@@ -11,6 +11,6 @@ let section = document.querySelector("section");
 let button = document.querySelector("button");
 
 button.addEventListener("click", function (){
-	section.classList.toggle("visible");
-	section.classList.toggle("invisible");
+	section.classList.toggle("blue-bg");
+	section.classList.toggle("red-bg");
 });
