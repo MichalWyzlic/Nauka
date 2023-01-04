@@ -41,7 +41,7 @@ function multiply(){
 }
 
 
-function divide(){b
+function divide(){
     const enteredNumber = getUserNumberInput();
     const initialResult = currentResult;
     currentResult /= enteredNumber;
@@ -49,11 +49,33 @@ function divide(){b
     createAndWriteOutput("/", currentResult, initialResult, enteredNumber);
 }
 
+function calculate (operation) {
+	const enteredNumber = getUserNumberInput();
+	const initialResult = currentResult;
+	let operator = '+';
+    if (operation === 'add') {
+		currentResult += enteredNumber;
+		operator = '+';
+	} else if (operation === 'sub') {
+		currentResult -= enteredNumber;
+		operator = '-';
 
-addBtn.addEventListener("click", add);
-subtractBtn.addEventListener("click", subtract);
-multiplyBtn.addEventListener("click", multiply);
-divideBtn.addEventListener("click", divide);
+	} else if (operation === 'mul') {
+		currentResult *= enteredNumber;
+		operator = '*';
+
+	} else if (operation === 'div') {
+		currentResult /= enteredNumber;
+		operator = '/';
+	}
+	createAndWriteOutput(operator, currentResult, initialResult, enteredNumber);
+    
+}
+
+addBtn.addEventListener("click", calculate.bind(this, 'add'));
+subtractBtn.addEventListener("click", calculate.bind(this, 'sub'));
+multiplyBtn.addEventListener("click", calculate.bind(this, 'mul'));
+divideBtn.addEventListener("click", calculate.bind(this, 'div'));
 
 
 

@@ -11,7 +11,7 @@ const RESULT_COMPUTER_WINS = 'Computer wins';
 
 let gameIsRunning = false;
 
-const getPlayerChoice = function() {
+const getPlayerChoice = () => {
 	const selection = prompt(`${ROCK}, ${PAPER} or ${SCISSORS}`, '').toUpperCase();
 	if(
 		selection != ROCK
@@ -24,7 +24,7 @@ const getPlayerChoice = function() {
 	return selection;
 }
 
-const getComputerChoice = function(){
+const getComputerChoice = () => {
 	const randomVlaue = Math.random();
 	if (randomVlaue <= 0.33){
 		return ROCK;
@@ -35,7 +35,7 @@ const getComputerChoice = function(){
 	}
 }
 
-const getWinner = function(cChoice, pChoice){
+const getWinner = (cChoice, pChoice) => {
 	if (pChoice === cChoice){
 		return RESULT_DRAW;
 	} else if (
@@ -48,7 +48,7 @@ const getWinner = function(cChoice, pChoice){
 	return RESULT_COMPUTER_WINS;
 }
 
-startGameBtn.addEventListener('click', function(){
+startGameBtn.addEventListener('click', () => {
 	if(gameIsRunning){
 		return;
 	}
@@ -57,5 +57,22 @@ startGameBtn.addEventListener('click', function(){
 	const playerChoice = getPlayerChoice();
 	const computerChoice = getComputerChoice();
 	const winner = getWinner(computerChoice, playerChoice);
-	console.log(winner);
+	let message = `You chose ${playerChoice}, the computer chose ${computerChoice}, therefore `;
+	if (winner === RESULT_PLAYER_WINS){
+		message += `you win.`;
+	} else if (winner === RESULT_COMPUTER_WINS){
+		message += `the computer wins.`;
+	} else {
+		message += `there is a draw.`;
+	}
+
+	alert(message);
+	gameIsRunning = false;
 });
+
+
+//not a game code
+
+const supUp = (a, b, c, d) => {
+	
+}

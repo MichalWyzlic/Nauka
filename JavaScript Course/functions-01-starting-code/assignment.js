@@ -1,34 +1,29 @@
-const sayHello1 = (greeting, name = "Tom") => {
-	console.log(greeting+ " " + name);
-};
+const sayHello = (name) => console.log(`Hi ` + name);
 
-sayHello1("Czesc", "Michal");
 
-sayHello1("Czesc");
+sayHello('Michal');
 
-const sayHello2 = () => {
-	console.log("Hi Misza.");
-};
+const sayHello2 = (name, greeting) => console.log(greeting + name);
 
-sayHello2("Czesc", "Michal");
 
-const sayHello3 = name => "Zdrastwuj " + name + ".";
+const sayHello3 = () => console.log('Cześć Mysza');
 
-console.log(sayHello3("Misza"));
 
-const checkInput = (callBack, ...strings) => {
-	let text = "";
-	for(let string of strings){
-		if (!string || string === ""){
-			return;
-		}
-		text += string + " ";
-	}
-	callBack(text);
-};
+const sayHello4 = (name) => 'Hi ' + name;
 
-function callAlert(text){
-	alert("This is a result of the callBack function." + text);
+const sayHello5 = (name, greeting = 'Dzien dobry') => console.log(greeting + name);
+
+
+const checkInput = (cb, ...strings) => strings.forEach(cb);
+
+
+const callback = (myString) => {
+	if (myString != ''){
+		console.log(myString);	
+	} else{
+		console.log('I found an empty space');
+	}	
 }
 
-checkInput(callAlert,"Czesc", "Michal", " spadaj na ", "drzewo.");
+const str3 = 'and';
+checkInput(callback, 'me', '', 'myself', str3, 'I');
