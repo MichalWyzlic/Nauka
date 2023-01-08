@@ -10,8 +10,8 @@ const li = document.querySelector('li:last-of-type');
 
 const changeLi = () => {
 	li.textContent = li.textContent + ' (Changed!)';
-	li.style.color = 'red';
-	li.style.backgroundColor = 'green';
+	li.style.color = 'white';
+	li.style.backgroundColor = 'red';
 }
 
 document.addEventListener('click', changeTitle);
