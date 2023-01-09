@@ -7,13 +7,31 @@
 		<title>DOM interactions</title>
 		<script src="app.js" defer></script>
 	</head>
+	<style>
+		.red-bg{
+			background-color: red;
+			color: white;
+		}
+
+		.visible{
+			display: block;
+		}
+
+		.invisible{
+			display: none;
+		}
+	</style>
 	<body>
 		<header><h1 id="main-title">Dive into the DOM!</h1></header>
-		<ul>
-			<li class="list-item">Item 1</li>
-			<li class="list-item">Item 2</li>
-			<li class="list-item">Item 3</li>
-		</ul>
+		<section class="red-bg visible">
+			<ul>
+				<li class="list-item">Item 1</li>
+				<li class="list-item">Item 2</li>
+				<li class="list-item">Item 3</li>
+			</ul>
+		</section>
+		<button>Toggle visibility</button>
 		<input type = 'text' value='default value'>
+		
 	</body>
 </html>

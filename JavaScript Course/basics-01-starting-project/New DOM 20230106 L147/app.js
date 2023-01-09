@@ -1,25 +1,13 @@
-const h1 =  document.getElementById('main-title');
+const ul = document.body.firstElementChild.nextElementSibling;
+const firstLi = ul.firstElementChild;
 
-const changeTitle = () => {
-	h1.textContent = 'Content after a click';
-	h1.style.color = 'white';
-	h1.style.backgroundColor = 'black';
-}
+console.log(firstLi);
 
-const li = document.querySelector('li:last-of-type');
+const section = document.querySelector('section');
+const button = section.nextElementSibling;
 
-const changeLi = () => {
-	li.textContent = li.textContent + ' (Changed!)';
-	li.style.color = 'white';
-	li.style.backgroundColor = 'red';
-}
 
-document.addEventListener('click', changeTitle);
-document.addEventListener('keyup', changeLi);
-// const listItemElements = document.querySelectorAll('li');
-
-const listItemElements = document.getElementsByTagName('li');
-
-for (const listItemEl of listItemElements){
-	console.dir(listItemEl);
-}
+button.addEventListener('click', () => {
+	section.classList.toggle('visible');
+	section.classList.toggle('invisible');
+})
