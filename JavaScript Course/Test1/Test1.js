@@ -1,34 +1,18 @@
-const numbers = [1, 2, 15.22, 35, 4.99, 5.01, 7, 0.15, 13.02];
-console.log(numbers);
+const testMatrix = [[1,2,3],[4,5,6]];
 
-const filteredNumbers = numbers.filter(value =>  value > 5 );
-console.log(filteredNumbers);
+function toCamelCase(str){
+	const testString = str.replace(/(\_+)|(\-+)/g, ' ').split(' ');
+	let result = testString[0];
+	for(let i = 1; i < testString.length; i++){
+		result += testString[i].charAt(0).toUpperCase() + testString[i].slice(1);		
+	};
 
-numbers[3]= 15.33;
-console.log(numbers);
-console.log(filteredNumbers);
+	return result;
+}
 
-const newNumbers = numbers.map((value, index) => ({index: index, value: value}));
-console.log(newNumbers);
+  
 
-const reducedArray = numbers.reduce((previousValue, currentValue) => previousValue * currentValue);
-console.log(reducedArray);
+console.log(toCamelCase('the_stealth_warrior'));
+//console.log(0%3, 1%3, 2%3, 3%3 );
 
-function findMax(...listOfNumbers){
-	return [Math.min(...listOfNumbers), Math.max(...listOfNumbers)];
-};
 
-const [arrayMin, arrayMax] = findMax(...numbers);
-console.log(findMax(...numbers), arrayMin, arrayMax);
-
-const listNoDuplicates = new Set(['Hi', 'it', 'is']);
-console.log(listNoDuplicates.size);
-listNoDuplicates.add('me');
-console.log(listNoDuplicates.size);
-listNoDuplicates.add('Hi');
-console.log(listNoDuplicates.size);
-
-listNoDuplicates.add('Michal.');
-console.log(listNoDuplicates.size);
-
-console.log(listNoDuplicates);
