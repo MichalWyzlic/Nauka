@@ -106,46 +106,19 @@ console.log(testParking.park(van2));
 // console.log(testParking.retrieve(van1.license));
 // console.log(testParking.park(car2));
 
-function NamedOne(first, last) {
-	// -- SHOULD be changed --
-	const _firstName = first;
-	const _lastName = last;
-	Object.defineProperty(this,"firstName",{
-		get: function() { return _firstName; },
-		set: function(fName) { 
-			if(typeof _firstName === 'undefined'){
-				_firstName = fName;
-			}
-		 }
-	  });
-	  Object.defineProperty(this,"lastName",{
-		get: function() { return _lastName },
-		set: function(lName) { 
-			if(typeof _lastName === 'undefined'){
-				_lastName = lName;
-			}
-		 }
-	  });
-	Object.defineProperty(this,"fullName",{
-		get: function() { return _firstName + ' ' + _lastName; },
-		set: function(fName) { 
-			const tempArray = fName.split(' ');
-			if(tempArray.length === 2 && typeof _firstName === 'undefined' && typeof _lastName === 'undefined'){
-				_firstName = tempArray[0];
-				_lastName = tempArray[1];
-			}
-		 }
-	  });
-	// this.fullName = this.firstName + ' ' + this.lastName;
-}
+function sumOfSums(n) {
+	function s(n){
+		return BigInt((BigInt(n)**2n+BigInt(n))/2n);
+	};
+	function z(n){
+		return BigInt( (BigInt(n)*(BigInt(n)+1n)*(BigInt(n)+2n))/6n);
+	};
+	return s(z(n));
+  }
+console.log(sumOfSums(3));
+console.log(sumOfSums(4));
+console.log(sumOfSums(5));
 
-
-
-let n;
-n=new NamedOne('John', 'Doe');
-console.log(n.firstName, n.lastName, n.fullName);
-n.lastName = 'Wojdylo';
-console.log(n.firstName, n.lastName, n.fullName);
 
 
 
