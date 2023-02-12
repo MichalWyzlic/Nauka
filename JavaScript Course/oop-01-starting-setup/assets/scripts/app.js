@@ -21,9 +21,14 @@ class ElementAttribute{
 }
 
 class Component {
-	constructor(renderHookId){
+	constructor(renderHookId, shouldRender = true){
 		this.hookId = renderHookId;
+		if(shouldRender){
+			this.render();
+		};
 	};
+
+	render(){};
 	createRootElement(tag, cssClasses, attributes){
 		const rootElement = document.createElement(tag);
 		if(cssClasses){
@@ -59,7 +64,12 @@ class ShoppingCart extends Component {
 	}
 
 	constructor(renderHookId){
-		super(renderHookId);
+		super(renderHookId,false);
+		this.orderProducts = () => {
+		console.log('Ordering ...');
+		console.log(this.items);
+		};
+		this.render();
 	}
 
 	addProduct(product){
@@ -68,20 +78,26 @@ class ShoppingCart extends Component {
 		this.cartItems = updatedItems;
 	};
 
+	
+
 	render(){
 		const cartEl = this.createRootElement('section', 'cart');
 		cartEl.innerHTML=`
 			<h2>Total \$${0}</h2>
 			<button>Order Now!</button>
 		`;
+		const orderButton = cartEl.querySelector('button');
+		//orderButton.addEventListener('click', this.orderProducts.bind(this));
+		orderButton.addEventListener('click', this.orderProducts);
 		this.totalOutput = cartEl.querySelector('h2');
 	}
 }
 
 class ProductItem extends Component {
 	constructor(product, renderHookId){
-		super(renderHookId);
+		super(renderHookId,false);
 		this.product = product;
+		this.render();
 	}
 
 	addToCartHandler(){
@@ -107,47 +123,59 @@ class ProductItem extends Component {
 };
 
 class ProductList extends Component {
-	products = [
-		new Product('A Pillow',
+	#products = [];
+
+	constructor(renderHookId){
+		super(renderHookId, false);
+		this.render();
+		this.#fetchProducts();
+		
+	};
+
+	#fetchProducts(){
+		this.#products = [
+			new Product('A Pillow',
 					'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.04Ttowe8HEE2Ob7xmxyxRgHaEJ%26pid%3DApi&f=1&ipt=cc717073e1648e6b629fa211f55bb4aba05245dc0fcb7a99104950bb97014074&ipo=images',
 					'A soft pillow!',
 					19.99
 					),
-		new Product('A Carpet',
+			new Product('A Carpet',
 					'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.V25Z6qAaXbNq8Y50ExnL8AAAAA%26pid%3DApi&f=1&ipt=774579234789f711d5a89d6b11d17b14c8192c62a59962d369013d4431863d4e&ipo=images',
 					'A carpet that you might like - or not.',
 					89.99
 					)
-	];
+		];
+		this.#renderProducts();
+	};
 
-	constructor(renderHookId){
-		super(renderHookId);
+	#renderProducts(){
+		for(const prod of this.#products){
+			new ProductItem(prod, 'prod-list');
+		};
 	};
 
 	render() {
 		const prodList = this.createRootElement('ul', 'product-list', [new ElementAttribute('id', 'prod-list')]);
-		for(const prod of this.products){
-			const productItem = new ProductItem(prod, 'prod-list');
-			productItem.render();
-		};
+		if(this.#products && this.#products.length > 0){
+			this.renderProducts();
+		}
 	};
 };
 
 
-class Shop {
-	render(){
-		
+class Shop extends Component{
+	constructor(){
+		super();
+	};
+	render(){		
 		this.cart = new ShoppingCart('app');
-		this.cart.render();
-		const productList = new ProductList('app');
-		productList.render();
-	}
+		new ProductList('app');
+	};
 }
 
 class App{
 	static init(){
 		const shop = new Shop();
-		shop.render();
 		this.cart = shop.cart;
 	}
 
