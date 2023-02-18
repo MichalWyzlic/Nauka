@@ -1,124 +1,139 @@
-'use strict';
+const  words = ['aab', 'defgab', 'abcde', 'aabcde', 'bbbbbbbbbb', 'jabjjjad'];
 
-class Bike{
-	constructor(license){
-		this.license = license;
-	}
-}
+    // // Write your code here
+	// for(let i = 0; i < words.length; i++){
+	// 	for(let j = 0; j < words.length; j++){
+	// 		if(j !== i && words[i].length >= words[j].length){
+	// 			if(words[j] === words[i].substring(0, words[j].length)){
+	// 				console.log('BAD SET');
+	// 				console.log(words[i]);
+	// 				return;
+	// 			};
+	// 		};
+	// 	};
+	// };
+	// console.log('GOOD SET');
 
-class Car{
-	constructor(license){
-		this.license = license;
-	}
-}
 
-class Van{
-	constructor(license){
-		this.license = license;
-	}
-}
+class TrieNode {
+	constructor() {
+		this.keys = new Map();
+		this.end = false;
+	};
 
-class ParkingLot {
-	constructor(size) {
-		this.parking = Array(size).fill('0').join(',');
-		this.size = size;
-	}
-	park(vehicle) {
-		// const regEx = new RegExp(`${vehicle.license}`,'g'); 
-		// if(regEx.test(this.parking)){
-		// 	return false;
-		// };
+	setEnd(){
+		this.end = true;
+	};
 
-		if(vehicle instanceof Bike){
-			if(/0/.test(this.parking)){
-				this.parking = this.parking.replace(/0/,`${vehicle.license}`);
-				return true;
-			} else {
+	isEnd(){
+		return this.end;
+	};
+};
+
+class Trie{
+	constructor(){
+		this.root = new TrieNode();
+	};
+
+	add(input, node = this.root){
+		if(input.length === 0){
+			node.setEnd();
+			return;
+		} else if(!node.keys.has(input[0])){
+			node.keys.set(input[0], new TrieNode());
+			return this.add(input.substring(1), node.keys.get(input[0]));
+		}else {
+			return this.add(input.substring(1), node.keys.get(input[0]));
+		};
+	};
+
+	isWord(word){
+		let node = this.root;
+		while(word.length > 1){
+			if(!node.keys.has(word[0])){
 				return false;
-			}
-
-		} else if(vehicle instanceof Car){
-			if(/0,0/.test(this.parking)){
-				this.parking = this.parking.replace(/0,0/,`${vehicle.license},${vehicle.license}`);
-				return true;
-			} else {
-				return false;
-			}
-
-		}else if(vehicle instanceof Van){
-			if(/0,0,0/.test(this.parking)){
-				this.parking = this.parking.replace(/0,0,0/,`${vehicle.license},${vehicle.license},${vehicle.license}`);
-				return true;
-			} else {
-				return false;
-			}
-
-		} else {
-			return false;
-		}
-	}
-	retrieve(license) {
-		const parkingArray = this.parking.split(',');
-		let result = false;
-		parkingArray.forEach(function test(value, index, arr){
-			if(value === license){
-				arr[index] = 0;
-				result = true;
+			} else{
+				node = node.keys.get(word[0]);
+				word = word.substring(1);
 			};
-		});
-		this.parking = parkingArray.join(',');
+		};
 
-		return result;
-
-		// const regEx = new RegExp(`${license}`,'g'); 
-		// if(regEx.test(this.parking)){
-		// 	this.parking = this.parking.replace(regEx,`0`);
-		// 	return true;
-		// } else {
-		// 	return false;
-		// }
-	}
-}
-
-
-
-let testParking = new ParkingLot(4);
-const bike1 = new Bike("BK-123");
-const bike2 = new Bike("BK-456");
-const bike3 = new Bike("BK-789");
-const car1 = new Car("CR-123");
-const car2 = new Car("CR-456");
-const van1 = new Van("VN-123");
-const van2 = new Van("VN-456");
-console.log(testParking.park(bike1));
-console.log(testParking.park(car1));
-console.log(testParking.park(bike2))
-console.log(testParking.park(van1));
-console.log(testParking.retrieve(bike1.license));
-console.log(testParking.retrieve(bike2.license));
-console.log(testParking.park(car2));
-
-//console.log(testParking.retrieve(bike1.license));
-console.log(testParking.park(bike3));
-console.log(testParking.park(car2));
-console.log(testParking.park(van2));
-// console.log(testParking.retrieve(car2.license));
-// console.log(testParking.retrieve(van1.license));
-// console.log(testParking.park(car2));
-
-function sumOfSums(n) {
-	function s(n){
-		return BigInt((BigInt(n)**2n+BigInt(n))/2n);
+		return (node.keys.has(word) && node.keys.get(word).isEnd());
 	};
-	function z(n){
-		return BigInt( (BigInt(n)*(BigInt(n)+1n)*(BigInt(n)+2n))/6n);
+
+
+
+	print(){
+		const words = [];
+		const search = function(node = this.root, string){
+			if(node.keys.size !== 0){
+				for(let letter of node.keys.keys()){
+					search(node.keys.get(letter), string.concat(letter));
+				};
+				if(node.isEnd()){
+					words.push(string);
+				};
+			} else{
+				string.length > 0 ? words.push(string) : undefined;
+				return;
+			};
+		};
+		search(this.root, new String());
+		return words.length > 0 ? words : null;
 	};
-	return s(z(n));
-  }
-console.log(sumOfSums(3));
-console.log(sumOfSums(4));
-console.log(sumOfSums(5));
+};
 
 
+function noPrefix(words) {
 
 
+	const testTrie = new Trie();
+	for(let i = 0; i<words.length; i++){
+		if(i > 0){
+
+			let isPrefix = false;
+			let hasPrefix = false;
+			let node = testTrie.root;
+			let word = words[i];
+			while(word.length > 1){
+				if(!node.keys.has(word[0])){
+					break;
+				} else{
+					node = node.keys.get(word[0]);
+					word = word.substring(1);
+					if(node.isEnd()){
+						hasPrefix = true;
+					}
+				};
+			};
+	
+			isPrefix = node.keys.has(word);
+
+			if(isPrefix || hasPrefix){
+				console.log('BAD SET\n' + words[i]);
+				return;
+			}
+		};
+		testTrie.add(words[i]);
+	};
+	console.log('GOOD SET');
+
+};
+
+// myTrie = new Trie();
+// myTrie.add('ball');
+// myTrie.add('dorm');
+// myTrie.add('send');
+// myTrie.add('bat');
+// myTrie.add('do');
+// myTrie.add('sense');
+// myTrie.add('doll');
+// myTrie.add('dork');
+// myTrie.add('sensei');
+
+// console.log(myTrie.isWord('doll'));
+// console.log(myTrie.isWord('sen'));
+// console.log(myTrie.isWord('ball'));
+// console.log(myTrie.print());
+
+noPrefix(words);
