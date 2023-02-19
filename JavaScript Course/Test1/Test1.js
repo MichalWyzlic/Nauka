@@ -1,79 +1,111 @@
-matrix = [[112, 42, 83, 119], [56, 125, 56, 49], [15, 78, 101, 43], [62, 98, 114, 108]];
+'use strict'
 
-function checkMaxValuePosition(pi, pj, matrix){
-	let n = matrix.length - 1;
-	let tempArray = [[matrix[pi][pj],1],[matrix[pi][n-pj],2],[matrix[n-pi][n-pj],3],[matrix[n-pi][pj],4]];
-	tempArray.sort((a,b) => b[0] - a[0]);
-	return tempArray[0][1];
-};
+// function checkPalindrome(s){
+// 	const len = Math.floor(s.length/2);
+// 	const end = s.length-1;
+// 	for(let i=0; i<len; i++){
+// 		if(s.charAt(i) != s.charAt(end-i)){
+// 			return false;
+// 		}
+// 	}
+// 	return true;
+// }
 
-function reverseV(c, matrix){
-	let n = matrix.length - 1;
-	if(c > n){
-		return;
+// function palindromeIndex(s) {
+// 	let len = Math.floor(s.length/2);
+// 	let end = s.length-1;
+// 	//const even = len === s.length/2;
+// 	let removed = -1;
+// 	for(let i = 0; i < len; i ++){
+// 		if(s.charAt(i) !== s.charAt(end-i)){
+// 			if(removed !== -1){
+// 				return -1;
+// 			} else if(i > 0 && s.charAt(i-1) === s.charAt(i) && s.charAt(i) === s.charAt(end-i+1)) {
+// 				//remove i-1
+// 				removed = i-1;
+// 				s = s.slice(0,i-1) + s.slice(i);
+// 				len = Math.floor(s.length/2);
+// 				end = s.length-1;
+// 			}else if(s.charAt(i) === s.charAt(end-i-1)){
+// 				//remove end-i
+// 				removed = end-i;
+// 				s = s.slice(0,end-i) + s.slice(end-i+1);
+// 				len = Math.floor(s.length/2);
+// 				end = s.length-1;
+// 			} else if(s.charAt(i+1) === s.charAt(end-i)){
+// 				//remove i
+// 				removed = i;
+// 				s = s.slice(0,i) + s.slice(i+1);
+// 				len = Math.floor(s.length/2);
+// 				end = s.length-1;
+// 			} else {
+// 				return -1;
+// 			};
+// 		};
+// 	};
+// 	return removed;
+// };
+
+// console.log(palindromeIndex('hgygsvlfwcwnswtuhmyaljkqlqjjqlqkjlaymhutwsnwcflvsgygh'));
+// console.log(palindromeIndex('quyjjdcgsvvsgcdjjyq'));
+
+// quyjjdcgsvvsgcdjjyq
+// hgygsvlfwcwnswtuhmyaljkqlqjjqlqkjlaymhutwsnwcflvsgygh
+// fgnfnidynhxebxxxfmxixhsruldhsaobhlcggchboashdlurshxixmfxxxbexhnydinfngf
+// bsyhvwfuesumsehmytqioswvpcbxyolapfywdxeacyuruybhbwxjmrrmjxwbhbyuruycaexdwyfpaloyxbcpwsoiqtymhesmuseufwvhysb
+// fvyqxqxynewuebtcuqdwyetyqqisappmunmnldmkttkmdlnmnumppasiqyteywdquctbeuwenyxqxqyvf
+// mmbiefhflbeckaecprwfgmqlydfroxrblulpasumubqhhbvlqpixvvxipqlvbhqbumusaplulbrxorfdylqmgfwrpceakceblfhfeibmm
+// tpqknkmbgasitnwqrqasvolmevkasccsakvemlosaqrqwntisagbmknkqpt
+// lhrxvssvxrhl
+// prcoitfiptvcxrvoalqmfpnqyhrubxspplrftomfehbbhefmotfrlppsxburhyqnpfmqlaorxcvtpiftiocrp
+// kjowoemiduaaxasnqghxbxkiccikxbxhgqnsaxaaudimeowojk
+
+// 1
+// 8
+// 33
+// 23
+// 24
+// 43
+// 20
+// -1
+// 14
+// -1
+
+// 1
+// -1
+// 33
+// 23
+// 24
+// 43
+// 20
+// -1
+// 14
+// -1
+
+function palindromeIndex(s) {
+	const reversedS = s.split('').reverse().join('');
+	let len = Math.floor(s.length / 2);
+	let string1 = s.slice(0,len);
+	let string2 = reversedS.slice(0,len);
+	if(string1 === string2){
+		return -1;
 	};
-	for(let i = 0; i < matrix.length/2; i++){
-		let tempValue = matrix[i][c];
-		matrix[i][c] = matrix[n-i][c];
-		matrix[n-i][c] = tempValue;
-	};
-};
-
-
-
-function flippingMatrix(matrix) {
-	let n = matrix.length / 2 - 1;
-	let n2 = matrix.length - 1;
-	let sum = 0;
-	for(let i = 0; i <= n; i ++){
-		for(let j = 0; j <= n; j++){
-			let maxPosition = checkMaxValuePosition(i, j, matrix);
-			switch(maxPosition){
-				case 2 :
-					reverseV(n2-j, matrix);
-					matrix[i].reverse();
-					reverseV(n2-j, matrix);
-					matrix[i].reverse();
-					break;
-				case 3:
-					matrix[i].reverse();
-					reverseV(n2-j, matrix);
-					matrix[i].reverse();
-					break;
-				case 4:
-					matrix[i].reverse();
-					matrix[n2-i].reverse();
-					reverseV(n2-j, matrix);
-					matrix[i].reverse();
-					break;
+	for(let i = 0; i < len; i++){
+		if(string1.charAt(i) !== string2.charAt(i)){
+			let temp1 = s.slice(0,i) + s.slice(i+1,len+1);
+			if(temp1 === string2){
+				return i;
 			};
-			sum += matrix[i][j];
+			temp1 = reversedS.slice(0,i) + reversedS.slice(i+1,len+1); 
+			if(temp1 === string1){
+				return s.length - 1 - i;
+			};
+			return -1;
 		};
-	};
+	}
 
-	return sum;
-	
-};
-reverseV(2,matrix);
-console.log(flippingMatrix(matrix));
-
-
-function fizzBuzz(n) {
-    // Write your code here
-	for(let i = 1; i <= n; i++){
-		let output = '';
-		if(Math.floor(i/3)===i/3){
-			output += 'Fizz';
-		};
-		if(Math.floor(i/5)===i/5){
-			output += 'Buzz';
-		};
-		if(output === ''){
-			output += i;
-		};
-		console.log(output);
-	};
-
+	return undefined;
 };
 
-fizzBuzz(15);
+
+console.log(palindromeIndex('abcwddwcwba'))
