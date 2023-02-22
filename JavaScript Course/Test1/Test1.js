@@ -1,111 +1,69 @@
 'use strict'
 
-// function checkPalindrome(s){
-// 	const len = Math.floor(s.length/2);
-// 	const end = s.length-1;
-// 	for(let i=0; i<len; i++){
-// 		if(s.charAt(i) != s.charAt(end-i)){
-// 			return false;
-// 		}
-// 	}
-// 	return true;
-// }
-
-// function palindromeIndex(s) {
-// 	let len = Math.floor(s.length/2);
-// 	let end = s.length-1;
-// 	//const even = len === s.length/2;
-// 	let removed = -1;
-// 	for(let i = 0; i < len; i ++){
-// 		if(s.charAt(i) !== s.charAt(end-i)){
-// 			if(removed !== -1){
-// 				return -1;
-// 			} else if(i > 0 && s.charAt(i-1) === s.charAt(i) && s.charAt(i) === s.charAt(end-i+1)) {
-// 				//remove i-1
-// 				removed = i-1;
-// 				s = s.slice(0,i-1) + s.slice(i);
-// 				len = Math.floor(s.length/2);
-// 				end = s.length-1;
-// 			}else if(s.charAt(i) === s.charAt(end-i-1)){
-// 				//remove end-i
-// 				removed = end-i;
-// 				s = s.slice(0,end-i) + s.slice(end-i+1);
-// 				len = Math.floor(s.length/2);
-// 				end = s.length-1;
-// 			} else if(s.charAt(i+1) === s.charAt(end-i)){
-// 				//remove i
-// 				removed = i;
-// 				s = s.slice(0,i) + s.slice(i+1);
-// 				len = Math.floor(s.length/2);
-// 				end = s.length-1;
-// 			} else {
-// 				return -1;
-// 			};
-// 		};
-// 	};
-// 	return removed;
-// };
-
-// console.log(palindromeIndex('hgygsvlfwcwnswtuhmyaljkqlqjjqlqkjlaymhutwsnwcflvsgygh'));
-// console.log(palindromeIndex('quyjjdcgsvvsgcdjjyq'));
-
-// quyjjdcgsvvsgcdjjyq
-// hgygsvlfwcwnswtuhmyaljkqlqjjqlqkjlaymhutwsnwcflvsgygh
-// fgnfnidynhxebxxxfmxixhsruldhsaobhlcggchboashdlurshxixmfxxxbexhnydinfngf
-// bsyhvwfuesumsehmytqioswvpcbxyolapfywdxeacyuruybhbwxjmrrmjxwbhbyuruycaexdwyfpaloyxbcpwsoiqtymhesmuseufwvhysb
-// fvyqxqxynewuebtcuqdwyetyqqisappmunmnldmkttkmdlnmnumppasiqyteywdquctbeuwenyxqxqyvf
-// mmbiefhflbeckaecprwfgmqlydfroxrblulpasumubqhhbvlqpixvvxipqlvbhqbumusaplulbrxorfdylqmgfwrpceakceblfhfeibmm
-// tpqknkmbgasitnwqrqasvolmevkasccsakvemlosaqrqwntisagbmknkqpt
-// lhrxvssvxrhl
-// prcoitfiptvcxrvoalqmfpnqyhrubxspplrftomfehbbhefmotfrlppsxburhyqnpfmqlaorxcvtpiftiocrp
-// kjowoemiduaaxasnqghxbxkiccikxbxhgqnsaxaaudimeowojk
-
-// 1
-// 8
-// 33
-// 23
-// 24
-// 43
-// 20
-// -1
-// 14
-// -1
-
-// 1
-// -1
-// 33
-// 23
-// 24
-// 43
-// 20
-// -1
-// 14
-// -1
-
-function palindromeIndex(s) {
-	const reversedS = s.split('').reverse().join('');
-	let len = Math.floor(s.length / 2);
-	let string1 = s.slice(0,len);
-	let string2 = reversedS.slice(0,len);
-	if(string1 === string2){
-		return -1;
-	};
-	for(let i = 0; i < len; i++){
-		if(string1.charAt(i) !== string2.charAt(i)){
-			let temp1 = s.slice(0,i) + s.slice(i+1,len+1);
-			if(temp1 === string2){
-				return i;
-			};
-			temp1 = reversedS.slice(0,i) + reversedS.slice(i+1,len+1); 
-			if(temp1 === string1){
-				return s.length - 1 - i;
-			};
-			return -1;
-		};
+class PaginationHelper {
+	#pCount = 0;
+	constructor(collection, itemsPerPage) {
+	// The constructor takes in an array of items and a integer indicating how many
+	// items fit within a single page
+	this.arrayRef = collection;
+	this.itemsPerPage = itemsPerPage;
+	if(this.arrayRef.length > 0){
+		this.#pCount = Math.floor((this.arrayRef.length-1)/this.itemsPerPage) + 1;
+	}
 	}
 
-	return undefined;
-};
+	itemCount() {
+	// returns the number of items within the entire collection
+		return this.arrayRef.length;
+	}
 
+	pageCount() {
+	// returns the number of pages
+		return this.#pCount;
+	}
 
-console.log(palindromeIndex('abcwddwcwba'))
+	pageItemCount(pageIndex) {
+	// returns the number of items on the current page. page_index is zero based.
+	// this method should return -1 for pageIndex values that are out of range
+		if(pageIndex > (this.#pCount - 1) || pageIndex < 0){
+			return -1;
+		} else if(pageIndex === (this.#pCount - 1) ){
+			let count = this.itemCount() % this.itemsPerPage;
+			if (count === 0){
+				return this.itemsPerPage;
+			} else {
+				return count;
+			}
+
+		};
+		return this.itemsPerPage;
+	}
+
+	pageIndex(itemIndex) {
+	// determines what page an item is on. Zero based indexes
+	// this method should return -1 for itemIndex values that are out of range
+		if(itemIndex < 0 || itemIndex >= this.itemCount() ){
+			return -1;
+		}
+		return Math.floor(itemIndex/this.itemsPerPage);	
+	}
+}
+
+const collection = [1, 2, 3, 4, 
+	5, 6, 7, 8, 
+	9, 10, 11, 12, 
+	13, 14, 15, 16, 
+	17, 18, 19, 20, 
+	21, 22, 23, 24];
+const helper = new PaginationHelper(collection, 4);
+
+console.log(helper.pageCount());
+console.log(helper.itemCount());
+
+console.log(helper.pageItemCount(5));
+console.log(helper.pageItemCount(2));
+console.log(helper.pageItemCount(3));
+console.log(helper.pageIndex(40));
+console.log(helper.pageIndex(22));
+console.log(helper.pageIndex(3));
+console.log(helper.pageIndex(0));
