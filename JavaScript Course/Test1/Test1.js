@@ -52,6 +52,7 @@ function spiral(inSize) {
 			result[n-rowNumber] = fillZeros();
 			vZeros.push(n-rowNumber)
 		}else if((n - 2*rowNumber) > 0){
+			vOnes.push(rowNumber-1);
 			vZeros.push(n-rowNumber);
 			result[n-rowNumber] = fillZeros();
 			break;
@@ -72,4 +73,4 @@ function printSpiral(n){
 	};
 };
 
-printSpiral(11);
+printSpiral(8);
