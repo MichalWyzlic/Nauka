@@ -1,69 +1,75 @@
 'use strict'
 
-class PaginationHelper {
-	#pCount = 0;
-	constructor(collection, itemsPerPage) {
-	// The constructor takes in an array of items and a integer indicating how many
-	// items fit within a single page
-	this.arrayRef = collection;
-	this.itemsPerPage = itemsPerPage;
-	if(this.arrayRef.length > 0){
-		this.#pCount = Math.floor((this.arrayRef.length-1)/this.itemsPerPage) + 1;
-	}
-	}
+const size = 10;
 
-	itemCount() {
-	// returns the number of items within the entire collection
-		return this.arrayRef.length;
-	}
-
-	pageCount() {
-	// returns the number of pages
-		return this.#pCount;
-	}
-
-	pageItemCount(pageIndex) {
-	// returns the number of items on the current page. page_index is zero based.
-	// this method should return -1 for pageIndex values that are out of range
-		if(pageIndex > (this.#pCount - 1) || pageIndex < 0){
-			return -1;
-		} else if(pageIndex === (this.#pCount - 1) ){
-			let count = this.itemCount() % this.itemsPerPage;
-			if (count === 0){
-				return this.itemsPerPage;
-			} else {
-				return count;
-			}
-
+function spiral(inSize) {
+	const n = inSize - 1;
+	const vOnes = [];
+	const vZeros = [];
+	const result = new Array(inSize);
+	function fillOnes(){
+		let row = new Array(inSize).fill(1);
+		for(let i = 0; i < vZeros.length; i++){
+			row[vZeros[i]]=0;
 		};
-		return this.itemsPerPage;
-	}
+		return row;
+	};
+	function fillZeros(){
+		let row = new Array(inSize).fill(0);
+		for(let i = 0; i < vOnes.length; i++){
+			row[vOnes[i]]=1;
+		};
+		return row;
+	};
 
-	pageIndex(itemIndex) {
-	// determines what page an item is on. Zero based indexes
-	// this method should return -1 for itemIndex values that are out of range
-		if(itemIndex < 0 || itemIndex >= this.itemCount() ){
-			return -1;
-		}
-		return Math.floor(itemIndex/this.itemsPerPage);	
-	}
-}
+	result[0] = fillOnes();
+	result[n] = fillOnes();
+	vOnes.push(n)
 
-const collection = [1, 2, 3, 4, 
-	5, 6, 7, 8, 
-	9, 10, 11, 12, 
-	13, 14, 15, 16, 
-	17, 18, 19, 20, 
-	21, 22, 23, 24];
-const helper = new PaginationHelper(collection, 4);
+	result[1] = fillZeros();
+	vOnes.push(0);
+	result[n-1] = fillZeros();
+	vZeros.push(n-1);
 
-console.log(helper.pageCount());
-console.log(helper.itemCount());
+	let rowNumber = 2;
+	let loop = true;
+	while(loop){
+		result[rowNumber] = fillOnes();
+		vZeros.push(rowNumber-1);
+		if((n - 2*rowNumber) > 1){
+			result[n-rowNumber] = fillOnes();
+			vOnes.push(n-rowNumber)
+		}else if((n - 2*rowNumber) > 0){
+			vOnes.push(n-rowNumber);
+			result[n-rowNumber] = fillZeros();
+			break;
+		};
+		rowNumber++;
+		result[rowNumber] = fillZeros();
+		
+		if((n - 2*rowNumber) > 1){
+			vOnes.push(rowNumber-1);
+			result[n-rowNumber] = fillZeros();
+			vZeros.push(n-rowNumber)
+		}else if((n - 2*rowNumber) > 0){
+			vZeros.push(n-rowNumber);
+			result[n-rowNumber] = fillZeros();
+			break;
+		} else{
+			break;
+		};
+		rowNumber++;
 
-console.log(helper.pageItemCount(5));
-console.log(helper.pageItemCount(2));
-console.log(helper.pageItemCount(3));
-console.log(helper.pageIndex(40));
-console.log(helper.pageIndex(22));
-console.log(helper.pageIndex(3));
-console.log(helper.pageIndex(0));
+	};
+
+	return result;
+  }
+
+function printSpiral(n){
+	const spiralArray = spiral(n); 
+	for(let i=0; i < n; i++){
+		console.log(spiralArray[i]);
+	};
+};
+
+printSpiral(11);
