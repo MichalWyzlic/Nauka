@@ -1,75 +1,42 @@
 'use strict'
 
-const size = 10;
-
-function spiral(inSize) {
-	const n = inSize - 1;
-	const vOnes = [];
-	const vZeros = [];
-	const result = new Array(inSize);
-	function fillOnes(){
-		let row = new Array(inSize).fill(1);
-		for(let i = 0; i < vZeros.length; i++){
-			row[vZeros[i]]=0;
-		};
-		return row;
+function getPINs(observed) {
+	// TODO: This is your job, detective!
+	const pinTable = [	['0','8'],
+						['1','2','4'],
+						['2','1','3','5'],
+						['3','2','6'],
+						['4','1','5','7'],
+						['5','2','4','6','8'],
+						['6','3','5','9'],
+						['7','4','8'],
+						['8','5','7','9','0'],
+						['9','6','8'] ];
+	const pinString = observed.split('');
+	const position = [pinString.length];
+	position.fill(0);
+	let cases	= 1;
+	const tempString = '';
+	const resultTable = [];
+	resultTable.push(observed);
+	for(let i = 0; i < pinString.length; i++){
+		pinString[i]=Number(pinString[i]);
+	 	position[i] = pinTable[pinString[i]].length;
+		cases *= position[i];
 	};
-	function fillZeros(){
-		let row = new Array(inSize).fill(0);
-		for(let i = 0; i < vOnes.length; i++){
-			row[vOnes[i]]=1;
+	position.fill(0);
+	for(let i = 1; i < cases; i++){
+		let temp = i;
+		let tempString = '';
+		for(let j = 0; j < pinString.length; j++){
+			position[j] = temp % (pinTable[pinString[j]].length);
+			temp = Math.floor(temp/(pinTable[pinString[j]].length));
+			tempString += pinTable[pinString[j]][position[j]];
 		};
-		return row;
+		resultTable.push(tempString);		
 	};
+	return resultTable;
+  };
 
-	result[0] = fillOnes();
-	result[n] = fillOnes();
-	vOnes.push(n)
 
-	result[1] = fillZeros();
-	vOnes.push(0);
-	result[n-1] = fillZeros();
-	vZeros.push(n-1);
-
-	let rowNumber = 2;
-	let loop = true;
-	while(loop){
-		result[rowNumber] = fillOnes();
-		vZeros.push(rowNumber-1);
-		if((n - 2*rowNumber) > 1){
-			result[n-rowNumber] = fillOnes();
-			vOnes.push(n-rowNumber)
-		}else if((n - 2*rowNumber) > 0){
-			vOnes.push(n-rowNumber);
-			result[n-rowNumber] = fillZeros();
-			break;
-		};
-		rowNumber++;
-		result[rowNumber] = fillZeros();
-		
-		if((n - 2*rowNumber) > 1){
-			vOnes.push(rowNumber-1);
-			result[n-rowNumber] = fillZeros();
-			vZeros.push(n-rowNumber)
-		}else if((n - 2*rowNumber) > 0){
-			vZeros.push(n-rowNumber);
-			result[n-rowNumber] = fillZeros();
-			break;
-		} else{
-			break;
-		};
-		rowNumber++;
-
-	};
-
-	return result;
-  }
-
-function printSpiral(n){
-	const spiralArray = spiral(n); 
-	for(let i=0; i < n; i++){
-		console.log(spiralArray[i]);
-	};
-};
-
-printSpiral(11);
+  console.log(getPINs('11'));
