@@ -1,42 +1,28 @@
 'use strict'
 
-function getPINs(observed) {
-	// TODO: This is your job, detective!
-	const pinTable = [	['0','8'],
-						['1','2','4'],
-						['2','1','3','5'],
-						['3','2','6'],
-						['4','1','5','7'],
-						['5','2','4','6','8'],
-						['6','3','5','9'],
-						['7','4','8'],
-						['8','5','7','9','0'],
-						['9','6','8'] ];
-	const pinString = observed.split('');
-	const position = [pinString.length];
-	position.fill(0);
-	let cases	= 1;
-	const tempString = '';
-	const resultTable = [];
-	resultTable.push(observed);
-	for(let i = 0; i < pinString.length; i++){
-		pinString[i]=Number(pinString[i]);
-	 	position[i] = pinTable[pinString[i]].length;
-		cases *= position[i];
+function powerOf(x, n){
+	if(n===1){
+		return x;
 	};
-	position.fill(0);
-	for(let i = 1; i < cases; i++){
-		let temp = i;
-		let tempString = '';
-		for(let j = 0; j < pinString.length; j++){
-			position[j] = temp % (pinTable[pinString[j]].length);
-			temp = Math.floor(temp/(pinTable[pinString[j]].length));
-			tempString += pinTable[pinString[j]][position[j]];
+	return x * powerOf(x, n-1);
+}
+
+console.log(powerOf(2,5));
+
+
+
+function smartSum(){
+	let sum = 0;
+	const myArray = [...arguments];
+	myArray.forEach(element => {
+		if(element instanceof Array){
+			sum += smartSum(...element);
+		} else {
+			sum += element;
 		};
-		resultTable.push(tempString);		
-	};
-	return resultTable;
-  };
+		
+	});
+	return sum;
+};
 
-
-  console.log(getPINs('11'));
+console.log(smartSum(1,2,[[3,4],5],6));
