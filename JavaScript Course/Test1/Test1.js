@@ -1,28 +1,18 @@
 'use strict'
-
-function powerOf(x, n){
-	if(n===1){
-		return x;
+function productDescription(strings, name, price){
+	console.log(strings);
+	console.log(name);
+	console.log(price);
+	let priceCategory = 'well priced';
+	if(price >= 20){
+		priceCategory = 'moderately priced'
 	};
-	return x * powerOf(x, n-1);
+
+	return `${strings[0]}${name}${strings[1]}${priceCategory}${strings[2]}`;
 }
 
-console.log(powerOf(2,5));
+const productName = 'Kilogram jablek';
+const cena = 65;
 
-
-
-function smartSum(){
-	let sum = 0;
-	const myArray = [...arguments];
-	myArray.forEach(element => {
-		if(element instanceof Array){
-			sum += smartSum(...element);
-		} else {
-			sum += element;
-		};
-		
-	});
-	return sum;
-};
-
-console.log(smartSum(1,2,[[3,4],5],6));
+const productOption = productDescription`This ${productName} is ${cena}`;
+console.log(productOption);
