@@ -34,7 +34,9 @@ class Keypad{
 class Calculator{
 	inputArray = [];
 	#keyPad;
-	//Possible states 'number1', 'dotNumber1', 'number2', 'dotNumber2', 'operator'
+	#mainDisplay;
+	#supportDisplay;
+	//Possible states 'number1', 'dotNumber1', 'number2', 'dotNumber2', 'operator', 'result'
 	#state = 'number1';
 	#number1 = '';
 	#number2 = '';
@@ -45,38 +47,65 @@ class Calculator{
 	constructor(){
 		this.#keyPad = new Keypad(this.checkInputHandler.bind(this));
 		this.#keyPad.addListeners();
+		this.#mainDisplay = document.getElementById('main-display-line');
+		this.#supportDisplay = document.getElementById('support-display-line');
 	};
 
-	updateDisplay(){
+	calculate(){
+		let n1 = Number(this.#number1);
+		let n2 = Number(this.#number2);
+		switch(this.#operator){
+			case 'div' :
+				this.lastResult = n1 / n2;
+				break;
+			case 'mul' :
+				this.lastResult = n1 * n2;
+				break;
+			case 'plus' :
+				this.lastResult = n1 + n2;
+				break;
+			case 'min' :
+				this.lastResult = n1 - n2;
+				break;				
+		};
+		this.updateDisplay(this.lastResult.toString());
+	};
 
+	updateDisplay(str){
+		this.#mainDisplay.innerHTML = str;
 	};
 	
 	checkInputHandler(key){
-		const rgKey = new RegExp(/^key\-/);
-		str = key.replace(rgKey, '');
+		let rgKey = new RegExp(/^key\-/);
+		let str = key.replace(rgKey, '');
 		if(str ==='ac'){
 			this.#number1 = '';
 			this.#number2 = '';
 			this.#state = 'number1';
 			this.#memory = 0;
-			updateDisplay();
+			this.updateDisplay('0');
 			return;
 		} else if(str ==='c'){
 			this.#number1 = '';
 			this.#number2 = '';
 			this.#state = 'number1';
-			updateDisplay();
+			this.updateDisplay('0');
 			return;
 		} else if(str ==='mc'){
 			this.#memory = '';
 			return;
 		};
 
-		switch(state){
+		switch(this.#state){
 			case 'number1': 
 			case 'dotNumber1':
 				if(str === 'mr' && this.#memory !== ''){
 					this.#number1 = this.#memory.toString();
+					if(Math.floor(this.#memory) !== this.#memory){
+						this.#state = 'dotNumber1';
+					} else {
+						this.#state = 'number1';
+					};
 				} else if(str >= 0 && str <= 9){
 					this.#number1 += str;
 				} else if(str ==='dot' && this.#state !=='dotNumber1'){
@@ -84,13 +113,13 @@ class Calculator{
 					this.#state = 'dotNumber1'
 				} else if (this.#number1.length > 0){
 					if(str === 'mmin'){
-						if(this.#memory = ''){
+						if(this.#memory === ''){
 							this.#memory = - Number(this.#number1);
 						} else {
 							this.#memory -= Number(this.#number1);
 						};
 					} else if(str === 'mplus'){
-						if(this.#memory = ''){
+						if(this.#memory === ''){
 							this.#memory = Number(this.#number1);
 						} else {
 							this.#memory += Number(this.#number1);
@@ -98,46 +127,105 @@ class Calculator{
 					} else if(str === 'ce'){
 						this.#number1 = '';
 						this.#state = 'number1';
-						};
-					} else 
-
-				}
-
-			case 'key-1': 
-			case 'key-2': 
-			case 'key-3': 
-			case 'key-4': 
-			case 'key-5': 
-			case 'key-6': 
-			case 'key-7': 
-			case 'key-8': 
-			case 'key-9':
-					console.log(this.extractKey(key));
+					} else if(str !== 'equ'){
+						this.#operator = str;
+						this.#state = 'operator';
+					};
+				} else {
 					break;
-			case 'key-dot':
-				console.log(this.extractKey(key));
-				break; 
-			case 'key-equ':
-				console.log(this.extractKey(key));
-				break; 
-			case 'key-div': 
-			case 'key-mul': 
-			case 'key-min': 
-			case 'key-plus':
-				console.log(this.extractKey(key));
-				break; 
-			case 'key-c': 
-			case 'key-ce': 
-			case 'key-mc': 
-			case 'key-mr':
-			case 'key-mmin': 
-			case 'key-mplus':
-				console.log(this.extractKey(key));
-				break; 
+				};
+				this.updateDisplay(this.#number1);
+				break;
 
-		}
+			case 'number2': 
+			case 'dotnumber2':
+				if(str === 'mr' && this.#memory !== ''){
+					this.#number2 = this.#memory.toString();
+					if(Math.floor(this.#memory) !== this.#memory){
+						this.#state = 'dotNumber2';
+					} else {
+						this.#state = 'number2';
+					};
+				} else if(str >= 0 && str <= 9){
+					this.#number2 += str;
+				} else if(str ==='dot' && this.#state !=='dotnumber2'){
+					this.#number2 += '.';
+					this.#state = 'dotnumber2'
+				} else if (this.#number2.length > 0){
+					if(str === 'mmin'){
+						if(this.#memory === ''){
+							this.#memory = - Number(this.#number2);
+						} else {
+							this.#memory -= Number(this.#number2);
+						};
+					} else if(str === 'mplus'){
+						if(this.#memory === ''){
+							this.#memory = Number(this.#number2);
+						} else {
+							this.#memory += Number(this.#number2);
+						};
+					} else if(str === 'ce'){
+						this.#number2 = '';
+						this.#state = 'number2';
+					} else if(str === 'equ'){
+						this.calculate();
+						this.#state = 'number1';
+						break;
+					} else if (str === 'div' || 
+								str === 'mul' || 
+								str === 'min' ||
+								str === 'plus'){
+						this.calculate();
+						this.#number1 = this.lastResult.toString();
+						this.#operator = str;	
+						break;				
+					};
+				}else {
+					break;
+				};
+				this.updateDisplay(this.#number2);
+				break;
 
-	}
+
+			case 'operator':
+				if(str === 'mr' && this.#memory !== ''){
+					this.#number2 = this.#memory.toString();
+					if(Math.floor(this.#memory) !== this.#memory){
+						this.#state = 'dotNumber2';
+					} else {
+						this.#state = 'number2';
+					};
+				} if(str === 'mmin'){
+					if(this.#memory === ''){
+						this.#memory = - Number(this.#number1);
+					} else {
+						this.#memory -= Number(this.#number1);
+					};
+				} else if(str === 'mplus'){
+					if(this.#memory === ''){
+						this.#memory = Number(this.#number1);
+					} else {
+						this.#memory += Number(this.#number1);
+					};
+				} else if(str >= 0 && str <= 9){
+					this.#number2 = str;
+					this.#state = 'number2';
+				} else if(str ==='dot' && this.#state !=='dotnumber2'){
+					this.#number2 += '.';
+					this.#state = 'dotnumber2'
+				} else if (str === 'div' || 
+							str === 'mul' ||
+							str === 'min' || 
+							str === 'plus'){
+					this.#operator = str;	
+					break;				
+				};
+				this.updateDisplay(this.#number2);
+				break;
+
+		};
+
+	};
 
 };
 

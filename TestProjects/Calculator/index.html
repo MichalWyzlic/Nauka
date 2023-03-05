@@ -9,41 +9,42 @@
 		<script src="assets/scripts/app.js" defer></script>
 	</head> 
 	<body>
-		<div id="result" class="result-window">
-			<p id="main-display-line" class="main-line">0</p>
-			<p id="support-display-line" class="support-line"></p>
+		<div class = "calculator">
+			<div id="result" class="result-window">
+				<p id="main-display-line" class="main-line">0</p>
+				<p id="support-display-line" class="support-line"></p>
+			</div>
+			<div id="pad">
+				<div id="memory-pad" class="keypad">
+					<button id="key-ce" class="keys key-s">CE</button>
+					<button id="key-c" class="keys key-s">C</button>
+					<button id="key-ac" class="keys key-dh">AC</button>
+					<button id="key-mc" class="keys key-s">MC</button>
+					<button id="key-mr" class="keys key-s">MR</button>
+					<button id="key-mplus" class="keys key-s">M+</button>
+					<button id="key-mmin" class="keys key-s">M-</button>
+				</div>
+					<div id="number-pad" class="number-keypad">
+					<button id="key-7" class="keys key-s">7</button>
+					<button id="key-8" class="keys key-s">8</button>
+					<button id="key-9" class="keys key-s">9</button>
+					<button id="key-4" class="keys key-s">4</button>
+					<button id="key-5" class="keys key-s">5</button>
+					<button id="key-6" class="keys key-s">6</button>
+					<button id="key-1" class="keys key-s">1</button>
+					<button id="key-2" class="keys key-s">2</button>
+					<button id="key-3" class="keys key-s">3</button>
+					<button id="key-0" class="keys key-dh">0</button>
+					<button id="key-dot" class="keys key-s">.</button>
+				</div>
+				<div id="basic-operators-pad" class="basic-operators">
+					<button id="key-div" class="keys key-s">/</button>
+					<button id="key-mul" class="keys key-s">*</button>
+					<button id="key-min" class="keys key-s">-</button>
+					<button id="key-plus" class="keys key-s">+</button>
+					<button id="key-equ" class="keys key-s">=</button>
+				</div>
+			</div>
 		</div>
-		<div id="pad">
-			<div id="memory-pad" class="keypad">
-				<button id="key-ce" class="keys key-s">CE</button>
-				<button id="key-c" class="keys key-s">C</button>
-				<button id="key-ac" class="keys key-dh">AC</button>
-				<button id="key-mc" class="keys key-s">MC</button>
-				<button id="key-mr" class="keys key-s">MR</button>
-				<button id="key-mmin" class="keys key-s">M+</button>
-				<button id="key-mplus" class="keys key-s">M-</button>
-			</div>
-				<div id="number-pad" class="number-keypad">
-				<button id="key-7" class="keys key-s">7</button>
-				<button id="key-8" class="keys key-s">8</button>
-				<button id="key-9" class="keys key-s">9</button>
-				<button id="key-4" class="keys key-s">4</button>
-				<button id="key-5" class="keys key-s">5</button>
-				<button id="key-6" class="keys key-s">6</button>
-				<button id="key-1" class="keys key-s">1</button>
-				<button id="key-2" class="keys key-s">2</button>
-				<button id="key-3" class="keys key-s">3</button>
-				<button id="key-0" class="keys key-dh">0</button>
-				<button id="key-dot" class="keys key-s">.</button>
-			</div>
-			<div id="basic-operators-pad" class="basic-operators">
-				<button id="key-div" class="keys key-s">/</button>
-				<button id="key-mul" class="keys key-s">*</button>
-				<button id="key-min" class="keys key-s">-</button>
-				<button id="key-plus" class="keys key-s">+</button>
-				<button id="key-equ" class="keys key-s">=</button>
-			</div>
-		</div>
-		
 	</body>
 </html>
