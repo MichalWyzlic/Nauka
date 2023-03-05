@@ -1,42 +1,52 @@
 'use strict'
 
-function getPINs(observed) {
-	// TODO: This is your job, detective!
-	const pinTable = [	['0','8'],
-						['1','2','4'],
-						['2','1','3','5'],
-						['3','2','6'],
-						['4','1','5','7'],
-						['5','2','4','6','8'],
-						['6','3','5','9'],
-						['7','4','8'],
-						['8','5','7','9','0'],
-						['9','6','8'] ];
-	const pinString = observed.split('');
-	const position = [pinString.length];
-	position.fill(0);
-	let cases	= 1;
-	const tempString = '';
-	const resultTable = [];
-	resultTable.push(observed);
-	for(let i = 0; i < pinString.length; i++){
-		pinString[i]=Number(pinString[i]);
-	 	position[i] = pinTable[pinString[i]].length;
-		cases *= position[i];
-	};
-	position.fill(0);
-	for(let i = 1; i < cases; i++){
-		let temp = i;
-		let tempString = '';
-		for(let j = 0; j < pinString.length; j++){
-			position[j] = temp % (pinTable[pinString[j]].length);
-			temp = Math.floor(temp/(pinTable[pinString[j]].length));
-			tempString += pinTable[pinString[j]][position[j]];
+function arrayToList(arr){
+	function iterate(i, arr){
+		if(i === (arr.length - 1)){
+			return new Node(arr[i], null);
+		} else {
+			return new Node(arr[i], iterate(i + 1, arr));
 		};
-		resultTable.push(tempString);		
 	};
-	return resultTable;
-  };
+
+	return iterate(0, arr);
+}
+
+function Node(value, next=null) {
+	this.value = value;
+	this.next = next;
+  }
+  
+
+function zipWith(fn,head0,head1) {
+	if(head0 === null || head1 === null){
+	  return null;
+	} else {
+		  return new Node(fn(head0.value, head1.value), zipWith(fn,head0.next,head1.next));
+	};
+};
+
+function add(a,b) {
+	return a+b;
+}
+let a = arrayToList([0,1,2,3,4,5]);
+let b = arrayToList([6,5,4,3,2,1]);
+console.log(zipWith(add, a, b));
 
 
-  console.log(getPINs('11'));
+let boom3 = 343;
+let test = false;
+let myWireId = 0;
+
+for(let i = 0; i < 10; i++ ){
+	let text = `test = (typeof boom${i} === 'number');`;
+	console.log(eval(text));
+	if(test){
+		eval(`myWireId = boom${i};`);
+		break;
+	}
+};
+
+
+
+console.log(myWireId)
