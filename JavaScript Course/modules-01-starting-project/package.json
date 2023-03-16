@@ -1,0 +1,22 @@
+{
+  "name": "modules-01-starting-project",
+  "version": "1.0.0",
+  "description": "My test project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"build:dev": "set NODE_OPTIONS=--openssl-legacy-provider && webpack-dev-server",
+	"build": "set NODE_OPTIONS=--openssl-legacy-provider && webpack",
+	"build:prod": "set NODE_OPTIONS=--openssl-legacy-provider &&webpack --config webpack.config.prod.js"
+  },
+  "author": "Michal Wyzlic",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.36.0",
+    "eslint-plugin-react": "^7.32.2",
+    "webpack": "4.46.0"
+  },
+  "dependencies": {
+    "webpack-cli": "^3.3.9"
+  }
+}
