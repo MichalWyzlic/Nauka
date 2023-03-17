@@ -5,18 +5,21 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"build:dev": "set NODE_OPTIONS=--openssl-legacy-provider && webpack-dev-server",
-	"build": "set NODE_OPTIONS=--openssl-legacy-provider && webpack",
-	"build:prod": "set NODE_OPTIONS=--openssl-legacy-provider &&webpack --config webpack.config.prod.js"
+    "build:dev": "set NODE_OPTIONS=--openssl-legacy-provider && webpack-dev-server",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && webpack",
+    "build:prod": "set NODE_OPTIONS=--openssl-legacy-provider &&webpack --config webpack.config.prod.js"
   },
   "author": "Michal Wyzlic",
   "license": "ISC",
   "devDependencies": {
+    "clean-webpack-plugin": "^4.0.0",
     "eslint": "^8.36.0",
     "eslint-plugin-react": "^7.32.2",
-    "webpack": "4.46.0"
+    "webpack": "4.46.0",
+    "webpack-dev-server": "^4.12.0"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "webpack-cli": "^3.3.9"
   }
 }
