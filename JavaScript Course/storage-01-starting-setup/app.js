@@ -2,14 +2,33 @@ console.log(document.cookie);
 
 const storeBtn = document.getElementById('store-btn');
 const retrBtn = document.getElementById('retrieve-btn');
+/**A variable holding access to the local database*/
+let db;
 
 const dbRequest = indexedDB.open('StorageDummy', 1);
 
-dbRequest.addEventListener('success', event => {
-	const db = event.target.result;
+dbRequest.addEventListener('success', function (event) {
+	db = event.target.result;
 });
 
-dbRequest.addEventListener('error', event => {
+dbRequest.addEventListener('upgradeneeded', function (event) {
+	db = event.target.result;
+
+	const objStore = db.createObjectStore('products', { keyPath: 'id' });
+	objStore.transaction.addEventListener('complete', function (event) {
+		const productsStore = db
+			.transaction('products', 'readwrite')
+			.objectStore('products');
+		productsStore.add({
+			id: 'p1',
+			title: 'The first product',
+			price: 12.99,
+			tags: ['Expensive', 'Luxury']
+		});
+	});
+});
+
+dbRequest.addEventListener('error', function (event) {
 	console.log('ERROR!');
 });
 
@@ -18,18 +37,38 @@ const user = {
 	name: 'Max',
 	age: 30,
 	hobbies: ['Sports', 'Cooking']
-}
+};
 
 storeBtn.addEventListener('click', () => {
-	document.cookie = `uid=${userId}; max-age=360`;
-	document.cookie = `user=${JSON.stringify(user)}`;
+	if (!db) {
+		return;
+	};
+	const productsStore = db
+		.transaction('products', 'readwrite')
+		.objectStore('products');
+	productsStore.add({
+		id: 'p2',
+		title: 'The second product',
+		price: 8.99,
+		tags: ['Cheap', 'Standard']
+	});
 });
 
 retrBtn.addEventListener('click', () => {
-	const data = document.cookie.split(';').map((item) => {
-		return item.trim();
+	if (!db) {
+		return;
+	};
+	const productsStore = db
+		.transaction('products', 'readwrite')
+		.objectStore('products');
+	const request = productsStore.get('p2');
+
+	request.addEventListener('success', function(){
+		console.log(request.result);
 	});
-	console.log(data);
-	console.log(JSON.parse(data[1].split('=')[1]));
-	
+
+	request.addEventListener('error', function (event) {
+		console.log('ERROR!');
+	});
+
 });
