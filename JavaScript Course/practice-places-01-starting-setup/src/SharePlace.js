@@ -1,5 +1,6 @@
 import { Modal } from './UI/Modal';
 import { Map } from './UI/Map';
+import { getCoordsFromAddress } from './Utility/Location';
 
 class PlaceFinder{
 	constructor(){
@@ -39,7 +40,29 @@ class PlaceFinder{
 		});
 	};
 
-	findAddressHandler(){
+	findAddressHandler(event){
+		event.preventDefault();
+		const address = event.target.querySelector('input').value;
+		if(!address || address.trim().length ===0){
+			alert('Invalid address. Enter a valid one.')
+			return;
+		};
+
+		const modal = new Modal('loading-modal-content', 'Loading location, please wait.');
+		modal.show();
+		
+		getCoordsFromAddress(address).then(result => {
+			console.log('findAddessHandler result '+result);
+			const coordinates = result;
+			console.log(coordinates);
+			modal.hide();
+			this.selectPlace(coordinates);
+
+		}, error => {
+			alert('Could not get the position form given address.');
+			modal.hide();
+		});
+
 	};
 };
 
