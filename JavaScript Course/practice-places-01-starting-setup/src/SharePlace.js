@@ -9,8 +9,25 @@ class PlaceFinder{
 		this.shareBtn = document.getElementById('share-btn');
 
 		locateUserBtn.addEventListener('click', this.locateUserHandler.bind(this));
-		//this.shareBtn.addEventListener('click');
+		this.shareBtn.addEventListener('click', this.sharePlaceHandler.bind(this));
 		addressForm.addEventListener('submit', this.findAddressHandler.bind(this));
+	};
+
+	sharePlaceHandler(){
+		const shareLinkInputElement = document.getElementById('share-link');
+		if(!navigator.clipboard){
+			shareLinkInputElement.select();
+			return;
+		};
+
+		navigator.clipboard.writeText(shareLinkInputElement.value)
+			.then(response => {
+				alert('Copied into clipboard.')
+			}).catch( err => {
+				console.log(err);
+				shareLinkInputElement.select();
+			});
+
 	};
 
 	selectPlace(coordinates, address){
