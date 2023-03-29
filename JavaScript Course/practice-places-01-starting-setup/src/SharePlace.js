@@ -1,22 +1,28 @@
 import { Modal } from './UI/Modal';
 import { Map } from './UI/Map';
-import { getCoordsFromAddress } from './Utility/Location';
+import { getCoordsFromAddress, getAddressFromCoords } from './Utility/Location';
 
 class PlaceFinder{
 	constructor(){
 		const addressForm = document.querySelector('form');
 		const locateUserBtn = document.getElementById('locate-btn');
+		this.shareBtn = document.getElementById('share-btn');
 
 		locateUserBtn.addEventListener('click', this.locateUserHandler.bind(this));
+		//this.shareBtn.addEventListener('click');
 		addressForm.addEventListener('submit', this.findAddressHandler.bind(this));
 	};
 
-	selectPlace(coordinates){
+	selectPlace(coordinates, address){
 		if(this.map){
 			this.map.render(coordinates);
 		} else {
 			this.map = new Map(coordinates);
 		};
+		this.shareBtn.disabled = false;
+		const shareLinkInputElement = document.getElementById('share-link');
+		shareLinkInputElement.value = `${location.origin}/my-place?address=${encodeURI(address)}&lat=${coordinates.lat}&&lng=${coordinates.lng}`;
+		
 	};
 
 	locateUserHandler(){
@@ -32,8 +38,17 @@ class PlaceFinder{
 				lng: successResult.coords.longitude
 			};
 			console.log(coordinates);
-			modal.hide();
-			this.selectPlace(coordinates);
+			
+			getAddressFromCoords(coordinates).then(result => {
+				const address = result;
+				console.log(address);
+				this.selectPlace(coordinates, address);
+				modal.hide();	
+			}, error => {
+				alert('Could not get the address form given position.');
+				modal.hide();
+			});
+			
 		}, error => {
 			alert('Could not locate you, please enter the address manually!');
 			modal.hide();
@@ -52,11 +67,11 @@ class PlaceFinder{
 		modal.show();
 		
 		getCoordsFromAddress(address).then(result => {
-			console.log('findAddessHandler result '+result);
+			//console.log('findAddessHandler result '+result);
 			const coordinates = result;
-			console.log(coordinates);
+			//console.log(coordinates);
 			modal.hide();
-			this.selectPlace(coordinates);
+			this.selectPlace(coordinates, address);
 
 		}, error => {
 			alert('Could not get the position form given address.');
