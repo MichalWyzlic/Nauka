@@ -1,25 +1,18 @@
-const http = require('http');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-const server = http.createServer((request, response) => {
-	let body = [];
-	console.log(request.method, request.url);
-	request.on('data', (chunk) => {
-		body.push(chunk);
-	});
-	request.on('end', () => {
-		body = Buffer.concat(body).toString();
-		console.log(body);
-		let userName = 'Unknown user';
-		if (body) {
-			userName = body.split('=')[1];
-		}
-		console.log(userName);
-		response.setHeader('Content-Type', 'text/html');
-		response.write(
-			`<h1>Hi ${userName}</h1><form method="POST" action="/"><input name="username" type="text"><button type="submit">Send</button></form>`
-		);
-		response.end();
-	});
+const app = express();
+
+app.use(bodyParser.urlencoded({extended: false}))
+
+app.use((req, res, next) => {
+	res.setHeader('Content-Type', 'text/html');
+	next();
 });
 
-server.listen(3000);
+app.use((req, res, next) => {
+	const userName = req.body.username || 'Unknown user';
+	res.send(`<h1>Hi ${userName}</h1><form method="POST" action="/"><input name="username" type="text"><button type="submit">Send</button></form>`);
+});
+
+app.listen(3000);
