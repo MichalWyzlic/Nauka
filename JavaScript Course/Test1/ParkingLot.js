@@ -20,7 +20,7 @@ class Van{
 
 class ParkingLot {
 	constructor(size) {
-		this.parking = Array(size).fill('0').join(',');
+		this.parking = Array(size).fill('%').join(',');
 		this.size = size;
 	}
 	park(vehicle) {
@@ -30,24 +30,24 @@ class ParkingLot {
 		// };
 
 		if(vehicle instanceof Bike){
-			if(/0/.test(this.parking)){
-				this.parking = this.parking.replace(/0/,`${vehicle.license}`);
+			if(/%/.test(this.parking)){
+				this.parking = this.parking.replace(/%/,`${vehicle.license}`);
 				return true;
 			} else {
 				return false;
 			}
 
 		} else if(vehicle instanceof Car){
-			if(/0,0/.test(this.parking)){
-				this.parking = this.parking.replace(/0,0/,`${vehicle.license},${vehicle.license}`);
+			if(/%,%/.test(this.parking)){
+				this.parking = this.parking.replace(/%,%/,`${vehicle.license},${vehicle.license}`);
 				return true;
 			} else {
 				return false;
 			}
 
 		}else if(vehicle instanceof Van){
-			if(/0,0,0/.test(this.parking)){
-				this.parking = this.parking.replace(/0,0,0/,`${vehicle.license},${vehicle.license},${vehicle.license}`);
+			if(/%,%,%/.test(this.parking)){
+				this.parking = this.parking.replace(/%,%,%/,`${vehicle.license},${vehicle.license},${vehicle.license}`);
 				return true;
 			} else {
 				return false;
@@ -62,7 +62,7 @@ class ParkingLot {
 		let result = false;
 		parkingArray.forEach(function test(value, index, arr){
 			if(value === license){
-				arr[index] = 0;
+				arr[index] = '%';
 				result = true;
 			};
 		});
@@ -72,7 +72,7 @@ class ParkingLot {
 
 		// const regEx = new RegExp(`${license}`,'g'); 
 		// if(regEx.test(this.parking)){
-		// 	this.parking = this.parking.replace(regEx,`0`);
+		// 	this.parking = this.parking.replace(regEx,`%`);
 		// 	return true;
 		// } else {
 		// 	return false;
@@ -126,7 +126,7 @@ const COMB_REFS = {};
 
 function legoBlocks(n, m) {
     const combs = [0n, 1n, 2n, 4n, 8n];
-    const totals = [0n]; // 0^n 1^n 2^n ... m^n
+    const totals = [0n]; // %^n 1^n 2^n ... m^n
     const results = [0n];
     for (let i=1; i<=m; i++) {
         if (i >= 5) {
