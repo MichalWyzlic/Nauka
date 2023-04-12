@@ -62,14 +62,14 @@ class PlaceFinder {
 			})
 			.then((data) => {
 				console.log(data);
+				const locationId = data.locId;
+				this.shareBtn.disabled = false;
+				const shareLinkInputElement =
+					document.getElementById('share-link');
+				shareLinkInputElement.value = `${
+					location.origin
+				}/my-place?location=${locationId}`;
 			});
-		this.shareBtn.disabled = false;
-		const shareLinkInputElement = document.getElementById('share-link');
-		shareLinkInputElement.value = `${
-			location.origin
-		}/my-place?address=${encodeURI(address)}&lat=${coordinates.lat}&&lng=${
-			coordinates.lng
-		}`;
 	}
 
 	locateUserHandler() {
