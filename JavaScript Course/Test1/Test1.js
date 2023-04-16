@@ -1,6 +1,6 @@
 const testMatrix = [2,7,12,10,9,8,6,4,5,3,11,20,55,34,72,-15];
 //const testMatrix = [1, 1, -1, 0, 0];
-// function smaller(arr){
+// function down(arr){
 // 	const result = new Array(arr.length).fill(0);
 // 	for(let i = 0; i < arr.length; i++){
 // 		for(let j = i+1; j < arr.length; j++){
@@ -15,15 +15,23 @@ const testMatrix = [2,7,12,10,9,8,6,4,5,3,11,20,55,34,72,-15];
 class Node{
 	constructor(value){
 		this.value = value;
-		// this.minChild = null;
-		// this.maxChild = null;
-		// this.childrenCount = 0;
-		this.smaller = null;
-		this.greater = null;
+		this.isKnot = false;	
+		//Knot parameters	
+			this.minChild = null;
+			this.maxChild = null;
+			this.childrenCount = 0;
+		this.isTwig = false;
+		this.down = null;
+		this.up = null;
+		this.right = null;
+		this.left = null;
+		this.knot = null;
+		this.twig = null;
 	};
 };
 
 class OrderedList{
+	maxBranchSize = 50;
 	constructor(headValue, secondValue, index, resultArr){
 		
 		if(headValue >= secondValue){
@@ -31,8 +39,7 @@ class OrderedList{
 			this.tail = new Node(secondValue);
 			this.max = headValue;
 			this.min = secondValue;
-			this.head.smaller = this.tail;
-			this.tail.greater = this.head;
+
 			resultArr[index]=0;
 			resultArr[index -1]=0;
 		} else {
@@ -40,11 +47,22 @@ class OrderedList{
 			this.tail = new Node(headValue);
 			this.min = headValue;
 			this.max = secondValue;
-			this.head.smaller = this.tail;
-			this.tail.greater = this.head;
+
 			resultArr[index]=0;
 			resultArr[index -1]=1;
 		}
+		//Head as a knot
+		this.head.down = this.right;
+		this.head.isKnot = true;
+		this.head.childrenCount = 1;
+		this.head.minChild = this.tail.value;
+		this.head.minChild = this.tail.value;
+		this.twig = this.tail;
+		//Tail as a twig
+		this.tail.left = this.head;
+		this.tail.isTwig = true;
+		this.knot = this.head;
+
 		this.length = 2;
 	}
 
@@ -53,45 +71,136 @@ class OrderedList{
 			this.min = value;
 			resultArr[index] = 0;
 			const newNode = this.tail;
-			this.tail.greater.smaller = newNode;
+			this.tail.up.down = newNode;
 
 			this.tail = new Node(value);
-			this.tail.greater = newNode
-			newNode.smaller = this.tail;
+			this.tail.up = newNode
+			newNode.down = this.tail;
 			this.length ++;
 
 		} else if(value > this.max){
 			this.max = value;
 			resultArr[index] = this.length;
 			const newNode = this.head;
-			this.head.smaller.greater = newNode;
+			this.head.down.up = newNode;
 
 			this.head = new Node(value);
-			this.head.smaller = newNode
-			newNode.greater = this.head;
+			this.head.down = newNode
+			newNode.up = this.head;
 			this.length ++;
 		} else {
 			let currentNode = this.tail;
 			let count = 1;
-			while(currentNode.greater){
-				if(value <= currentNode.greater.value){
+			while(currentNode.up){
+				if(value <= currentNode.up.value){
 					resultArr[index] = count;
 					const newNode = new Node(value);
-					newNode.smaller = currentNode;
-					newNode.greater = currentNode.greater;
-					currentNode.greater.smaller = newNode;
-					currentNode.greater = newNode;
+					newNode.down = currentNode;
+					newNode.up = currentNode.up;
+					currentNode.up.down = newNode;
+					currentNode.up = newNode;
 					this.length ++
 					break;
 				}
-				currentNode = currentNode.greater;
+				currentNode = currentNode.up;
 				count ++;
 			}
 		}
 
 	}
 
+	addToBranch(value, knot, counter, index, resultArr){
+		if(value <= knot.minChild){
+			knot.minChild = value;
+		
+			const newNode = knot.twig;
+			knot.twig.up.down = newNode;
 
+			this.tail = new Node(value);
+			this.tail.up = newNode
+			newNode.down = this.tail;
+
+			resultArr[index] = this.length - counter - this.knot.childrenCount;
+			this.length ++;
+			this.knot.childrenCount ++;
+
+		} else if(value > this.max){
+			this.max = value;
+			resultArr[index] = this.length;
+			const newNode = this.head;
+			this.head.down.up = newNode;
+
+			this.head = new Node(value);
+			this.head.down = newNode
+			newNode.up = this.head;
+			this.length ++;
+		} else {
+			let currentNode = this.tail;
+			let count = 1;
+			while(currentNode.up){
+				if(value <= currentNode.up.value){
+					resultArr[index] = count;
+					const newNode = new Node(value);
+					newNode.down = currentNode;
+					newNode.up = currentNode.up;
+					currentNode.up.down = newNode;
+					currentNode.up = newNode;
+					this.length ++
+					break;
+				}
+				currentNode = currentNode.up;
+				count ++;
+			}
+		}
+
+	}
+
+	addToTrunc(value, index, resultArr){
+		if(value <= this.min){
+			this.min = value;
+			resultArr[index] = 0;
+			const newNode = this.tail;
+			this.tail.up.down = newNode;
+
+			this.tail = new Node(value);
+			this.tail.up = newNode
+			newNode.down = this.tail;
+			this.length ++;
+
+		} else if(value > this.max){
+			this.max = value;
+			resultArr[index] = this.length;
+			const newNode = this.head;
+			this.head.down.up = newNode;
+
+			this.head = new Node(value);
+			this.head.down = newNode
+			newNode.up = this.head;
+			this.length ++;
+		} else {
+			let currentNode = this.tail;
+			let count = 1;
+			while(currentNode.up){
+				if(value <= currentNode.up.value){
+					resultArr[index] = count;
+					const newNode = new Node(value);
+					newNode.down = currentNode;
+					newNode.up = currentNode.up;
+					currentNode.up.down = newNode;
+					currentNode.up = newNode;
+					this.length ++
+					break;
+				}
+				currentNode = currentNode.up;
+				count ++;
+			}
+		}
+
+	}
+
+	putInBranch(){
+
+	}
 }
 
 function smaller2(arr){
@@ -143,7 +252,7 @@ function smaller1(arr){
 }
 
 
-function smaller(arr){
+function down(arr){
 	let result = [];
 	let tempArr1 = [];
 	let tempArr2 = [];
@@ -367,4 +476,4 @@ for(let i=0; i < 100000; i++){
 	smaller1(testMatrix);
 }
 console.timeEnd(timerName);
-// console.log(smaller(testMatrix));
+// console.log(down(testMatrix));
