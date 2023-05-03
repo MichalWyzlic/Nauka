@@ -1,29 +1,43 @@
-var num1Input = document.getElementById('num1');
-var num2Input = document.getElementById('num2');
-var buttonEl = document.querySelector('button');
+"use strict";
+class User {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+const num1Input = document.getElementById('num1');
+const num2Input = document.getElementById('num2');
+const buttonEl = document.querySelector('button');
 function add(a, b) {
     return a + b;
 }
+var OutputMode;
+(function (OutputMode) {
+    OutputMode[OutputMode["CONSOLE"] = 0] = "CONSOLE";
+    OutputMode[OutputMode["ALERT"] = 1] = "ALERT";
+})(OutputMode || (OutputMode = {}));
 function printResults(result, printMode) {
-    if (printMode === 'console') {
+    if (printMode === OutputMode.CONSOLE) {
         console.log(result);
     }
-    if (printMode === 'alert') {
+    if (printMode === OutputMode.ALERT) {
         alert(result);
     }
 }
-var results = [];
-buttonEl.addEventListener('click', function () {
-    var num1 = Number(num1Input.value);
-    var num2 = Number(num2Input.value);
-    var result = add(num1, num2);
-    var resultContainer = {
-        res: result,
-        print: function () {
-            console.log(this.res);
-        }
-    };
-    results.push(resultContainer);
-    results[results.length - 1].print();
-    printResults(result, 'alert');
-});
+const results = [];
+if (buttonEl) {
+    buttonEl.addEventListener('click', () => {
+        const num1 = Number(num1Input.value);
+        const num2 = Number(num2Input.value);
+        const result = add(num1, num2);
+        const resultContainer = {
+            res: result,
+            print() {
+                console.log(this.res);
+            }
+        };
+        results.push(resultContainer);
+        results[results.length - 1].print();
+        printResults(result, OutputMode.ALERT);
+    });
+}
