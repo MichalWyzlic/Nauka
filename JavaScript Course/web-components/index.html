@@ -1,17 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 	<script src="tooltip.js"></script>
-</head>
-<body>
-	<p><uc-tooltip tooltip-text="Web Components are a set of standards.">Web components</uc-tooltip> are awesome!</p>
-	
-	<p><uc-tooltip tooltip-text="Web Components provide effective customisation.">Custom elements</uc-tooltip> are awesome!</p>
+	<script src="confirm-link.js"></script>
+	<style>
+		div {
+			border: 2px solid orange;
+			border-radius: 5px;
+		}
 
-	<p><uc-tooltip>No tooltip</uc-tooltip> to be found here.</p>
+		.highlight{
+			/* background-color: lightgray; */
+		}
+
+		uc-tooltip{
+			border: 1px solid blue;
+			padding: 0.15rem;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- <template id="tooltip-template">
+		<slot></slot><span> (?)</span>
+	</template> -->
+	<p>
+		<uc-tooltip tooltip-text="Web Components are a set of standards.">
+			<span class="highlight">Web components</span>
+		</uc-tooltip>
+		 are awesome!
+	</p>
+
+	<p>
+		<uc-tooltip tooltip-text="Web Components provide effective customisation.">
+			<span class="highlight">Custom elements</span>
+		</uc-tooltip>
+		 are awesome!
+	</p>
+
+	<p>
+		<uc-tooltip>
+			<span class="highlight">No tooltip</span>
+		</uc-tooltip>
+		 to be found here.
+	</p>
+
+	<a is="uc-confirm-link" href="https://www.google.com">Google</a>
 </body>
+
 </html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Web Components</title>
+	<script src="dynamicParagraph.js"></script>
+</head>
+
+<body>
+	<div>
+		<uc-dynamic-paragraph is-visible="false">This is my paragraph test text.</uc-dynamic-paragraph>
+		<uc-dynamic-paragraph is-visible="true">To jest mój drugi paragraf.</uc-dynamic-paragraph>
+	</div>
+	<!-- <button>Show</button>
+	<p id="info-box">More infos!</p>
+
+	<script>
+		const button = document.querySelector('button');
+		const infoEl = document.querySelector('p');
+
+		let isHidden = true;
+
+		button.addEventListener('click', () => {
+			if (isHidden) {
+				infoEl.style.display = 'block';
+				button.textContent = 'Hide';
+				isHidden = false;
+			} else {
+				infoEl.style.display = 'none';
+				button.textContent = 'Show';
+				isHidden = true;
+			}
+		});
+	</script> -->
+</body>
+
+</html>
