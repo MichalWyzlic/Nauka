@@ -9,18 +9,16 @@
 	<script src="tooltip.js"></script>
 	<script src="confirm-link.js"></script>
 	<style>
-		div {
-			border: 2px solid orange;
-			border-radius: 5px;
+		* {
+			box-sizing: border-box;
+		}
+		:root{
+			--color-primary: #a4fcc3;
+			font-family: sans-serif;
 		}
 
 		.highlight{
 			/* background-color: lightgray; */
-		}
-
-		uc-tooltip{
-			border: 1px solid blue;
-			padding: 0.15rem;
 		}
 	</style>
 </head>
@@ -30,7 +28,7 @@
 		<slot></slot><span> (?)</span>
 	</template> -->
 	<p>
-		<uc-tooltip tooltip-text="Web Components are a set of standards.">
+		<uc-tooltip class="important" tooltip-text="Web Components are a set of standards.">
 			<span class="highlight">Web components</span>
 		</uc-tooltip>
 		 are awesome!
@@ -43,13 +41,10 @@
 		 are awesome!
 	</p>
 
-	<p>
-		<uc-tooltip>
+	<uc-tooltip>
 			<span class="highlight">No tooltip</span>
-		</uc-tooltip>
-		 to be found here.
-	</p>
-
+	</uc-tooltip>
+	
 	<a is="uc-confirm-link" href="https://www.google.com">Google</a>
 </body>
 
