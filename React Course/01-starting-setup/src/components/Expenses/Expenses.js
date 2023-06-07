@@ -1,3 +1,4 @@
+import React from 'react';
 import './Expenses.css';
 import ExpenseItem from './ExpenseItem';
 import Card from '../UI/Card';
@@ -12,10 +13,12 @@ function Expenses(props) {
 				date={props.expenses[`${i}`].date}
 			></ExpenseItem>
 		);
+		// console.log(innerHTML);
+		// console.dir(innerHTML);
 	}
-	// props.expenses.reduce((acc, currVal) => acc + ();
-	// console.div(innerHTML);
-	return <Card className='expenses'>{innerHTML}</Card>;
+
+	return React.createElement(Card, {className: 'expenses'}, ...innerHTML);
+	//<Card className='expenses'>{innerHTML}</Card>;
 }
 
 export default Expenses;
