@@ -3,9 +3,9 @@ import ExpenseDate from './ExpenseDate';
 import Card from '../UI/Card';
 
 function ExpenseItem(props) {
-	// const day = props.date.toLocaleString('en-GB', {day: 'numeric'});
-	// const month = props.date.toLocaleString('en-GB', {month: 'long'});
-	// const year = props.date.toLocaleString('en-GB', {year: 'numeric'});
+	function clickHandler() {
+		console.log('Clicked!')
+	};
 	return (
 		<Card className='expense-item'>
 			<ExpenseDate date={props.date}></ExpenseDate>
@@ -13,6 +13,7 @@ function ExpenseItem(props) {
 				<h2>{props.title}</h2>
 				<div className='expense-item__price'>{`$${props.amount}`}</div>
 			</div>
+			<button onClick={clickHandler.bind(this)}>Change Title</button>
 		</Card>
 	);
 }
