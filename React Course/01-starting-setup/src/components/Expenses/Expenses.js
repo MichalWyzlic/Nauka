@@ -1,5 +1,6 @@
 import './Expenses.css';
 import ExpenseItem from './ExpenseItem';
+import Card from '../UI/Card';
 
 function Expenses(props) {
 	let innerHTML = [];
@@ -14,7 +15,7 @@ function Expenses(props) {
 	}
 	// props.expenses.reduce((acc, currVal) => acc + ();
 	// console.div(innerHTML);
-	return <div className='expenses'>{innerHTML}</div>;
+	return <Card className='expenses'>{innerHTML}</Card>;
 }
 
 export default Expenses;
