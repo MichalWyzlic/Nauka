@@ -1,64 +1,50 @@
-import logo from './assets/investment-calculator-logo.png';
-import NewInvestment from './components/NewInvestment/NewInvestment';
-import Results from './components/Results/Results';
-import TitleSection from './components/TitleSection/TitleSection';
 import React, { useState } from 'react';
+import AddUser from './components/AddUser/AddUser';
+import ErrorModal from './components/ErrorModal/ErrorModal';
+import UserList from './components/UserList/UserList';
 
 function App() {
-	const [savings, setSavings] = useState(null);
+	const [isValidNewUser, setIsValidNewUser] = useState(true);
+	const [errorMessage, setErrorMessage] = useState('Data is not valid.');
+	const [userList, setUserList] = useState({});
+	function hideModalHandler() {
+		setIsValidNewUser(true);
+	}
 
-	const calculateHandler = (userInput) => {
-		// Should be triggered when form is submitted
-		// You might not directly want to bind it to the submit event on the form though...
-		if (userInput) {
-			const yearlyData = []; // per-year results
-
-			let currentSavings = +userInput['current-savings']; // feel free to change the shape of this input object!
-			const yearlyContribution = +userInput['yearly-contribution']; // as mentioned: feel free to change the shape...
-			const expectedReturn = +userInput['expected-return'] / 100;
-			const duration = +userInput['duration'];
-			let totalInvestedCapital = 0;
-			let totalInterestGained = 0;
-
-			// The below code calculates yearly results (total savings, interest etc)
-			for (let i = 0; i < duration; i++) {
-				const yearlyInterest = currentSavings * expectedReturn;
-				currentSavings += yearlyInterest + yearlyContribution;
-				totalInvestedCapital += yearlyContribution;
-				totalInterestGained += yearlyInterest;
-
-				yearlyData.push({
-					// feel free to change the shape of the data pushed to the array!
-					year: i + 1,
-					yearlyInterest: yearlyInterest,
-					savingsEndOfYear: currentSavings,
-					yearlyContribution: yearlyContribution,
-					totalInvestedCapital: totalInvestedCapital,
-					totalInterestGained: totalInterestGained
-				});
-			}
-
-			setSavings(yearlyData);
+	function addNewUserHandler(newUser) {
+		if(newUser.name.trim().length <= 0){
+			setIsValidNewUser(false);
+			setErrorMessage('The name is not valid');
+			return;
+		};
+		if(newUser.age <= 0){
+			setIsValidNewUser(false);
+			setErrorMessage(`The age of: ${newUser.age} is not correct.`);
+			return;
+		};
+		//console.log(newUser);
+		let users = [];
+		if(userList.length > 0){
+			users = [...userList];
 		}
-		// console.log(savings);
 
-		// do something with yearlyData ...
-	};
+		users.push(newUser);
 
+		setUserList(users);
+		console.log(userList);
+
+	}
+
+	//hidden={isValidNewUser}/>
 	return (
 		<div>
-			<TitleSection logoImg={`${logo}`} />
-
-			<NewInvestment calculationFunction={calculateHandler.bind(this)} />
-
-			{/* Todo: Show below table conditionally (only once result data is available) */}
-			{/* Show fallback text if no data is available */}
-
-			{savings ? (
-				<Results userData={savings} />
-			) : (
-				<p style={{textAlign: 'center'}}>No investment data calculated yet.</p>
-			)}
+			<ErrorModal
+				hidden={isValidNewUser}
+				hideModal={hideModalHandler.bind(this)}
+				errorMsg={errorMessage}
+			/>
+			<AddUser addUserFunction={addNewUserHandler.bind(this)} />
+			<UserList users={userList}/>
 		</div>
 	);
 }

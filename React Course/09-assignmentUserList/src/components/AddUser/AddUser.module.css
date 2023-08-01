@@ -3,6 +3,7 @@
   padding: 1rem;
   width: 90%;
   max-width: 40rem;
+  background-color: #a892ee;
 }
 
 .input label {
@@ -24,4 +25,4 @@
   outline: none;
   border-color: #4f005f;
 }
-
+ 
