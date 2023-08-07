@@ -31,7 +31,7 @@ function App() {
 		users.push(newUser);
 
 		setUserList(users);
-		console.log(userList);
+		//console.log(userList);
 
 	}
 
