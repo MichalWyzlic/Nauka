@@ -8,7 +8,7 @@ function Header(props){
 		<React.Fragment>
 			<header className={styles.header}>
 				<h1>Rect food ordering site</h1>
-				<HeaderCartButton/>
+				<HeaderCartButton showCart={props.showCart}/>
 			</header>
 			<div className={styles['main-image']}>
 				<img src={mealsImage} alt='A table with many plates.'/>
