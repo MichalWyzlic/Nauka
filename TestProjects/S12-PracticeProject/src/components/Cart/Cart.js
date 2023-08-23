@@ -6,13 +6,17 @@ import CartContext from '../../store/cart-context';
 
 function Cart(props) {
 	const cartContext = useContext(CartContext);
+
 	const cartItems = (
 		<ul className={styles['cart-items']}>
-			{cartContext.cartItems.map((item) => {
+			{(cartContext.items !== undefined) ? 
+			cartContext.items.map((item) => {
 				return <li key={item.id}>{item.name}</li>;
-			})}
+			}) : ''}
 		</ul>
 	);
+	console.log(cartItems);
+	console.log(cartContext.items);
 
 	return (
 		<React.Fragment>
