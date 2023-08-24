@@ -7,19 +7,40 @@ const defaultCartState = {
 };
 
 function cartReducer(state, action){
+	if (action.type === 'ADD') {
+		const updatedTotalAmount =
+			state.totalAmount + action.item.price * action.item.amount;
+		let i = 0;
+		for (i = 0; i < state.items.length; i++) {
+			if (state.items[i].id === action.item.id) {
+				state.items[i].amount += action.item.amount;
+				const updatedItems = state.items.concat([]);
+				return { items: updatedItems, totalAmount: updatedTotalAmount };
+			}
+		}
+		const updatedItems = state.items.concat(action.item);
 
-	if(action.type === 'ADD'){
-		// for( let i = 0, i < state.items.length, i++){
-			// if(state[i].id === action.item.id){
-			// 	state[i].amount
-			// } else {
-				const updatedItems = state.items.concat(action.item);
-				const updatedTotalAmount = state.totalAmount + action.item.price * action.item.amount;
-			// }
-
-		// }
-		return {items: updatedItems, totalAmount: updatedTotalAmount};
-
+		return { items: updatedItems, totalAmount: updatedTotalAmount };
+	} else if (action.type === 'REMOVE') {
+		let i = 0;
+		for (i = 0; i < state.items.length; i++) {
+			if (state.items[i].id === action.id) {
+				let updatedItems = [];
+				const updatedTotalAmount =
+					state.totalAmount - state.items[i].price;
+				if (state.items[i].amount > 1) {
+					state.items[i].amount --;
+					updatedItems = [...state.items];
+					
+				} else {
+					updatedItems = state.items.toSpliced(i, 1);
+				}
+				return {
+					items: updatedItems,
+					totalAmount: updatedTotalAmount
+				};
+			}
+		}
 	}
 	return defaultCartState;
 };
