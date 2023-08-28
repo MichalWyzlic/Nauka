@@ -4,7 +4,7 @@ const MongoClient = require('mongodb').MongoClient;
 
 const router = express.Router();
 
-const url = 'mongodb+srv://wyzlicmichal:Profesor1@cluster0.qyurkhn.mongodb.net/locations?retryWrites=true&w=majority';
+const url = 'mongodb+srv://******@cluster0.qyurkhn.mongodb.net/locations?retryWrites=true&w=majority';
 const client = new MongoClient(url);//, {useUnifiedTopology: true});
 
 const locationStorage = {
