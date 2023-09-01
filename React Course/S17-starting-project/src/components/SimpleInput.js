@@ -1,84 +1,87 @@
 import { useState } from 'react';
 import styles from './SimpleInput.module.css';
 
+import useInput from '../hooks/use-input';
+
 const SimpleInput = (props) => {
-	const [enteredName, setEnteredName] = useState('');
-	const [enteredNameTouched, setEnteredNameTouched] = useState(false);
-	const [enteredEmail, setEnteredEmail] = useState('');
-	const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
+	const {
+		value: enteredName,
+		isValid: enteredNameIsValid,
+		hasError: nameInputHasError,
+		reset: nameReset,
+		valueChangeHandler: nameChangedHandler,
+		inputBlurHandler: nameBlurHandler
+	} = useInput((value) => {
+		if (value) {
+			return value.trim() !== '';
+		} else {
+			return false;
+		}
+	});
 
-	const enteredNameIsValid = enteredName.trim() !== '';
-	const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+	const {
+		value: enteredEmail,
+		isValid: enteredEmailIsValid,
+		hasError: emailInputHasError,
+		reset: emailReset,
+		valueChangeHandler: emailChangedHandler,
+		inputBlurHandler: emailBlurHandler
+	} = useInput((value) => {
+		if (value) {
+			return value
+				.toLowerCase()
+				.match(
+					/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+				);
+		} else {
+			return false;
+		}
+	});
 
-	const enteredEmailIsValid = enteredEmail
-		.toLowerCase()
-		.match(
-			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-		);
-	const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
-
-	function nameInputChangeHandler(event) {
-		setEnteredNameTouched(true);
-		setEnteredName(event.target.value);
-	}
-
-	function emailInputChangeHandler(event) {
-		setEnteredEmailTouched(true);
-		setEnteredEmail(event.target.value);
-	}
+	let formIsValid = enteredNameIsValid && enteredEmailIsValid;
 
 	function formSubmissionHandler(event) {
 		event.preventDefault();
 		//setEnteredNameTouched(true);
 
-		if (!(enteredNameIsValid && enteredEmailIsValid)) {
+		if (!(formIsValid)) {
 			return;
 		}
 		console.log(enteredName);
 		console.log(enteredEmail);
-		setEnteredName('');
-		setEnteredNameTouched(false);
-		setEnteredEmail('');
-		setEnteredEmailTouched(false);
+		nameReset();
+		emailReset();
 	}
 
-	function nameInputBlurHandler(event) {
-		setEnteredNameTouched(true);
-	}
-
-	function emailInputBlurHandler(event) {
-		setEnteredEmailTouched(true);
-	}
-
-	let formIsValid = enteredNameIsValid && enteredEmailIsValid;
+	
 
 	return (
 		<form onSubmit={formSubmissionHandler}>
 			<div className='form-control'>
 				<label htmlFor='name'>Your Name</label>
 				<input
-					type='email'
+					type='text'
 					id='name'
-					onChange={nameInputChangeHandler}
-					onBlur={nameInputBlurHandler}
+					onChange={nameChangedHandler}
+					onBlur={nameBlurHandler}
 					value={enteredName}
-					className={nameInputIsInvalid ? styles['input-error'] : ''}
+					className={nameInputHasError ? styles['input-error'] : ''}
 				/>
-				{nameInputIsInvalid && (
+				{nameInputHasError && (
 					<p className='error-text'>Name must not be empty!</p>
 				)}
 			</div>
 			<div className='form-control'>
 				<label htmlFor='email'>Your e-mail</label>
 				<input
-					type='text'
+					type='email'
 					id='email'
-					onChange={emailInputChangeHandler}
-					onBlur={emailInputBlurHandler}
+					onChange={emailChangedHandler}
+					onBlur={emailBlurHandler}
 					value={enteredEmail}
-					className={emailInputIsInvalid ? styles['input-error'] : ''}
+					className={emailInputHasError ? styles['input-error'] : ''}
 				/>
-				{emailInputIsInvalid && (
+				{emailInputHasError && (
 					<p className='error-text'>
 						Entered e-mails is not correct!
 					</p>
