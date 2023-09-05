@@ -1,44 +1,57 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import styles from './Cart.module.css';
 
 import Modal from '../UI/Modal';
 import CartItem from './CartItem';
 import CartContext from '../../store/cart-context';
+import CustomerData from './CustomerData';
 
 function Cart(props) {
 	const cartContext = useContext(CartContext);
+	const [oderActive, setOrderActive] = useState(false);
 
 	const totalAmount = `$${cartContext.totalAmount.toFixed(2)}`;
 	const hasItems = cartContext.items.length > 0;
 
-	function cartAddItemHandler(item){
-		cartContext.addItem(item);		
+	function cartAddItemHandler(item) {
+		cartContext.addItem(item);
 	}
 
-	function cartRemoveItemHandler(id){
+	function cartRemoveItemHandler(id) {
 		cartContext.removeItem(id);
 	}
 
 	const cartItems = (
-		<ul className={styles['cart-items']}>
-			{cartContext.items !== undefined
-				? cartContext.items.map((item) => {
-						return (
-							<CartItem
-								key={item.id}
-								name={item.name}
-								amount={item.amount}
-								price={item.price}
-								onAdd={cartAddItemHandler.bind(null, {...item, amount: 1})}
-								onRemove={cartRemoveItemHandler.bind(null, item.id)}
-							/>
-						);
-				  })
-				: ''}
-		</ul>
+		<div className={styles['cart-items']}>
+			<ul>
+				{cartContext.items !== undefined
+					? cartContext.items.map((item) => {
+							return (
+								<CartItem
+									key={item.id}
+									name={item.name}
+									amount={item.amount}
+									price={item.price}
+									onAdd={cartAddItemHandler.bind(null, {
+										...item,
+										amount: 1
+									})}
+									onRemove={cartRemoveItemHandler.bind(
+										null,
+										item.id
+									)}
+								/>
+							);
+					  })
+					: ''}
+			</ul>
+			
+		</div>
 	);
-	console.log(cartItems);
-	console.log(cartContext.items);
+
+	function orderBtnClickHandler(event) {
+		setOrderActive(!oderActive);
+	}
 
 	return (
 		<React.Fragment>
@@ -48,7 +61,8 @@ function Cart(props) {
 					<span>Total</span>
 					<span>{totalAmount}</span>
 				</div>
-				<div className={styles.actions}>
+				{oderActive && <CustomerData onClose={props.onClose}/>}
+				{!oderActive && <div className={styles.actions}>
 					<button
 						className={styles['button--alt']}
 						onClick={props.onClose}
@@ -56,9 +70,14 @@ function Cart(props) {
 						Close
 					</button>
 					{hasItems && (
-						<button className={styles.button}>Order</button>
+						<button
+							className={styles.button}
+							onClick={orderBtnClickHandler}
+						>
+							Order
+						</button>
 					)}
-				</div>
+				</div>}
 			</Modal>
 		</React.Fragment>
 	);
