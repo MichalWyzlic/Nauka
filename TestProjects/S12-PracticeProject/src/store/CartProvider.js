@@ -41,6 +41,11 @@ function cartReducer(state, action){
 				};
 			}
 		}
+	}else if (action.type === 'RESET') {
+		return {
+			items: [],
+			totalAmount: 0
+		};	
 	}
 	return defaultCartState;
 };
@@ -55,11 +60,16 @@ function CartProvider(props) {
 		dispatchCartAction({type: 'REMOVE', id: id });
 	}
 
+	function resetCart(){
+		dispatchCartAction({type: 'RESET'});
+	}
+
 	const cartContext = {
 		items: cartState.items,
 		totalAmount: cartState.totalAmount,
 		addItem: addItemToCartHandler,
-		removeItem: removeItemFromCartHandler
+		removeItem: removeItemFromCartHandler,
+		resetCart: resetCart
 	}
 	return <CartContext.Provider value={cartContext}>
 		{props.children}
