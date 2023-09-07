@@ -7,8 +7,6 @@ import CartContext from '../../store/cart-context';
 
 const CustomerData = (props) => {
 	const cartContext = useContext(CartContext);
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const
 	
 
 	const {
@@ -115,7 +113,6 @@ const CustomerData = (props) => {
 			console.error(error.message);
 			props.onSend(true);
 		}
-		setIsSubmitting(false);
 	};
 
 	async function formSubmitHandler(event) {
@@ -124,8 +121,6 @@ const CustomerData = (props) => {
 		if (!formIsValid) {
 			return;
 		}
-
-		setIsSubmitting(true);
 		const orderToSend = {
 			id: enteredName + enteredSurname + Date.now(),
 			name: enteredName,
