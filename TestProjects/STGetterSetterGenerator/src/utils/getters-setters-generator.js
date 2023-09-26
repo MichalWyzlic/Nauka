@@ -2,7 +2,7 @@ function analyzeInputCode(inputCode) {
 	const multiLine = inputCode.split(';');
 	const result = [];
 	for (let i = 0; i < multiLine.length; i++) {
-		const commentReg = new RegExp();
+		multiLine[i] = multiLine[i].trim();
 		//extract comment at the beginning
 		let comment = multiLine[i].match(
 			/^((\(\*\*\s*|\(\*\s*))([^\*\)]*)(\*\))/gm
@@ -57,19 +57,21 @@ function analyzeInputCode(inputCode) {
 }
 
 function createGetSet(item) {
-	const getterAndSetter = `(* ${item.comment} *)
-	(**  Gets current value of ${item.comment} *)
-	METHOD Get${item.variable} : ${item.type}
-		Get${item.variable} := THIS.${item.variable};	
-	END_METHOD
+	const getterAndSetter = `
+		(* ${item.comment} *)
+		(**  Gets current value of ${item.comment} *)
+		METHOD Get${item.variable} : ${item.type}
+			Get${item.variable} := THIS.${item.variable};	
+		END_METHOD
 		
-	(**  Sets current value of ${item.comment} *)
-	METHOD Set${item.variable} 
-		VAR_INPUT
-			In${item.variable} : ${item.type};
-		END_VAR
-		THIS.${item.variable} := In${item.variable};
-	END_METHOD`;
+		(**  Sets current value of ${item.comment} *)
+		METHOD Set${item.variable} 
+			VAR_INPUT
+				In${item.variable} : ${item.type};
+			END_VAR
+			THIS.${item.variable} := In${item.variable};
+		END_METHOD
+	`;
 
 	return getterAndSetter;
 }
@@ -79,9 +81,15 @@ function gettersSettersGenerator(inputCode){
 
 	if(variablesList){
 		let gettersAndSetters = '';
-
 		
-		return 
+		variablesList.forEach((variable) => {
+			//console.log(variable);
+			const text = createGetSet(variable);
+			//console.log(text);
+			gettersAndSetters += text;
+		});
+
+		return gettersAndSetters;
 	}
 }
 

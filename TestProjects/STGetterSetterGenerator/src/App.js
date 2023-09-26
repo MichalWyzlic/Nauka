@@ -1,56 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from './components/Header';
+import VariableInput from './components/VariablesInput';
+import CodeOutput from './components/CodeOutput';
 
-import gettersSettersGenerator from './utils/getters-setters-generator';
 
-const textToAnalyze = `(**  Internal frequency inverter   *)
-Inverter	: LnxC_Actuator;
-(**  Control signal  *)
-CtrlSignal	  : REAL; 
-(**  Output control signal  *)
-OutputSignal	: REAL;
-
-//		(** Motor/fan type *)
-//		MotorType	 : USINT;
-(**  Maximum electrical power  *)
-MaxPower	: REAL;
-//		(**Variable speed fan*)		
-//		VarSpeed	: BOOL := FALSE;  
-
-(**  Minimum Control Signal [%]  *)
-MinCtrlSig	: REAL := 0;
-(**  Maximum Control Signal [%]  *)
-MaxCtrlSig	: REAL := 100;
-
-(**  Minimum speed [%]  *)
-MinSpeed	: REAL := 0;
-(**  Maximum speed [%]  *)
-MaxSpeed	: REAL := 100;
-
-(**  Ramp up %/s  *)
-RampUp		  : REAL := 1;
-(**  Ramp Down %/s  *)
-RampDown		: REAL := 1;		
-
-(*  Variables not exposed via getters and setters  *)
-Init		: BOOL := TRUE;
-TempCtrl	: REAL := 0;		`;
 
 function App() {
-	const [varArray, setVarArray] = useState(gettersSettersGenerator(textToAnalyze));
-	console.log(varArray);
-
-	const [gettersAndSetters, setGettersAndSetters] = useState('');
-
-	// const resultText = textArray.map((val) => {
-
-	// 	return (<p>{val}</p>);
-	// });
-
+	const appTitle = 'Structured Text getters and setters generator'
+	const version = '1.0.0';
 	return (
 		<React.Fragment>
-			<Header />
-			{/* {resultText} */}
+			<Header title={appTitle} version={version}/>
+			<VariableInput title="Put your variables here."/>
+			<CodeOutput title="Resulting code:"/>
 		</React.Fragment>
 	);
 }

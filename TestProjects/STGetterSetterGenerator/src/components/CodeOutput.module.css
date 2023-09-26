@@ -1,0 +1,30 @@
+.multiline {
+	margin-top: 2rem;
+	white-space: pre-wrap;
+	animation: code-appears 0.5s ease-out forwards;
+	color: #494949;
+	background-color:  rgb(180, 180, 180);
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.multiline-p{
+	font-family: "Courier New", "Lucida Console",monospace;
+	font-size:large;
+	font-weight:bold ;	
+	color: #494949;
+	background-color:  lightgray;
+	transition: transform 2s;
+}
+
+@keyframes code-appears {
+	from {
+		opacity: 0;
+		transform: translateY(3rem);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}

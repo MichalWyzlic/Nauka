@@ -1,15 +1,40 @@
-import React, {useContext} from "react";
+import React, { useContext, useRef } from 'react';
+import CodeContext from '../store/code-context';
 
-import styles from './VariablesInput.module.css'
+import Card from './Card';
 
-function VariableInput(props){
+
+
+import styles from './VariablesInput.module.css';
+
+function VariableInput(props) {
+	const codeCtx = useContext(CodeContext);
+	const inputRef = useRef();
+
+	function submitHandler(event) {
+		event.preventDefault();
+		const codeIn = inputRef.current.value;
+		codeCtx.convert(codeIn);
+		//console.log(codeCtx.gettersAndSetters)
+	}
 
 	return (
-		<React.Fragment>
-			<h3>{props.title}</h3>
-
-		</React.Fragment>
+		<Card className={styles['variable-input']}>
+			<form onSubmit={submitHandler}>
+				<label htmlFor='input-code'>{props.title}</label>
+				<textarea
+					id='input-code'
+					ref={inputRef}
+					rows='20'
+					cols='60'
+					type="text"
+					placeholder='(**Process value *)
+					PVi				: REAL;	'
+				></textarea>
+				<button type='submit'>Convert</button>
+			</form>
+		</Card>
 	);
-};
+}
 
 export default VariableInput;
