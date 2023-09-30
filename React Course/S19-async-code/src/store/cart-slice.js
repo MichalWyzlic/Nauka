@@ -6,7 +6,8 @@ const cartSlice = createSlice({
 	initialState: {
 		items: [],
 		totalQuantity: 0,
-		totalAmount: 0
+		totalAmount: 0,
+		send: false
 	},
 	reducers: {
 		addItemToCart(state, action) {
@@ -30,6 +31,7 @@ const cartSlice = createSlice({
 				state.totalQuantity += 1;
 				state.totalAmount += newItem.price;
 			}
+			state.send = true;
 		},
 		removeItemFromCart(state, action) {
 			const id = action.payload;
@@ -41,12 +43,18 @@ const cartSlice = createSlice({
 					state.totalQuantity--;
 					state.totalAmount -= existingItem.price;
 				} else {
-					state.totalQuantity += existingItem.quantity;
-					state.totalAmount +=
-						existingItem.quantity * existingItem.price;
+					state.totalQuantity--;
+					state.totalAmount -= existingItem.price;
 					state.items = state.items.filter((item) => item.id !== id);
 				}
+				state.send = true;
 			}
+		},
+		replaceCart(state, action) {
+			state.items = action.payload.items;
+			state.totalAmount = action.payload.totalAmount;
+			state.totalQuantity = action.payload.totalQuantity;
+			state.send = false;
 		}
 	}
 });
@@ -85,6 +93,57 @@ export function sendCartData(cart) {
 					status: 'success',
 					title: 'Success...',
 					message: 'Sending cart to server succeeded.'
+				})
+			);
+		} catch (error) {
+			dispatch(
+				uiActions.showNotification({
+					status: 'error',
+					title: 'Error...',
+					message: error.message
+				})
+			);
+		}
+	};
+}
+
+export function fetchCartData() {
+	return async function (dispatch) {
+		dispatch(
+			uiActions.showNotification({
+				status: 'pending',
+				title: 'Getting...',
+				message: 'Getting cart from server.'
+			})
+		);
+
+		async function sendRequest() {
+			const response = await fetch(
+				'https://react-http-ae809-default-rtdb.europe-west1.firebasedatabase.app/cart.json',
+				{
+					method: 'GET'
+				}
+			);
+			if (!response.ok) {
+				throw new Error('Sending cart data failed.');
+			}
+
+			const responseData = await response.json();
+			if (responseData) {
+				if (responseData.items) {
+					dispatch(cartActions.replaceCart(responseData));
+				}
+			}
+		}
+
+		try {
+			await sendRequest();
+
+			dispatch(
+				uiActions.showNotification({
+					status: 'success',
+					title: 'Success...',
+					message: 'Getting cart from server succeeded.'
 				})
 			);
 		} catch (error) {
