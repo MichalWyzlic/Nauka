@@ -4,8 +4,10 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootLayout from './pages/Root';
 import ErrorPage from './pages/Error';
 import HomePage from './pages/Home';
-import EventsPage from './pages/Events';
-import EventDetailPage from './pages/EventDetails';
+import EventsPage, { loader as eventsLoader } from './pages/Events';
+import EventDetailPage, {
+	loader as eventDetailsLoader
+} from './pages/EventDetails';
 import EditEventPage from './pages/EditEvent';
 import NewEventPage from './pages/NewEvent';
 import EventsRootLayout from './pages/EventsRoot';
@@ -16,30 +18,23 @@ const router = createBrowserRouter([
 		errorElement: <ErrorPage />,
 		element: <RootLayout />,
 		children: [
-			{ path: '', element: <HomePage />, errorElement: <ErrorPage /> },
+			{ path: '', element: <HomePage /> },
 			{
 				path: 'events',
 				element: <EventsRootLayout />,
-				errorElement: <ErrorPage />,
+				//errorElement: <ErrorPage />,
 				children: [
 					{
 						path: '',
 						element: <EventsPage />,
-						errorElement: <ErrorPage />,
-						loader: async () => {
-							const response = await fetch(
-								'http://localhost:8080/events'
-							);
-
-							if (!response.ok) {
-								//...
-							} else {
-								const resData = await response.json();
-								return resData.events;
-							}
-						}
+						//errorElement: <ErrorPage />,
+						loader: eventsLoader
 					},
-					{ path: ':eventId', element: <EventDetailPage /> },
+					{
+						path: ':eventId',
+						element: <EventDetailPage />,
+						loader: eventDetailsLoader
+					},
 					{
 						path: ':eventId/edit',
 						element: <EditEventPage />
