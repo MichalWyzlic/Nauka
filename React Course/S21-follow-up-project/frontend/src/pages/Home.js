@@ -1,11 +1,14 @@
-import React from "react";
+import React from 'react';
+import PageContent from '../components/PageContent';
 
-function HomePage(){
+function HomePage() {
 	return (
 		<React.Fragment>
-			<h1>My home page</h1>
+			<PageContent title='Welcome!'>
+				<p>Check out all our amazing events!!!</p>
+			</PageContent>
 		</React.Fragment>
-	)
+	);
 }
 
 export default HomePage;
