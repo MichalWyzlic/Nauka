@@ -1,4 +1,5 @@
 import {useQuery} from '@tanstack/react-query';
+import {useParams} from 'react-router-dom';
 
 import LoadingIndicator from '../UI/LoadingIndicator.jsx';
 import ErrorBlock from '../UI/ErrorBlock.jsx';
@@ -7,8 +8,8 @@ import {fetchEvents} from '../../util/http.js';
 
 export default function NewEventsSection() {
 	const { data, isPending, isError, error} = useQuery({
-		queryKey: ['events'],
-		queryFn: fetchEvents,
+		queryKey: ['events', {max: 3}],
+		queryFn: ({signal, queryKey}) => {return fetchEvents({signal, ...queryKey[1]})},
 		staleTime: 5000,
 		//gcTime: 1000
 	});

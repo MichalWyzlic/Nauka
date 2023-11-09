@@ -1,15 +1,19 @@
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient } from '@tanstack/react-query';
 
 export const queryClient = new QueryClient();
 
-export async function fetchEvents({signal, searchTerm}) {
+export async function fetchEvents({ signal, searchTerm, max }) {
 	let url = 'http://localhost:3000/events';
-	
-	if(searchTerm){
+
+	if (searchTerm && max) {
+		url += '?search=' + searchTerm + '?max=' + max;
+	} else if (searchTerm) {
 		url += '?search=' + searchTerm;
+	} else if (max) {
+		url += '?max=' + max;
 	}
 
-	const response = await fetch(url, {signal: signal});
+	const response = await fetch(url, { signal: signal });
 
 	if (!response.ok) {
 		const error = new Error('An error occurred while fetching the events');
@@ -23,7 +27,7 @@ export async function fetchEvents({signal, searchTerm}) {
 	return events;
 }
 
-export async function createNewEvent(eventData){
+export async function createNewEvent(eventData) {
 	let url = 'http://localhost:3000/events';
 	const response = await fetch(url, {
 		method: 'POST',
@@ -33,63 +37,92 @@ export async function createNewEvent(eventData){
 		}
 	});
 
-	if(!response.ok){
-		const error = new Error('An error has occurred while creating the event!');
+	if (!response.ok) {
+		const error = new Error(
+			'An error has occurred while creating the event!'
+		);
 		error.code = response.status;
 		error.info = await response.json();
 		throw error;
 	}
 
-	const {event} = await response.json();
+	const { event } = await response.json();
 
 	return event;
 }
 
-export async function fetchSelectableImages({ signal }){
+export async function fetchSelectableImages({ signal }) {
 	let url = 'http://localhost:3000/events/images';
-	const response = await fetch(url, {signal});
+	const response = await fetch(url, { signal });
 
-	if(!response.ok){
-		const error = new Error('An error has occurred while fetching the images!');
+	if (!response.ok) {
+		const error = new Error(
+			'An error has occurred while fetching the images!'
+		);
 		error.code = response.status;
 		error.info = await response.json();
 		throw error;
 	}
 
-	const {images} = await response.json();
+	const { images } = await response.json();
 
 	return images;
 }
 
-export async function fetchEvent({id, signal}){
+export async function fetchEvent({ id, signal }) {
 	let url = `http://localhost:3000/events/${id}`;
-	const response = await fetch(url, {signal});
+	const response = await fetch(url, { signal });
 
-	if(!response.ok){
-		const error = new Error(`An error has occurred while fetching the event ${id}!`);
+	if (!response.ok) {
+		const error = new Error(
+			`An error has occurred while fetching the event ${id}!`
+		);
 		error.code = response.status;
 		error.info = await response.json();
 		throw error;
 	}
 
-	const {event} = await response.json();
+	const { event } = await response.json();
 
 	return event;
 }
 
-export async function deleteEvent({id}){
+export async function deleteEvent(eventData, { id }) {
 	let url = `http://localhost:3000/events/${id}`;
-	const response = await fetch(url, {method: 'DELETE'});
+	const response = await fetch(url, { method: 'DELETE' });
 
-	if(!response.ok){
-		const error = new Error(`An error has occurred while deleting the event ${id}!`);
+	if (!response.ok) {
+		const error = new Error(
+			`An error has occurred while deleting the event ${id}!`
+		);
 		error.code = response.status;
 		error.info = await response.json();
 		throw error;
 	}
 
-	const {event} = await response.json();
+	const { event } = await response.json();
 
 	return event;
 }
 
+export async function modifyEvent({ id, event }) {
+	let url = `http://localhost:3000/events/${id}`;
+	const response = await fetch(url, {
+		method: 'PUT',
+		body: JSON.stringify({ event }),
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	});
+
+	if (!response.ok) {
+		const error = new Error(
+			'An error has occurred while modifying the event!'
+		);
+		error.code = response.status;
+		error.info = await response.json();
+		throw error;
+	}
+
+	return response.json();
+}
