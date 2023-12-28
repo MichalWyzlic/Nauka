@@ -6,9 +6,9 @@ import heroImg from '../assets/hero.png';
 
 export default function WelcomePage() {
 	const { scrollY } = useScroll();
-	const yCity = useTransform(scrollY, [0, 300], [0, -100]);
+	const yCity = useTransform(scrollY, [0, 600], [0, -350]);
 	const opacityCity = useTransform(scrollY, [0, 200, 300, 500], [1, 0.5, 0.5, 0]);
-	const yHero = useTransform(scrollY, [0, 300], [0, -150]);
+	const yHero = useTransform(scrollY, [0, 600], [0, -150]);
 	const opacityHero = useTransform(scrollY, [0, 300, 500], [1, 1, 0]);
 	const yText = useTransform(scrollY, [0, 200, 300, 500], [0, 50, 50, 300]);
 	const scaleText = useTransform(scrollY, [0,300], [1, 1.5]);
