@@ -45,52 +45,52 @@ function averagePair(arr, avg) {
 	}
 
 	//find the index i corresponding to intAvg or such that arr[i]< avg, arr[i]>avg
-	let i = Math.floor((arr.length -1) / 2);
-	let j = arr.length -1;
-	if(checkNeighbours(arr, i, avg)){
+	let i = Math.floor((arr.length - 1) / 2);
+	let j = arr.length - 1;
+	if (checkNeighbours(arr, i, avg)) {
 		return true;
-	};
+	}
 
-	if(arr[i] !== intAvg){	
+	if (arr[i] !== intAvg) {
 		//choose the half of the array to search
-		if(arr[i] > intAvg){			
+		if (arr[i] > intAvg) {
 			j = i;
 			i = 0;
 		}
-		
+
 		while (true) {
-			let k = Math.floor((i + j)/2);
+			let k = Math.floor((i + j) / 2);
 			//if i points at the average value, check its neighbours
-			if(checkNeighbours(arr, k, avg)){
+			if (checkNeighbours(arr, k, avg)) {
 				return true;
-			};
+			}
 
 			//bisect the array looking for val <= avg
 			if (arr[k] < avg) {
 				i = k;
-				if(arr[k+1] > avg){					
+				if (arr[k + 1] > avg) {
 					break;
 				}
 			} else {
 				j = k;
-				if(arr[k-1] < avg){
-					i = k-1;					
+				if (arr[k - 1] < avg) {
+					i = k - 1;
 					break;
 				}
-			}			
+			}
 		}
-	}	
-	j = i+1;
+	}
+	j = i + 1;
 
-	while(i >= 0 && j < arr.length){
+	while (i >= 0 && j < arr.length) {
 		//iterate to the left and to the right to check variables
 		let result = (arr[i] + arr[j]) / 2;
 		//check for success
-		if(result === avg){			
+		if (result === avg) {
 			return true;
 		}
 		//move pointers up or down
-		if(result < avg){
+		if (result < avg) {
 			j++;
 		} else {
 			i--;
@@ -108,24 +108,23 @@ function averagePair(arr, avg) {
 
 //console.log(averagePair([], 4)); // false
 
-
-function isSubsequence(str1, str2){
+function isSubsequence(str1, str2) {
 	//boundary condition
-	if(str1.length > str2.length){
+	if (str1.length > str2.length) {
 		return false;
 	}
 
 	//set two pointers to initial parts of the stings
 	let i = 0;
 	let j = 0;
-	while(j < str2.length){
-		if(str1.charAt(i) === str2.charAt(j)){
-			i++;		
-			if(i === str1.length){
+	while (j < str2.length) {
+		if (str1.charAt(i) === str2.charAt(j)) {
+			i++;
+			if (i === str1.length) {
 				return true;
 			}
-		} 
-		j++;		
+		}
+		j++;
 	}
 	return false;
 }
@@ -135,40 +134,38 @@ function isSubsequence(str1, str2){
 // console.log(isSubsequence('abc', 'adracadabcra')); // true
 // console.log(isSubsequence('abc', 'acb')); // false (order matters)
 
-
-function maxSubarraySum(arr, len){
-	if(arr.length < len){
+function maxSubarraySum(arr, len) {
+	if (arr.length < len) {
 		return null;
 	}
 
 	let i = 1;
 	let sum = arr[0];
-	while(i<len){
+	while (i < len) {
 		sum += arr[i];
-		i++
+		i++;
 	}
 	let result = sum;
-	while(i < arr.length){
-		sum -= arr[i-len];
+	while (i < arr.length) {
+		sum -= arr[i - len];
 		sum += arr[i];
 		result = Math.max(result, sum);
-		i++
+		i++;
 	}
 
 	return result;
-
 }
 
 // console.log(maxSubarraySum([100,200,300,400], 2)); // 700
-// console.log(maxSubarraySum([1,4,2,10,23,3,1,0,20], 4)); // 39 
+// console.log(maxSubarraySum([1,4,2,10,23,3,1,0,20], 4)); // 39
 // console.log(maxSubarraySum([-3,4,0,-2,6,-1], 2)); // 5
 // console.log(maxSubarraySum([3,-2,7,-4,1,-1,4,-2,1],2)); // 5
 // console.log(maxSubarraySum([2,3], 3)); // null
 
-function minSubArrayLen(arr, val){
-	if(arr[0]>=val){
+function minSubArrayLen(arr, val) {
+	if (arr[0] >= val) {
 		return 1;
-	};
+	}
 
 	let minLength = +Infinity;
 	let subArrSum = 0;
@@ -178,32 +175,31 @@ function minSubArrayLen(arr, val){
 	let j = 1;
 	subArrSum = arr[0];
 
-	while(j < arr.length){
+	while (j < arr.length) {
 		//expand the window to the right to increase the sub array sum
 		subArrSum += arr[j];
 		//collapse from the left the window to decrease the array
-		while(i <= j && subArrSum >= val){
-			minLength = Math.min(minLength, (j-i+1));
+		while (i <= j && subArrSum >= val) {
+			minLength = Math.min(minLength, j - i + 1);
 			//Minimum possible length of the array
-			if(minLength === 1){
+			if (minLength === 1) {
 				return 1;
 			}
-			//if the collapsing makes the sum lower than the value, stop 
-			if(subArrSum - arr[i] < val){
+			//if the collapsing makes the sum lower than the value, stop
+			if (subArrSum - arr[i] < val) {
 				break;
 			}
-			subArrSum -= arr[i];			
-			i++;			
+			subArrSum -= arr[i];
+			i++;
 		}
 		j++;
 	}
 
-	if(minLength === +Infinity){
-		return 0;		
+	if (minLength === +Infinity) {
+		return 0;
 	}
 	return minLength;
 }
-
 
 // console.log(minSubArrayLen([2,3,1,2,4,3], 7)); // 2 -> because [4,3] is the smallest subarray
 // console.log(minSubArrayLen([2,1,6,5,4], 9)); // 2 -> because [5,4] is the smallest subarray
@@ -213,9 +209,8 @@ function minSubArrayLen(arr, val){
 // console.log(minSubArrayLen([4, 3, 3, 8, 1, 2, 3], 11)); // 2
 // console.log(minSubArrayLen([1,4,16,22,5,7,8,9,10],95)); // 0
 
-
-function findLongestSubstring(str){
-	if(str === ''){
+function findLongestSubstring(str) {
+	if (str === '') {
 		return 0;
 	}
 
@@ -225,18 +220,18 @@ function findLongestSubstring(str){
 	let subStr = str.charAt(i);
 	let maxLength = 1;
 
-	while(j < str.length){
+	while (j < str.length) {
 		//if the next character exists in the sub string
-		while(testSet.has(str.charAt(j)) && i < j){
+		while (testSet.has(str.charAt(j)) && i < j) {
 			//move left boundary to the right
 			testSet.delete(str.charAt(i));
 			i++;
 		}
 
-		//add to set and update the maxlength 
+		//add to set and update the maxlength
 		testSet.add(str.charAt(j));
 		j++;
-		maxLength = Math.max(maxLength, (j-i));
+		maxLength = Math.max(maxLength, j - i);
 	}
 
 	return maxLength;
@@ -250,29 +245,29 @@ function findLongestSubstring(str){
 // console.log(findLongestSubstring('longestsubstring')); // 8
 // console.log(findLongestSubstring('thisishowwedoit')); // 6
 
-function countDownRecursive(n){
-	if(n < 1){
+function countDownRecursive(n) {
+	if (n < 1) {
 		console.log(n);
-		return n;		
+		return n;
 	}
-	countDownRecursive(n-1);
+	countDownRecursive(n - 1);
 	console.log(n);
 }
 
 // countDownRecursive(5);
 
-function factorial(n){
-	if(n === 1){
-		return 1
+function factorial(n) {
+	if (n === 1) {
+		return 1;
 	}
-	return n * factorial(n-1);
+	return n * factorial(n - 1);
 }
 
 //console.log(factorial(3));
 //console.log(factorial(6));
 
-function power(a, n){
-	return ((n > 1) ? a * power(a, n-1) : a);
+function power(a, n) {
+	return n > 1 ? a * power(a, n - 1) : a;
 }
 
 // console.log(power(2, 10));
@@ -292,18 +287,73 @@ function power(a, n){
 // 		n_2 = n_1;
 // 		n_1 = tempN;
 // 		return subSum(i);
-// 	}	
+// 	}
 
 // 	return subSum(i);
 //   }
 
-function fib(n){
-    if (n <= 2) return 1;
-    return fib(n-1) + fib(n-2);
+function fib(n) {
+	if (n <= 2) return 1;
+	return fib(n - 1) + fib(n - 2);
 }
 
-  console.log(fib(4));
-  console.log(fib(9));
-  console.log(fib(12));
-  console.log(fib(15));
-  console.log(fib(0));
+//   console.log(fib(4));
+//   console.log(fib(9));
+//   console.log(fib(12));
+//   console.log(fib(15));
+//   console.log(fib(0));
+
+function reverse(str, i = 0) {
+	// add whatever parameters you deem necessary - good luck!
+	if (i === str.length - 1) return str.charAt(str.length - 1 - i);
+	return str.charAt(str.length - 1 - i) + reverse(str, i + 1);
+}
+
+// console.log(reverse('abacus'));
+
+function isPalindrome(str) {
+	if (str.length <= 1) return true;
+	if (str.charAt(0) != str.charAt(str.length - 1)) return false;
+	return isPalindrome(str.slice(1, -1));
+}
+
+// console.log(isPalindrome('awesome')); // false
+// console.log(isPalindrome('foobar')); // false
+// console.log(isPalindrome('tacoccat')); // true
+// console.log(isPalindrome('amanaplanacanalpanama')); // true
+// console.log(isPalindrome('amanaplanacanalpandemonium')); // false
+
+function someRecursive(arr, callback) {
+	if (arr.length === 0) return false;
+	let k = arr.pop();
+	return callback(k) ? true : someRecursive(arr, callback);
+}
+
+const isOdd = (val) => val % 2 !== 0;
+
+// console.log(someRecursive([1,2,3,4], isOdd)); // true
+// console.log(someRecursive([4,6,8,9], isOdd)); // true
+// console.log(someRecursive([4,6,8], isOdd)); // false
+// console.log(someRecursive([4,6,8], val => val > 10)); // false
+
+function flatten(arr) {
+	const tempArr =[];
+
+	function extractFromSubArray(subArr){
+		while(subArr.length > 0){
+			if(Array.isArray(subArr[0])) {
+				extractFromSubArray(subArr.shift());
+			} else{
+				tempArr.push(subArr.shift());
+			}
+		}
+	}
+
+	extractFromSubArray(arr);
+	return tempArr;
+}
+
+console.log(flatten([1, 2, 3, [4, 5] ])); // [1, 2, 3, 4, 5]
+console.log(flatten([1, [2, [3, 4], [[5]]]])); // [1, 2, 3, 4, 5]
+console.log(flatten([[1],[2],[3]])); // [1,2,3]
+console.log(flatten([[[[1], [[[2]]], [[[[[[[3]]]]]]]]]])); // [1,2,3
