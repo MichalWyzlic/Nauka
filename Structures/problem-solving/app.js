@@ -711,3 +711,43 @@ function mergeSort2(arr){
 }
 
 console.log(mergeSort2([5,7,1,3,6,2,8,15,-3,-4,11,22,-9,14,-15]))
+
+function pivot(arr){
+	if(arr.length <= 1) return arr;
+	let pivotValue = arr[0];
+	let pivotIndex = 0;
+	let leftArr = [];
+	let rightArr = [];
+	let middleArr = [pivotValue];
+	for(let i = 1; i < arr.length; i++){
+		if(arr[i] < pivotValue){
+			leftArr.push(arr[i]);
+		} else if(arr[i] > pivotValue){
+			rightArr.push(arr[i])
+		} else {
+			middleArr.push(pivotValue);
+		}
+	}
+
+	return pivot(leftArr).concat(middleArr.concat(pivot(rightArr)));
+}
+
+function pivot2(arr){
+	let pivotValue = arr[0];
+	let pivotIndex = 0;
+	for(let i = 1; i < arr.length; i++){
+		if(arr[i] < pivotValue){
+			pivotIndex ++;
+			if(pivotIndex < i){
+				let tempValue = arr[i];
+				arr[i] = arr[pivotIndex];
+				arr[pivotIndex] = tempValue;
+			}
+		} 
+	}
+	let tempValue = arr[0];
+	arr[0] = arr[pivotIndex];
+	arr[pivotIndex] = tempValue;
+}
+
+console.log(pivot2([37,7,4,99,22,33,24,15,67,34,27,68,95,46,57,34,56,78,56,43,34]));
