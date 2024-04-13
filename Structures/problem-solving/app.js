@@ -337,13 +337,13 @@ const isOdd = (val) => val % 2 !== 0;
 // console.log(someRecursive([4,6,8], val => val > 10)); // false
 
 function flatten(arr) {
-	const tempArr =[];
+	const tempArr = [];
 
-	function extractFromSubArray(subArr){
-		while(subArr.length > 0){
-			if(Array.isArray(subArr[0])) {
+	function extractFromSubArray(subArr) {
+		while (subArr.length > 0) {
+			if (Array.isArray(subArr[0])) {
 				extractFromSubArray(subArr.shift());
-			} else{
+			} else {
 				tempArr.push(subArr.shift());
 			}
 		}
@@ -353,7 +353,361 @@ function flatten(arr) {
 	return tempArr;
 }
 
-console.log(flatten([1, 2, 3, [4, 5] ])); // [1, 2, 3, 4, 5]
-console.log(flatten([1, [2, [3, 4], [[5]]]])); // [1, 2, 3, 4, 5]
-console.log(flatten([[1],[2],[3]])); // [1,2,3]
-console.log(flatten([[[[1], [[[2]]], [[[[[[[3]]]]]]]]]])); // [1,2,3
+// console.log(flatten([1, 2, 3, [4, 5] ])); // [1, 2, 3, 4, 5]
+// console.log(flatten([1, [2, [3, 4], [[5]]]])); // [1, 2, 3, 4, 5]
+// console.log(flatten([[1],[2],[3]])); // [1,2,3]
+// console.log(flatten([[[[1], [[[2]]], [[[[[[[3]]]]]]]]]])); // [1,2,3
+
+function capitalizeFirst(arr, i = 0) {
+	if (arr.length <= i) return;
+	arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].substring(1);
+	capitalizeFirst(arr, i + 1);
+	return arr;
+}
+
+//console.log(capitalizeFirst(['car','taco','banana'])); // ['Car','Taco','Banana']
+
+function nestedEvenSum(value) {
+	let subSum = 0;
+	for (let key in value) {
+		subSum +=
+			typeof value[key] === 'object'
+				? nestedEvenSum(value[key])
+				: value[key] % 2 === 0
+				? value[key]
+				: 0;
+	}
+	return subSum;
+}
+
+var obj1 = {
+	outer: 2,
+	obj: {
+		inner: 2,
+		otherObj: {
+			superInner: 2,
+			notANumber: true,
+			alsoNotANumber: 'yup'
+		}
+	}
+};
+
+var obj2 = {
+	a: 2,
+	b: { b: 2, bb: { b: 3, bb: { b: 2 } } },
+	c: { c: { c: 2 }, cc: 'ball', ccc: 5 },
+	d: 1,
+	e: { e: { e: 2 }, ee: 'car' }
+};
+
+//   console.log(nestedEvenSum(obj1)); // 6
+//   console.log(nestedEvenSum(obj2)); // 10
+
+function capitalizedWords(arr, i = 0) {
+	return arr.length - 1 === i
+		? [arr[i].toUpperCase()]
+		: [arr[i].toUpperCase()].concat(capitalizedWords(arr, i + 1));
+}
+
+// let words = ['i', 'am', 'learning', 'recursion'];
+// console.log(capitalizedWords(words)); // ['I', 'AM', 'LEARNING', 'RECURSION']
+
+// let obj = {
+// 	num: 1,
+// 	test: [],
+// 	data: {
+// 		val: 4,
+// 		info: {
+// 			isRight: true,
+// 			random: 66
+// 		}
+// 	}
+// };
+
+function stringifyNumbers(value) {
+	let newObj = {};
+	if (Array.isArray(value)) {
+		newObj = [];
+	}
+	for (let key in value) {
+		if (typeof value[key] === 'object') {
+			newObj[key] = stringifyNumbers(value[key]);
+		} else {
+			if (typeof value[key] === 'number') {
+				newObj[key] = value[key].toString();
+			} else {
+				newObj[key] = value[key];
+			}
+		}
+	}
+	return newObj;
+}
+
+// console.log(obj);
+// console.log(stringifyNumbers(obj));
+
+/*
+{
+    num: "1",
+    test: [],
+    data: {
+        val: "4",
+        info: {
+            isRight: true,
+            random: "66"
+        }
+    }
+}
+*/
+
+function collectStrings(value) {
+	let strArray = [];
+	for (let key in value) {
+		if (typeof value[key] === 'object') {
+			strArray = strArray.concat(collectStrings(value[key]));
+		} else if (typeof value[key] === 'string') {
+			strArray.push(value[key]);
+		}
+	}
+	return strArray;
+}
+
+const obj = {
+	stuff: 'foo',
+	data: {
+		val: {
+			thing: {
+				info: 'bar',
+				moreInfo: {
+					evenMoreInfo: {
+						weMadeIt: 'baz'
+					}
+				}
+			}
+		}
+	}
+};
+
+//console.log(collectStrings(obj)); // ["foo", "bar", "baz"])
+
+function linearSearch(arr, value) {
+	for (let i = 0; i < arr.length; i++) {
+		if (value === arr[i]) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+function binarySearch(arr, value) {
+	let i = 0;
+	let j = arr.length - 1;
+
+	while (j - i > 1) {
+		let k = Math.floor((j + i) / 2);
+		if (arr[k] === value) {
+			return k;
+		}
+		if (arr[k] < value) {
+			i = k;
+		} else {
+			j = k;
+		}
+	}
+	if (arr[i] === value) {
+		return i;
+	}
+	if (arr[j] === value) {
+		return j;
+	}
+	return -1;
+}
+
+// console.log(binarySearch([1, 2, 3, 4, 5], 2)); // 1
+// console.log(binarySearch([1, 2, 3, 4, 5], 3)); // 2
+// console.log(binarySearch([1, 2, 3, 4, 5], 5)); // 4
+// console.log(binarySearch([1, 2, 3, 4, 5], 6)); // -1
+// console.log(
+// 	binarySearch(
+// 		[
+// 			5, 6, 10, 13, 14, 18, 30, 34, 35, 37, 40, 44, 64, 79, 84, 86, 95,
+// 			96, 98, 99
+// 		],
+// 		10
+// 	)
+// ); // 2
+// console.log(
+// 	binarySearch(
+// 		[
+// 			5, 6, 10, 13, 14, 18, 30, 34, 35, 37, 40, 44, 64, 79, 84, 86, 95,
+// 			96, 98, 99
+// 		],
+// 		95
+// 	)
+// ); // 16
+// console.log(
+// 	binarySearch(
+// 		[
+// 			5, 6, 10, 13, 14, 18, 30, 34, 35, 37, 40, 44, 64, 79, 84, 86, 95,
+// 			96, 98, 99
+// 		],
+// 		100
+// 	)
+// ); // -1
+
+function stingSearch(str1, str2) {
+	if (str1.length < str2.length || str1.length === 0 || str2.length === 0) {
+		return 0;
+	}
+	let count = 0;
+
+	let i = 0;
+	let j = 0;
+
+	while (i < str1.length - str2.length) {
+		while (str1[i + j] === str2[j]) {
+			if (j === str2.length - 1) {
+				count++;
+				j = 0;
+				break;
+			}
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+
+	return count;
+}
+
+//console.log(stingSearch('wmnomgsgsgsgomgomaomggomga', 'omg'));
+
+function bubbleSort(arr) {
+	if (arr.length < 2) {
+		return arr;
+	}
+	let i = 0;
+	for (let i = arr.length - 1; i > 0; i--) {
+		let end = true;
+		for (let j = 0; j < i; j++) {
+			if (arr[j] > arr[j + 1]) {
+				let temp = arr[j];
+				arr[j] = arr[j + 1];
+				arr[j + 1] = temp;
+				end = false;
+			}
+		}
+		if (end) return arr;
+		console.log(arr);
+	}
+	return arr;
+}
+
+function selectionSort(arr) {
+	if (arr.length < 2) {
+		return arr;
+	}
+	let i = 0;
+	for (let i = 0; i < arr.length - 1; i++) {
+		let end = true;
+		let minIndex = i;
+		for (let j = i + 1; j < arr.length; j++) {
+			if (arr[j] < arr[minIndex]) {
+				minIndex = j;
+				end = false;
+			}
+		}
+		if (minIndex !== i) {
+			let temp = arr[i];
+			arr[i] = arr[minIndex];
+			arr[minIndex] = temp;
+		}
+		//if(end) return arr;
+		console.log(arr);
+	}
+	return arr;
+}
+
+function insertionSort(arr) {
+	if (arr.length < 2) {
+		return arr;
+	}
+	let i = 0;
+	for (let i = 1; i < arr.length; i++) {
+		for (let j = i - 1; j >= 0; j--) {
+			if (arr[i] <= arr[j] && (j === 0 || arr[i] >= arr[j - 1])) {
+				arr.splice(j, 0, arr[i]);
+				//remove element i (but one was added)
+				arr.splice(i + 1, 1);
+				break;
+			}
+		}
+		console.log(arr);
+	}
+	return arr;
+}
+
+//console.log(insertionSort([2, 4, 1, 12,34,7,4,5,1,22,55, 36]));
+
+function merge(arr1, arr2) {
+	let i = 0;
+	let j = 0;
+	// if (arr1.length <= 1 && arr2.length <= 1) {
+	// 	return arr1.concat(arr2);
+	// }
+	let tempArr = [];
+	while (i < arr1.length && j < arr2.length) {
+		if (arr1[i] <= arr2[j]) {
+			tempArr.push(arr1[i]);
+			i++;
+		} else {
+			tempArr.push(arr2[j]);
+			j++;
+		}
+	}
+	while (i < arr1.length) {
+		tempArr.push(arr1[i]);
+		i++;
+	}
+	while (j < arr2.length) {
+		tempArr.push(arr2[j]);
+		j++;
+	}
+	return tempArr;
+}
+
+console.log(merge([1, 10, 50], [2, 14, 99, 100]));
+
+function mergeSort(arr) {
+	let tempArr = [];
+	let i = 0;
+	if (Array.isArray(arr[0])) {
+		while (i < arr.length-1) {
+			tempArr.push(merge(arr[i], arr[i + 1]));
+			i+=2;
+		}
+		if(i === (arr.length -1)){
+			tempArr.push(arr[i]);
+		}
+	} else {
+		while (i < arr.length-1) {
+			tempArr.push(merge([arr[i]], [arr[i + 1]]));
+			i+=2;
+		}
+		if(i === (arr.length -1)){
+			tempArr.push([arr[i]]);
+		}
+	}
+	console.log(tempArr);
+	return (tempArr.length > 1) ? mergeSort(tempArr) : tempArr[0];
+}
+
+function mergeSort2(arr){
+	if(arr.length <= 1) return arr;
+	let mid = Math.floor(arr.length/2);
+	let left = mergeSort2(arr.slice(0,mid));
+	let right = mergeSort2(arr.slice(mid));
+	return merge(left, right);
+}
+
+console.log(mergeSort2([5,7,1,3,6,2,8,15,-3,-4,11,22,-9,14,-15]))
