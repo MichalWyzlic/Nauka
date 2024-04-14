@@ -710,7 +710,7 @@ function mergeSort2(arr){
 	return merge(left, right);
 }
 
-console.log(mergeSort2([5,7,1,3,6,2,8,15,-3,-4,11,22,-9,14,-15]))
+//console.log(mergeSort2([5,7,1,3,6,2,8,15,-3,-4,11,22,-9,14,-15]))
 
 function pivot(arr){
 	if(arr.length <= 1) return arr;
@@ -732,10 +732,10 @@ function pivot(arr){
 	return pivot(leftArr).concat(middleArr.concat(pivot(rightArr)));
 }
 
-function pivot2(arr){
-	let pivotValue = arr[0];
-	let pivotIndex = 0;
-	for(let i = 1; i < arr.length; i++){
+function pivot2(arr, start = 0, end = arr.length){
+	let pivotValue = arr[start];
+	let pivotIndex = start;
+	for(let i = start +1; i < end; i++){
 		if(arr[i] < pivotValue){
 			pivotIndex ++;
 			if(pivotIndex < i){
@@ -745,9 +745,20 @@ function pivot2(arr){
 			}
 		} 
 	}
-	let tempValue = arr[0];
-	arr[0] = arr[pivotIndex];
+	let tempValue = arr[start];
+	arr[start] = arr[pivotIndex];
 	arr[pivotIndex] = tempValue;
+	console.log(arr);
+	return pivotIndex;
 }
 
-console.log(pivot2([37,7,4,99,22,33,24,15,67,34,27,68,95,46,57,34,56,78,56,43,34]));
+function quickSort(arr, start = 0, end = arr.length){
+	if((end - start) > 1) {
+		let midPoint = pivot2(arr, start, end);
+		quickSort(arr, start, midPoint);
+		quickSort(arr, midPoint + 1, end);
+	}
+	return arr;
+}
+
+console.log(quickSort([37,7,4,99,22,33,24,15,67,34,27,68,95,46,57,34,56,78,56,43,34]));
