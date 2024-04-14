@@ -676,7 +676,7 @@ function merge(arr1, arr2) {
 	return tempArr;
 }
 
-console.log(merge([1, 10, 50], [2, 14, 99, 100]));
+//console.log(merge([1, 10, 50], [2, 14, 99, 100]));
 
 function mergeSort(arr) {
 	let tempArr = [];
@@ -761,4 +761,42 @@ function quickSort(arr, start = 0, end = arr.length){
 	return arr;
 }
 
-console.log(quickSort([37,7,4,99,22,33,24,15,67,34,27,68,95,46,57,34,56,78,56,43,34]));
+//console.log(quickSort([37,7,4,99,22,33,24,15,67,34,27,68,95,46,57,34,56,78,56,43,34]));
+
+function digitAtPosition(number, position){
+	number /= 10**position;
+	
+	return Math.floor(number) % 10;
+}
+
+function digitCount(num){
+	if(num === 0) return 1;
+	return Math.floor(Math.log10(num) + 1);
+}
+
+function mostDigits(arr){
+	let mostDigits = digitCount(arr[0]);
+	for(let i = 1; i < arr.length; i++){
+		mostDigits = Math.max(mostDigits, digitCount(arr[i]));
+	}
+	return mostDigits;
+}
+
+function radixSort(arr){
+	let iterations = mostDigits(arr);
+	for(let i = 0; i < iterations; i++){
+		let tempArr = Array.from({length: 10}, () => []);
+		for(let j = 0; j < arr.length; j++){
+			tempArr[digitAtPosition(arr[j],i)].push(arr[j]);
+		}
+		arr = [].concat(...tempArr);
+		console.log(arr);
+	}
+	return arr;
+}
+
+// console.log(digitAtPosition(7323, 1));
+// console.log(digitCount(7323));
+
+console.log(radixSort([37,7,4,199,22,333,24,15,2367,34,27,1268,95,46,57,3334,56,978,756,43,34]));
+
