@@ -682,48 +682,48 @@ function mergeSort(arr) {
 	let tempArr = [];
 	let i = 0;
 	if (Array.isArray(arr[0])) {
-		while (i < arr.length-1) {
+		while (i < arr.length - 1) {
 			tempArr.push(merge(arr[i], arr[i + 1]));
-			i+=2;
+			i += 2;
 		}
-		if(i === (arr.length -1)){
+		if (i === arr.length - 1) {
 			tempArr.push(arr[i]);
 		}
 	} else {
-		while (i < arr.length-1) {
+		while (i < arr.length - 1) {
 			tempArr.push(merge([arr[i]], [arr[i + 1]]));
-			i+=2;
+			i += 2;
 		}
-		if(i === (arr.length -1)){
+		if (i === arr.length - 1) {
 			tempArr.push([arr[i]]);
 		}
 	}
 	console.log(tempArr);
-	return (tempArr.length > 1) ? mergeSort(tempArr) : tempArr[0];
+	return tempArr.length > 1 ? mergeSort(tempArr) : tempArr[0];
 }
 
-function mergeSort2(arr){
-	if(arr.length <= 1) return arr;
-	let mid = Math.floor(arr.length/2);
-	let left = mergeSort2(arr.slice(0,mid));
+function mergeSort2(arr) {
+	if (arr.length <= 1) return arr;
+	let mid = Math.floor(arr.length / 2);
+	let left = mergeSort2(arr.slice(0, mid));
 	let right = mergeSort2(arr.slice(mid));
 	return merge(left, right);
 }
 
 //console.log(mergeSort2([5,7,1,3,6,2,8,15,-3,-4,11,22,-9,14,-15]))
 
-function pivot(arr){
-	if(arr.length <= 1) return arr;
+function pivot(arr) {
+	if (arr.length <= 1) return arr;
 	let pivotValue = arr[0];
 	let pivotIndex = 0;
 	let leftArr = [];
 	let rightArr = [];
 	let middleArr = [pivotValue];
-	for(let i = 1; i < arr.length; i++){
-		if(arr[i] < pivotValue){
+	for (let i = 1; i < arr.length; i++) {
+		if (arr[i] < pivotValue) {
 			leftArr.push(arr[i]);
-		} else if(arr[i] > pivotValue){
-			rightArr.push(arr[i])
+		} else if (arr[i] > pivotValue) {
+			rightArr.push(arr[i]);
 		} else {
 			middleArr.push(pivotValue);
 		}
@@ -732,18 +732,18 @@ function pivot(arr){
 	return pivot(leftArr).concat(middleArr.concat(pivot(rightArr)));
 }
 
-function pivot2(arr, start = 0, end = arr.length){
+function pivot2(arr, start = 0, end = arr.length) {
 	let pivotValue = arr[start];
 	let pivotIndex = start;
-	for(let i = start +1; i < end; i++){
-		if(arr[i] < pivotValue){
-			pivotIndex ++;
-			if(pivotIndex < i){
+	for (let i = start + 1; i < end; i++) {
+		if (arr[i] < pivotValue) {
+			pivotIndex++;
+			if (pivotIndex < i) {
 				let tempValue = arr[i];
 				arr[i] = arr[pivotIndex];
 				arr[pivotIndex] = tempValue;
 			}
-		} 
+		}
 	}
 	let tempValue = arr[start];
 	arr[start] = arr[pivotIndex];
@@ -752,8 +752,8 @@ function pivot2(arr, start = 0, end = arr.length){
 	return pivotIndex;
 }
 
-function quickSort(arr, start = 0, end = arr.length){
-	if((end - start) > 1) {
+function quickSort(arr, start = 0, end = arr.length) {
+	if (end - start > 1) {
 		let midPoint = pivot2(arr, start, end);
 		quickSort(arr, start, midPoint);
 		quickSort(arr, midPoint + 1, end);
@@ -763,31 +763,31 @@ function quickSort(arr, start = 0, end = arr.length){
 
 //console.log(quickSort([37,7,4,99,22,33,24,15,67,34,27,68,95,46,57,34,56,78,56,43,34]));
 
-function digitAtPosition(number, position){
-	number /= 10**position;
-	
+function digitAtPosition(number, position) {
+	number /= 10 ** position;
+
 	return Math.floor(number) % 10;
 }
 
-function digitCount(num){
-	if(num === 0) return 1;
+function digitCount(num) {
+	if (num === 0) return 1;
 	return Math.floor(Math.log10(num) + 1);
 }
 
-function mostDigits(arr){
+function mostDigits(arr) {
 	let mostDigits = digitCount(arr[0]);
-	for(let i = 1; i < arr.length; i++){
+	for (let i = 1; i < arr.length; i++) {
 		mostDigits = Math.max(mostDigits, digitCount(arr[i]));
 	}
 	return mostDigits;
 }
 
-function radixSort(arr){
+function radixSort(arr) {
 	let iterations = mostDigits(arr);
-	for(let i = 0; i < iterations; i++){
-		let tempArr = Array.from({length: 10}, () => []);
-		for(let j = 0; j < arr.length; j++){
-			tempArr[digitAtPosition(arr[j],i)].push(arr[j]);
+	for (let i = 0; i < iterations; i++) {
+		let tempArr = Array.from({ length: 10 }, () => []);
+		for (let j = 0; j < arr.length; j++) {
+			tempArr[digitAtPosition(arr[j], i)].push(arr[j]);
 		}
 		arr = [].concat(...tempArr);
 		console.log(arr);
@@ -798,5 +798,185 @@ function radixSort(arr){
 // console.log(digitAtPosition(7323, 1));
 // console.log(digitCount(7323));
 
-console.log(radixSort([37,7,4,199,22,333,24,15,2367,34,27,1268,95,46,57,3334,56,978,756,43,34]));
+console.log(
+	radixSort([
+		37, 7, 4, 199, 22, 333, 24, 15, 2367, 34, 27, 1268, 95, 46, 57, 3334,
+		56, 978, 756, 43, 34
+	])
+);
 
+// Linked list
+
+class Node {
+	constructor(val) {
+		this.val = val;
+		this.next = null;
+	}
+}
+
+let first = new Node('Hi ');
+first.next = new Node('there, ');
+first.next.next = new Node('how ');
+first.next.next.next = new Node('are ');
+first.next.next.next.next = new Node('you?');
+
+class SinglyLinkedList {
+	constructor() {
+		this.head = null;
+		this.tail = null;
+		this.length = 0;
+	}
+
+	push(val) {
+		let tempNode = new Node(val);
+		if (this.length === 0) {
+			this.head = tempNode;
+			this.tail = tempNode;
+		} else {
+			this.tail.next = tempNode;
+			this.tail = tempNode;
+		}
+		this.length++;
+		return this;
+	}
+
+	pop() {
+		if (this.length > 1) {
+			let tempNode = this.head;
+			while (tempNode.next.next !== null) {
+				tempNode = tempNode.next;
+			}
+			let nodeToPop = tempNode.next;
+			tempNode.next = null;
+			this.tail = tempNode;
+			this.length --;
+			return nodeToPop;
+		} else {
+			let nodeToPop = this.head;
+			this.length = 0;
+			this.head = null;
+			this.tail = null;
+			return nodeToPop ? nodeToPop : undefined ;
+		}
+	}
+
+	shift(){
+		if (this.length > 1) {
+			let tempNode = this.head;
+			this.head = tempNode.next;
+			this.length --;
+			return tempNode;
+		} else {
+			let tempNode = this.head;
+			this.length = 0;
+			this.head = null;
+			this.tail = null;
+			return tempNode ? tempNode : undefined ;
+		}
+	}
+
+	unshift(val){
+		let tempNode = new Node(val);
+		if(this.length >= 1){
+			tempNode.next = this.head;
+			this.head = tempNode;
+		} else {
+			this.head = tempNode;
+			this.tail = tempNode;
+		}
+		this.length++;
+		return this;
+	}
+
+	get(index){
+		if(index >= this.length || index < 0) return undefined;
+		if(index === this.length -1) return this.tail;
+		let tempNode = this.head;
+		for(let i = 1; i < index; i++){
+			tempNode = tempNode.next;
+		}
+		return tempNode;
+	}
+
+	set(val, index){
+		let node = get(index);
+		if(node) {
+			node.val = val;
+			return true;
+		}
+		return false;
+	}
+
+	insert(val, index){
+		if(index < 0 || index > this.length ) return false;
+		if(index === 0){
+			this.unshift(val);
+			return true;
+		}
+		if(index === this.length){
+			this.push(val);
+			return true;
+		}
+		let prevNode = this.get(index - 1);
+		let newNode = new Node(val);
+		newNode.next = prevNode.next;
+		prevNode.next = newNode;
+		this.length++;
+		return true;
+	}
+
+	remove(index){
+		if(index < 0 || index >= this.length ) return undefined;
+		if(index === 0){
+			return this.shift();
+		}
+		if(index === this.length - 1){
+			return this.pop();			
+		}
+		let prevNode = this.get(index - 1);
+		let tempNode = prevNode.next;
+		prevNode.next = prevNode.next.next;
+		this.length--;
+		return tempNode;
+	}
+
+	reverse(){
+		if(this.length === 1) return this;
+		let newTail = this.head;
+		let currNode = this.head.next;
+		let oldNext = currNode.next;
+		let newNext = this.head;
+		// this.tail = this.head;
+		// this.tail.next = null;
+		let index = 1;
+		while(index < this.length -1){
+			currNode.next = newNext;
+			newNext = currNode;
+			currNode = oldNext;
+			oldNext = currNode.next;
+			index++;
+		}
+		this.head = currNode;
+		this.head.next = newNext;
+		this.tail = newTail;
+		this.tail.next = null;
+		return this;
+	}
+}
+
+let MyList = new SinglyLinkedList();
+
+MyList.unshift('Hi ');
+MyList.unshift('there, ');
+MyList.unshift('how ');
+MyList.unshift('are ');
+MyList.unshift('you?');
+
+
+
+console.log(MyList.reverse());
+// console.log(MyList.remove(6));
+// console.log(MyList.remove(4));
+// console.log(MyList.remove(3));
+//console.log(MyList.shift());
+// console.log(MyList.remove(3));
