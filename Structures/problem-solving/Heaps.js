@@ -104,7 +104,7 @@ class MaxBinaryHeap{
 // console.log(myHeap.values);
 
 
-class PiorityNode{
+class PriorityNode{
 	constructor(value, priority){
 		this.value = value;
 		this.priority = priority;
@@ -117,7 +117,7 @@ class PriorityQueue{
 	}
 
 	enqueue(value, priority){
-		const node = new PiorityNode(value, priority);
+		const node = new PriorityNode(value, priority);
 		this.queue.push(node);
 		let index = this.queue.length - 1;
 		let parentIndex = Math.floor((index - 1) / 2);

@@ -1,148 +1,114 @@
-class Graph {
+class WiegthedGraph {
 	constructor() {
 		this.adjacencyList = {};
 	}
 
 	addVertex(vertex) {
-		if (!this.adjacencyList[vertex]) {
-			this.adjacencyList[vertex] = [];
-			return true;
-		}
-		return false;
+		if (!this.adjacencyList[vertex]) this.adjacencyList[vertex] = [];
 	}
 
-	addEdge(v1, v2) {
-		this.adjacencyList[v1].push(v2);
-		this.adjacencyList[v2].push(v1);
-	}
-
-	removeEdge(v1, v2) {
-		let index = this.adjacencyList[v1].indexOf(v2);
-		this.adjacencyList[v1].splice(index, 1);
-
-		index = this.adjacencyList[v2].indexOf(v1);
-		this.adjacencyList[v2].splice(index, 1);
-	}
-
-	removeVertex(v1) {
-		this.adjacencyList[v1].forEach((element) => {
-			let index = this.adjacencyList[element].indexOf(v1);
-			this.adjacencyList[element].splice(index, 1);
-		});
-		delete this.adjacencyList[v1];
-	}
-
-	DFS_Recursive(vertex) {
-		const visitingOrder = [];
-		const visitedVertices = {};
-		const ptToAdjacencyList = this.adjacencyList;
-
-		function visit(vertex) {
-			if (!vertex in ptToAdjacencyList) return null;
-			visitingOrder.push(vertex);
-			visitedVertices[vertex] = true;
-			console.log(vertex);
-			ptToAdjacencyList[vertex].forEach((vtx) => {
-				if (!visitedVertices[vtx]) {
-					visit(vtx);
-				}
-			});
-		}
-
-		visit(vertex);
-		return visitingOrder;
-	}
-
-	DFS_Iterative(start) {
-		const stack = [];
-		const visitedVertices = {};
-		const visitingOrder = [];
-		stack.push(start);
-
-		while (stack.length) {
-			let tempVertex = stack.pop();
-			if (!visitedVertices[tempVertex]) {
-				visitingOrder.push(tempVertex);
-				visitedVertices[tempVertex] = true;
-				console.log(tempVertex);
-				this.adjacencyList[tempVertex].forEach((vtx) => {
-					if (!visitedVertices[vtx]) {
-						stack.push(vtx);
-					}
-				});
-			}
-		}
-		return visitingOrder;
-	}
-
-	BFS_Iterative(start) {
-		const stack = [];
-		const visitedVertices = {};
-		const visitingOrder = [];
-		stack.push(start);
-
-		while (stack.length) {
-			let tempVertex = stack.shift();
-			if (!visitedVertices[tempVertex]) {
-				visitingOrder.push(tempVertex);
-				visitedVertices[tempVertex] = true;
-				console.log(tempVertex);
-				this.adjacencyList[tempVertex].forEach((vtx) => {
-					if (!visitedVertices[vtx]) {
-						stack.push(vtx);
-					}
-				});
-			}
-		}
-		return visitingOrder;
+	addEdge(vertex1, vertex2, weight) {
+		this.adjacencyList[vertex1].push({ node: vertex2, weight });
+		this.adjacencyList[vertex2].push({ node: vertex1, weight });
 	}
 }
 
-const myGraph = new Graph();
+// class PriorityQueue{
+// 	constructor(){
+// 		this.values=[];
+// 	}
 
-// myGraph.addVertex('Tokyo');
-// myGraph.addVertex('Dallas');
-// myGraph.addVertex('Aspen');
-// myGraph.addVertex('Hong Kong');
-// myGraph.addVertex('Los Angeles');
+// 	enqueue(val, priority){
+// 		this.values.push({val, priority});
+// 		this.sort();
+// 	}
+// 	dequeue(){
+// 		return this.values.shift();
+// 	}
 
-// myGraph.addEdge('Tokyo', 'Dallas');
-// myGraph.addEdge('Tokyo', 'Hong Kong');
-// myGraph.addEdge('Dallas', 'Aspen');
-// myGraph.addEdge('Dallas', 'Hong Kong');
-// myGraph.addEdge('Dallas', 'Los Angeles');
-// myGraph.addEdge('Hong Kong', 'Los Angeles');
-myGraph.addVertex('A');
-myGraph.addVertex('B');
-myGraph.addVertex('C');
-myGraph.addVertex('D');
-myGraph.addVertex('E');
-myGraph.addVertex('F');
+// 	sort(){
+// 		this.values.sort((a, b) => a.priority - b.priority);
+// 	}
+// }
 
-myGraph.addEdge('A', 'B');
-myGraph.addEdge('A', 'C');
-myGraph.addEdge('B', 'D');
-myGraph.addEdge('C', 'E');
-myGraph.addEdge('D', 'E');
-myGraph.addEdge('D', 'F');
-myGraph.addEdge('E', 'F');
+class PriorityNode {
+	constructor(value, priority) {
+		this.value = value;
+		this.priority = priority;
+	}
+}
 
-console.log(myGraph);
+class PriorityQueue {
+	constructor() {
+		this.queue = [];
+	}
 
-//myGraph.removeVertex('Dallas');
-console.log(myGraph.DFS_Recursive('A'));
-console.log(myGraph);
+	enqueue(value, priority) {
+		const node = new PriorityNode(value, priority);
+		this.queue.push(node);
+		let index = this.queue.length - 1;
+		let parentIndex = Math.floor((index - 1) / 2);
 
-console.log(myGraph.DFS_Iterative('A'));
-console.log(myGraph);
+		while (
+			index > 0 &&
+			this.queue[parentIndex].priority > this.queue[index].priority
+		) {
+			let temp = this.queue[index];
+			this.queue[index] = this.queue[parentIndex];
+			this.queue[parentIndex] = temp;
+			index = parentIndex;
+			parentIndex = Math.floor((index - 1) / 2);
+		}
 
-console.log(myGraph.BFS_Iterative('A'));
-console.log(myGraph);
+		return this.queue;
+	}
 
-console.log(myGraph.BFS_Iterative('F'));
-console.log(myGraph);
+	dequeue() {
+		let minNode = this.queue[0];
+		let valueToBubble = this.queue.pop();
+		if (this.queue.length === 0) return minNode;
 
+		this.queue[0] = valueToBubble;
+		let bubbleUP = true;
+		let index = 0;
 
-console.log(myGraph.BFS_Iterative('E'));
-console.log(myGraph);
+		while (bubbleUP) {
+			let leftIndex = index * 2 + 1;
+			let rightIndex = leftIndex + 1;
+			let leftCondition =
+				leftIndex < this.queue.length &&
+				valueToBubble.priority > this.queue[leftIndex].priority;
+			let rightCondition =
+				rightIndex < this.queue.length &&
+				valueToBubble.priority > this.queue[rightIndex].priority;
+			if (leftCondition && rightCondition) {
+				if (
+					this.queue[leftIndex].priority <
+					this.queue[rightIndex].priority
+				) {
+					this.queue[index] = this.queue[leftIndex];
+					this.queue[leftIndex] = valueToBubble;
+					index = leftIndex;
+				} else {
+					this.queue[index] = this.queue[rightIndex];
+					this.queue[rightIndex] = valueToBubble;
+					index = rightIndex;
+				}
+			} else if (leftCondition) {
+				this.queue[index] = this.queue[leftIndex];
+				this.queue[leftIndex] = valueToBubble;
+				index = leftIndex;
+			} else if (rightCondition) {
+				this.queue[index] = this.queue[rightIndex];
+				this.queue[rightIndex] = valueToBubble;
+				index = rightIndex;
+			} else {
+				bubbleUP = false;
+			}
+		}
+
+		return minNode;
+	}
+}
+
 
