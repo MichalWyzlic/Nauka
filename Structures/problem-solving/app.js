@@ -200,4 +200,180 @@ graph.addEdge("E","F", 1);
 
 console.log(graph.dijkstra("A", "E"));
 
+function sortedFrequency(arr, val) {
+	if (arr[0] > val || arr[arr.length - 1] < val) return -1;
+	// add whatever parameters you deem necessary - good luck!
+	//lef limit
+	let leftLimit = 0;
+	let rightLimit = arr.length - 1;
+	let left = leftLimit;
+	let right = rightLimit;
+	let end = false;
+	if (arr[0] !== val) {
+		while (right - left > 1) {
+			let mid = Math.floor((left + right) / 2);
+			if (arr[mid] < val) {
+				left = mid;
+			} else {
+				right = mid;
+				if (arr[right] > val) rightLimit = right;
+			}
+		}
+		if (arr[right] !== val) return 0;
+		leftLimit = right;
+	}
 
+	left = leftLimit;
+	right = rightLimit;
+	if (arr[arr.length - 1] !== val) {
+		while (right - left > 1) {
+			let mid = Math.floor((left + right) / 2);
+			if (arr[mid] <= val) {
+				left = mid;
+			} else {
+				right = mid;
+			}
+		}
+		if (arr[left] !== val) return 0;
+		rightLimit = left;
+	}
+
+	return rightLimit - leftLimit + 1;
+}
+
+// console.log(sortedFrequency([1, 1, 2, 2, 2, 2, 3], 2)); // 4
+// console.log(sortedFrequency([1, 1, 2, 2, 2, 2, 3], 3)); // 1
+// console.log(sortedFrequency([1, 1, 2, 2, 2, 2, 3], 1)); // 2
+// console.log(sortedFrequency([1, 1, 2, 2, 2, 2, 3], 4)); // -1
+
+function findRotatedIndex(arr, val) {
+	if (arr[0] === val) return 0;
+	if (arr[arr.length] === val) return arr.length;
+
+	let left = 0;
+	let right = arr.length - 1;
+
+	let pivotIndex = 0;
+	//find the pivot index - the first index of the original array
+	if (arr[0] > arr[arr.length - 1]) {
+		while (right - left > 1) {
+			let mid = Math.floor((left + right) / 2);
+			//if(arr[mid] === val) return mid;
+			if (arr[mid] > arr[right]) {
+				left = mid;
+			} else {
+				right = mid;
+			}
+		}
+		pivotIndex = right;
+	}
+
+	//there is no solution
+	if (arr[pivotIndex - 1] < val || arr[pivotIndex] > val) return -1;
+	//solution is at the pivot index
+	if (arr[pivotIndex] === val) return pivotIndex;
+
+	//search in the bigger part
+	if (arr[0] <= val) {
+		left = 0;
+		right = pivotIndex - 1;
+	} else {
+		left = pivotIndex;
+		right = arr.length - 1;
+	}
+
+	while (right - left > 1) {
+		let mid = Math.floor((left + right) / 2);
+		if (arr[mid] < val) {
+			left = mid;
+		} else {
+			right = mid;
+		}
+	}
+
+	return arr[right] === val ? right : -1;
+}
+
+// console.log(findRotatedIndex([3, 4, 1, 2], 4)); // 1
+// console.log(findRotatedIndex([6, 7, 8, 9, 1, 2, 3, 4], 8)); // 2
+// console.log(findRotatedIndex([6, 7, 8, 9, 1, 2, 3, 4], 3)); // 6
+// console.log(findRotatedIndex([37, 44, 66, 102, 10, 22], 14)); // -1
+// console.log(findRotatedIndex([6, 7, 8, 9, 1, 2, 3, 4], 12)); // -1
+// console.log(findRotatedIndex([11, 12, 13, 14, 15, 16, 3, 5, 7, 9], 16)); // 5
+
+
+//selection sort
+function sorting(arr, comparator) {
+	
+	if (typeof comparator !== 'function') {
+		// provide a default
+		comparator = (a, b) => a - b;
+	}
+
+	for(let i = 0; i < arr.length - 1; i ++){
+		let minPos = i;
+		for(let j = i + 1; j < arr.length; j++){
+			if(comparator(arr[j],arr[minPos]) < 0){
+				minPos = j;
+			}
+		}
+		let temp = arr[i];
+		arr[i] = arr[minPos];
+		arr[minPos] = temp;
+	}
+
+	return arr;
+}
+
+console.log(sorting([4, 20, 12, 10, 7, 9])); // [4, 7, 9, 10, 12, 20]
+console.log(sorting([0, -10, 7, 4])); // [-10, 0, 4, 7]
+console.log(sorting([1, 2, 3])); // [1, 2, 3]
+console.log(sorting([]));
+
+var nums = [
+	4, 3, 5, 3, 43, 232, 4, 34, 232, 32, 4, 35, 34, 23, 2, 453, 546, 75, 67,
+	4342, 32
+];
+console.log(sorting(nums)); // [2, 3, 3, 4, 4, 4, 5, 23, 32, 32, 34, 34, 35, 43, 67, 75, 232, 232, 453, 546, 4342]
+
+var kitties = ['LilBub', 'Garfield', 'Heathcliff', 'Blue', 'Grumpy'];
+
+function strComp(a, b) {
+	if (a < b) {
+		return -1;
+	} else if (a > b) {
+		return 1;
+	}
+	return 0;
+}
+
+console.log(sorting(kitties, strComp)); // ["Blue", "Garfield", "Grumpy", "Heathcliff", "LilBub"]
+
+var moarKittyData = [
+	{
+		name: 'LilBub',
+		age: 7
+	},
+	{
+		name: 'Garfield',
+		age: 40
+	},
+	{
+		name: 'Heathcliff',
+		age: 45
+	},
+	{
+		name: 'Blue',
+		age: 1
+	},
+	{
+		name: 'Grumpy',
+		age: 6
+	}
+];
+
+function oldestToYoungest(a, b) {
+	return b.age - a.age;
+}
+
+console.log(sorting(moarKittyData, oldestToYoungest)); // sorted by age in descending order
