@@ -111,29 +111,29 @@ class PriorityQueue {
 	}
 }
 
-class WeightedGraph{
-	constructor(){
+class WeightedGraph {
+	constructor() {
 		this.adjacencyList = {};
 	}
 
-	addVertex(vertex){
-		if(!this.adjacencyList[vertex]) this.adjacencyList[vertex] = [];
+	addVertex(vertex) {
+		if (!this.adjacencyList[vertex]) this.adjacencyList[vertex] = [];
 	}
 
-	addEdge(vertex1, vertex2, weight){
-		this.adjacencyList[vertex1].push({node: vertex2, weight});
-		this.adjacencyList[vertex2].push({node: vertex1, weight});		
+	addEdge(vertex1, vertex2, weight) {
+		this.adjacencyList[vertex1].push({ node: vertex2, weight });
+		this.adjacencyList[vertex2].push({ node: vertex1, weight });
 	}
 
-	dijkstra(start, finish){
+	dijkstra(start, finish) {
 		const nodes = new PriorityQueue();
 		const distances = {};
 		const previous = {};
 		let smallest;
 
 		//initialise
-		for(let vertex in this.adjacencyList){
-			if(vertex === start){
+		for (let vertex in this.adjacencyList) {
+			if (vertex === start) {
 				distances[start] = 0;
 				nodes.enqueue(start, 0);
 			} else {
@@ -144,9 +144,9 @@ class WeightedGraph{
 		}
 
 		//as long as there is something to visit
-		while(nodes.queue.length > 0){
+		while (nodes.queue.length > 0) {
 			smallest = nodes.dequeue().value;
-			if(smallest === finish){
+			if (smallest === finish) {
 				const results = [finish];
 				let tempNode = finish;
 				console.log(distances);
@@ -154,51 +154,47 @@ class WeightedGraph{
 				console.log(nodes);
 				//we are done
 				//build the path
-				while(tempNode !== start){
+				while (tempNode !== start) {
 					tempNode = previous[tempNode];
 					results.unshift(tempNode);
 				}
 				return results;
 			}
-			if(smallest || distances[smallest] !==  Infinity){
-				for(let neighbor in this.adjacencyList[smallest]){
+			if (smallest || distances[smallest] !== Infinity) {
+				for (let neighbor in this.adjacencyList[smallest]) {
 					//find neighbour node
 					let nextNode = this.adjacencyList[smallest][neighbor];
 					//calculate the distance to the nextNode
 					let candidate = distances[smallest] + nextNode.weight;
-					if(candidate < distances[nextNode.node]){
+					if (candidate < distances[nextNode.node]) {
 						distances[nextNode.node] = candidate;
 						previous[nextNode.node] = smallest;
 						nodes.enqueue(nextNode.node, candidate);
 					}
-
 				}
-
 			}
 		}
-
 	}
 }
 
-let graph = new WeightedGraph()
-graph.addVertex("A");
-graph.addVertex("B");
-graph.addVertex("C");
-graph.addVertex("D");
-graph.addVertex("E");
-graph.addVertex("F");
+let graph = new WeightedGraph();
+graph.addVertex('A');
+graph.addVertex('B');
+graph.addVertex('C');
+graph.addVertex('D');
+graph.addVertex('E');
+graph.addVertex('F');
 
-graph.addEdge("A","B", 4);
-graph.addEdge("A","C", 2);
-graph.addEdge("B","E", 3);
-graph.addEdge("C","D", 2);
-graph.addEdge("C","F", 4);
-graph.addEdge("D","E", 3);
-graph.addEdge("D","F", 1);
-graph.addEdge("E","F", 1);
+graph.addEdge('A', 'B', 4);
+graph.addEdge('A', 'C', 2);
+graph.addEdge('B', 'E', 3);
+graph.addEdge('C', 'D', 2);
+graph.addEdge('C', 'F', 4);
+graph.addEdge('D', 'E', 3);
+graph.addEdge('D', 'F', 1);
+graph.addEdge('E', 'F', 1);
 
-
-console.log(graph.dijkstra("A", "E"));
+console.log(graph.dijkstra('A', 'E'));
 
 function sortedFrequency(arr, val) {
 	if (arr[0] > val || arr[arr.length - 1] < val) return -1;
@@ -301,19 +297,17 @@ function findRotatedIndex(arr, val) {
 // console.log(findRotatedIndex([6, 7, 8, 9, 1, 2, 3, 4], 12)); // -1
 // console.log(findRotatedIndex([11, 12, 13, 14, 15, 16, 3, 5, 7, 9], 16)); // 5
 
-
 //selection sort
 function sorting(arr, comparator) {
-	
 	if (typeof comparator !== 'function') {
 		// provide a default
 		comparator = (a, b) => a - b;
 	}
 
-	for(let i = 0; i < arr.length - 1; i ++){
+	for (let i = 0; i < arr.length - 1; i++) {
 		let minPos = i;
-		for(let j = i + 1; j < arr.length; j++){
-			if(comparator(arr[j],arr[minPos]) < 0){
+		for (let j = i + 1; j < arr.length; j++) {
+			if (comparator(arr[j], arr[minPos]) < 0) {
 				minPos = j;
 			}
 		}
@@ -377,3 +371,71 @@ function oldestToYoungest(a, b) {
 }
 
 console.log(sorting(moarKittyData, oldestToYoungest)); // sorted by age in descending order
+
+class Node {
+	constructor(val) {
+		this.val = val;
+		this.next = null;
+	}
+}
+
+class SinglyLinkedList {
+	constructor(val) {
+		this.val = val;
+		this.next = null;
+		this.length = 0;
+	}
+	push(val) {
+		var newNode = new Node(val);
+		if (!this.head) {
+			this.head = newNode;
+			this.tail = this.head;
+		} else {
+			this.tail.next = newNode;
+			this.tail = newNode;
+		}
+		this.length++;
+
+		return this;
+	}
+
+	get(index) {
+		if (index >= this.length || index < 0) return undefined;
+		if (index === this.length - 1) return this.tail;		
+		let tempNode = this.head;
+		for (let i = 1; i <= index; i++) {
+			tempNode = tempNode.next;
+		}
+		return tempNode;
+	}
+
+	remove(index) {
+		if (index >= this.length || index < 0) return undefined;
+		let tempNode;
+		if (index === 0) {
+			tempNode = this.head;
+			this.head = this.head.next;
+		} else if (index === this.length - 1) {
+			tempNode = this.tail;
+			this.tail = this.get(this.length - 2);
+			this.tail.next = null;
+		} else {
+			let prevNode = this.get(index - 1);
+			tempNode = prevNode.next;
+			prevNode.next = tempNode.next;
+		}
+		tempNode.next = null;
+		this.length--;
+		return tempNode;
+	}
+}
+
+let singlyLinkedList = new SinglyLinkedList();
+console.log(singlyLinkedList.push(5).push(10).push(15).push(20));
+console.log(singlyLinkedList);
+console.log(singlyLinkedList.remove(2).val); // 15
+console.log(singlyLinkedList.remove(100)); // undefined
+console.log(singlyLinkedList.length); // 3
+console.log(singlyLinkedList.head.val); // 5
+console.log(singlyLinkedList.head.next.val); // 10
+console.log(singlyLinkedList.head.next.next.val); // 20
