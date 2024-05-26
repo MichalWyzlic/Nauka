@@ -111,29 +111,29 @@ class PriorityQueue {
 	}
 }
 
-class WeightedGraph{
-	constructor(){
+class WeightedGraph {
+	constructor() {
 		this.adjacencyList = {};
 	}
 
-	addVertex(vertex){
-		if(!this.adjacencyList[vertex]) this.adjacencyList[vertex] = [];
+	addVertex(vertex) {
+		if (!this.adjacencyList[vertex]) this.adjacencyList[vertex] = [];
 	}
 
-	addEdge(vertex1, vertex2, weight){
-		this.adjacencyList[vertex1].push({node: vertex2, weight});
-		this.adjacencyList[vertex2].push({node: vertex1, weight});		
+	addEdge(vertex1, vertex2, weight) {
+		this.adjacencyList[vertex1].push({ node: vertex2, weight });
+		this.adjacencyList[vertex2].push({ node: vertex1, weight });
 	}
 
-	dijkstra(start, finish){
+	dijkstra(start, finish) {
 		const nodes = new PriorityQueue();
 		const distances = {};
 		const previous = {};
 		let smallest;
 
 		//initialise
-		for(let vertex in this.adjacencyList){
-			if(vertex === start){
+		for (let vertex in this.adjacencyList) {
+			if (vertex === start) {
 				distances[start] = 0;
 				nodes.enqueue(start, 0);
 			} else {
@@ -144,9 +144,9 @@ class WeightedGraph{
 		}
 
 		//as long as there is something to visit
-		while(nodes.queue.length > 0){
+		while (nodes.queue.length > 0) {
 			smallest = nodes.dequeue().value;
-			if(smallest === finish){
+			if (smallest === finish) {
 				const results = [finish];
 				let tempNode = finish;
 				console.log(distances);
@@ -154,51 +154,47 @@ class WeightedGraph{
 				console.log(nodes);
 				//we are done
 				//build the path
-				while(tempNode !== start){
+				while (tempNode !== start) {
 					tempNode = previous[tempNode];
 					results.unshift(tempNode);
 				}
 				return results;
 			}
-			if(smallest || distances[smallest] !==  Infinity){
-				for(let neighbor in this.adjacencyList[smallest]){
+			if (smallest || distances[smallest] !== Infinity) {
+				for (let neighbor in this.adjacencyList[smallest]) {
 					//find neighbour node
 					let nextNode = this.adjacencyList[smallest][neighbor];
 					//calculate the distance to the nextNode
 					let candidate = distances[smallest] + nextNode.weight;
-					if(candidate < distances[nextNode.node]){
+					if (candidate < distances[nextNode.node]) {
 						distances[nextNode.node] = candidate;
 						previous[nextNode.node] = smallest;
 						nodes.enqueue(nextNode.node, candidate);
 					}
-
 				}
-
 			}
 		}
-
 	}
 }
 
-let graph = new WeightedGraph()
-graph.addVertex("A");
-graph.addVertex("B");
-graph.addVertex("C");
-graph.addVertex("D");
-graph.addVertex("E");
-graph.addVertex("F");
+let graph = new WeightedGraph();
+graph.addVertex('A');
+graph.addVertex('B');
+graph.addVertex('C');
+graph.addVertex('D');
+graph.addVertex('E');
+graph.addVertex('F');
 
-graph.addEdge("A","B", 4);
-graph.addEdge("A","C", 2);
-graph.addEdge("B","E", 3);
-graph.addEdge("C","D", 2);
-graph.addEdge("C","F", 4);
-graph.addEdge("D","E", 3);
-graph.addEdge("D","F", 1);
-graph.addEdge("E","F", 1);
+graph.addEdge('A', 'B', 4);
+graph.addEdge('A', 'C', 2);
+graph.addEdge('B', 'E', 3);
+graph.addEdge('C', 'D', 2);
+graph.addEdge('C', 'F', 4);
+graph.addEdge('D', 'E', 3);
+graph.addEdge('D', 'F', 1);
+graph.addEdge('E', 'F', 1);
 
-
-console.log(graph.dijkstra("A", "E"));
+console.log(graph.dijkstra('A', 'E'));
 
 function sortedFrequency(arr, val) {
 	if (arr[0] > val || arr[arr.length - 1] < val) return -1;
@@ -301,19 +297,17 @@ function findRotatedIndex(arr, val) {
 // console.log(findRotatedIndex([6, 7, 8, 9, 1, 2, 3, 4], 12)); // -1
 // console.log(findRotatedIndex([11, 12, 13, 14, 15, 16, 3, 5, 7, 9], 16)); // 5
 
-
 //selection sort
 function sorting(arr, comparator) {
-	
 	if (typeof comparator !== 'function') {
 		// provide a default
 		comparator = (a, b) => a - b;
 	}
 
-	for(let i = 0; i < arr.length - 1; i ++){
+	for (let i = 0; i < arr.length - 1; i++) {
 		let minPos = i;
-		for(let j = i + 1; j < arr.length; j++){
-			if(comparator(arr[j],arr[minPos]) < 0){
+		for (let j = i + 1; j < arr.length; j++) {
+			if (comparator(arr[j], arr[minPos]) < 0) {
 				minPos = j;
 			}
 		}
