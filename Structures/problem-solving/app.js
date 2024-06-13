@@ -160,7 +160,11 @@ class BinarySearchTree {
 				currNode = currNode.left;
 			}
 			if(prevNode != node) {
-				prevNode.left = null;
+				if(currNode.right){
+					prevNode.left = currNode.right;
+				} else {
+					prevNode.left = null;
+				}
 			} 
 			let returnVal = currNode.value;
 			currNode = null;
@@ -168,80 +172,130 @@ class BinarySearchTree {
 		}
 	}
 
-	// hight(){
-	// 	if(this.root === null) return -1;
-	// 	let hight = 0;
-	// 	function parse(node, level = 0){
-	// 		if(!node) return;
-	// 		hight = Math.max(hight, level);
-	// 		parse(node.left, (level + 1)) ;
-	// 		parse(node.right, (level + 1));
-	// 	}
-	// 	parse(this.root, 0);
-	// 	return hight;
-	// }
+	hight(){
+		if(this.root === null) return -1;
+		let hight = 0;
+		function parse(node, level = 0){
+			if(!node) return;
+			hight = Math.max(hight, level);
+			parse(node.left, (level + 1)) ;
+			parse(node.right, (level + 1));
+		}
+		parse(this.root, 0);
+		return hight;
+	}
 
-	// size(){
-	// 	if(this.root === null) return 0;
-	// 	let size = 0;
-	// 	function parse(node){
-	// 		if(!node) return;
-	// 		size++;
-	// 		parse(node.left) ;
-	// 		parse(node.right);
-	// 	}
-	// 	parse(this.root);
-	// 	return size;
-	// }
+	size(){
+		if(this.root === null) return 0;
+		let size = 0;
+		function parse(node){
+			if(!node) return;
+			size++;
+			parse(node.left) ;
+			parse(node.right);
+		}
+		parse(this.root);
+		return size;
+	}
+
+	isBalanced() {
+		let coefficient = size/
+	}
+
+	findSecondLargest() {
+		if(!(this.root.right || this.root.left)) return undefined;
+		let largest = this.root;
+		let secondLargest = null;
+		while(largest.right){
+			secondLargest = largest;
+			largest = largest.right;
+		};
+		if(largest.left){
+			secondLargest = largest.left;
+			while(secondLargest.right){
+				secondLargest = secondLargest.right;
+			}
+		}
+		return secondLargest.value;
+	}
 }
 
 var binarySearchTree = new BinarySearchTree();
 binarySearchTree
-	.insert(15)
-	.insert(20)
-	.insert(10)
-	.insert(12)
-	.insert(1)
-	.insert(5)
-	.insert(50);
+    .insert(15)
+    .insert(20)
+    .insert(10)
+    .insert(12)
+    .insert(1)
+    .insert(5)
+    .insert(50);
 console.log(binarySearchTree.remove(50));
 console.log(binarySearchTree.root.right.value); // 20
-console.log(binarySearchTree.root.right.right); // nul
-
-binarySearchTree = new BinarySearchTree();
+console.log(binarySearchTree.root.right.right); // null
+ 
+console.log(binarySearchTree.remove(5));
+console.log(binarySearchTree.root.left.left.value); // 1
+console.log(binarySearchTree.root.left.left.right); // null
+ 
+var binarySearchTree = new BinarySearchTree();
 binarySearchTree
-	.insert(15)
-	.insert(20)
-	.insert(10)
-	.insert(12)
-	.insert(1)
-	.insert(5)
-	.insert(50)
-	.insert(60)
-	.insert(30)
-	.insert(35)
-	.insert(37)
-	.insert(34)
-	.insert(22)
-	.insert(25)
-	.insert(21);
-
+    .insert(15)
+    .insert(20)
+    .insert(10)
+    .insert(12)
+    .insert(1)
+    .insert(5)
+    .insert(50);
+ 
 console.log(binarySearchTree.remove(1));
 console.log(binarySearchTree.root.left.left.value); // 5
 console.log(binarySearchTree.root.left.left.left); // null
 console.log(binarySearchTree.root.left.left.right); // null
-console.log(binarySearchTree.remove(30));
-console.log(binarySearchTree.remove(22));
-console.log(binarySearchTree.remove(15));
-
-// binarySearchTree = new BinarySearchTree();
-// binarySearchTree
-//     .insert(15)
-//     .insert(20)
-//     .insert(10)
-//     .insert(12)
-//     .insert(1)
-//     .insert(5)
-//     .insert(50);
-// console.log(binarySearchTree.hight());
-// console.log(binarySearchTree.size());
+ 
+console.log(binarySearchTree.remove(20));
+console.log(binarySearchTree.root.right.value); // 50
+console.log(binarySearchTree.root.right.right); // null
+console.log(binarySearchTree.root.right.left); // null
+ 
+var binarySearchTree = new BinarySearchTree();
+binarySearchTree
+    .insert(15)
+    .insert(20)
+    .insert(10)
+    .insert(12)
+    .insert(1)
+    .insert(5)
+    .insert(50)
+    .insert(60)
+    .insert(30)
+    .insert(25)
+    .insert(23)
+    .insert(24)
+    .insert(70);
+ 
+console.log(binarySearchTree.remove(10));
+console.log(binarySearchTree.root.left.value); // 12
+console.log(binarySearchTree.root.left.left.value); // 1
+console.log(binarySearchTree.root.left.left.right.value); // 5
+ 
+console.log(binarySearchTree.remove(50));
+console.log(binarySearchTree.root.right.value); // 20
+console.log(binarySearchTree.root.right.right.value); // 60
+console.log(binarySearchTree.root.right.right.left.value); // 30
+ 
+var binarySearchTree = new BinarySearchTree();
+binarySearchTree
+    .insert(22)
+    .insert(49)
+    .insert(85)
+    .insert(66)
+    .insert(95)
+    .insert(90)
+    .insert(100)
+    .insert(88)
+    .insert(93)
+    .insert(89)
+ 
+console.log(binarySearchTree.remove(85));
+console.log(binarySearchTree.root.right.right.value); // 88
+console.log(binarySearchTree.root.right.right.right.left.left.value); // 89
