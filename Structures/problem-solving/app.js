@@ -1,215 +1,50 @@
-// My trie
-
-// class Trie {
-//     constructor() {
-//         this.characters = {};
-//         this.isWord = false;
-//     }
-//     addWord(word, index = 0) {
-// 		const char = word.charAt(index);
-// 		if(!(char in this.characters, char)){
-// 			this.characters[char] = new Trie();
-// 		}
-// 		if(index < word.length - 1){
-// 			this.characters[char].addWord(word, index + 1);
-// 		} else {
-// 			this.characters[char].isWord = true;
-// 		}
-//     }
-// }
-
-// class Trie {
-//     constructor() {
-//         this.characters = {};
-//         this.isWord = false;
-//     }
-//     addWord(word, index = 0) {
-//         if (index === word.length) {
-//             this.isWord = true;
-//         } else if (index < word.length) {
-//             var char = word[index];
-//             var subTrie = this.characters[char] || new Trie();
-//             subTrie.addWord(word, index + 1);
-//             this.characters[char] = subTrie;
-//         }
-//         return this;
-//     }
-
-//     findWord(word, index = 0, curTrie = this) {
-// 		let currentTrie = curTrie;
-// 		let char = word.charAt(index);
-// 		if(!(char in currentTrie.characters)){
-// 			return undefined;
-// 		};
-
-// 		if(index === word.length - 1) {
-// 			return currentTrie.characters[char].isWord ? currentTrie.characters[char] : undefined;
-// 		} else {
-// 			return this.findWord(word, index + 1, currentTrie.characters[char]);
-// 		}
-
-//     }
-// }
-
-// var t = new Trie();
-// console.log(t.addWord('fun'));
-// console.log(t.addWord('fast'));
-// console.log(t.addWord('fat'));
-// console.log(t.addWord('fate'));
-// console.log(t.addWord('father'));
-
-// console.log(t.findWord('taco')); // undefined
-// console.log(t.findWord('fat').characters); // {t: Trie}
-// console.log(t.findWord('father').characters); // {}
-// console.log(t.findWord('father').isWord); // true
-
-// class Trie {
-//     constructor() {
-//         this.characters = {};
-//         this.isWord = false;
-//     }
-//     addWord(word, index = 0) {
-//         if (index === word.length) {
-//             this.isWord = true;
-//         } else if (index < word.length) {
-//             var char = word[index];
-//             var subTrie = this.characters[char] || new Trie();
-//             subTrie.addWord(word, index + 1);
-//             this.characters[char] = subTrie;
-//         }
-//         return this;
-//     }
-//     getWords(words = [], currentWord = "", curTrie = this){
-//         if(curTrie.isWord) words.push(currentWord);
-// 		for(let key in curTrie.characters){
-// 			this.getWords(words, currentWord + key, curTrie.characters[key]);
-// 		}
-// 		return words;
-//     }
-// }
-
-// var t = new Trie();
-// t.addWord('fun')
-// t.addWord('fast')
-// t.addWord('fat')
-// t.addWord('fate')
-// t.addWord('father')
-// t.addWord('forget')
-// t.addWord('awesome')
-// t.addWord('argue')
-
-// console.log(t.getWords()); // ["fun", "fast", "fat", "fate", "father", "forget", "awesome", "argue"]
-
-// console.log(t.getWords().length); // 8
-
-class Trie {
-	constructor() {
-		this.characters = {};
-		this.isWord = false;
+function determinant(m) {
+	// return the determinant of the matrix passed in [x][y]
+	//	[00 , 10]
+	//	[01 , 11]
+	if (m.length === 1) {
+		return m[0][0];
+	} else if (m.length === 2) {
+		return m[0][0] * m[1][1] - m[0][1] * m[1][0];
 	}
-	addWord(word, index = 0) {
-		if (index === word.length) {
-			this.isWord = true;
-		} else if (index < word.length) {
-			var char = word[index];
-			var subTrie = this.characters[char] || new Trie();
-			subTrie.addWord(word, index + 1);
-			this.characters[char] = subTrie;
+	
+	let det = 0;
+	for(let i = 0; i < m.length; i ++){
+		let newMatrix = [];
+		for(let j = 0; j < m.length; j++){
+			if(i !== j) newMatrix.push(m[j].slice(1));
 		}
-		return this;
-	}
-
-	findWord(word, index = 0) {
-		var char = word[index];
-		if (index < word.length - 1 && this.characters[char]) {
-			index += 1;
-			return this.characters[char].findWord(word, index);
-		} else {
-			return this.characters[char];
+		if(m[i][0] !== 0) {
+			let tempDet = (i%2 === 0 ? 1 : -1) * m[i][0];
+			tempDet *=determinant(newMatrix); 
+			det += tempDet;
 		}
 	}
-	getWords(words = [], currentWord = '', curTrie = this) {
-		if (curTrie.isWord) words.push(currentWord);
-		for (let key in curTrie.characters) {
-			this.getWords(words, currentWord + key, curTrie.characters[key]);
-		}
-		return words;
-	}
-	autoComplete(prefix, curTrie = this) {
-		const result = [];
-		let index = 0;
 
-		while (index < prefix.length) {
-			let char = prefix.charAt(index);
-			if (char in curTrie.characters) {
-				index++;
-				curTrie = curTrie.characters[char];
-			} else {
-				return [];
-			}
-		}
-		return this.getWords(result, prefix, curTrie);
-	}
-
-	removeWord(word, curTrie = this) {
-		const charChain = [];
-		let index = 0;
-		let char = '';
-		while (index < word.length) {
-			char = word.charAt(index);
-			if (char in curTrie.characters) {
-				charChain[index] = [char, curTrie];
-				curTrie = curTrie.characters[char];
-				index++;
-			} else {
-				return false;
-			}
-		}
-
-		index--;
-		curTrie.isWord = false;
-
-		let canRemove = Object.keys(curTrie.characters).length === 0;
-		while (index >= 0 && canRemove) {
-			char = charChain[index][0];
-			curTrie = charChain[index][1];
-			canRemove =
-				canRemove &&
-				Object.keys(curTrie.characters[char].characters).length === 0 &&
-				!curTrie.characters[char].isWord;
-			if (canRemove) {
-				delete curTrie.characters[char];
-			}
-			index--;
-		}
-		return true;
-	}
+	return det;
 }
 
-var t = new Trie();
-t.addWord('awe');
-t.addWord('fun');
-t.addWord('fast');
-t.addWord('fat');
-t.addWord('fate');
-t.addWord('father');
-t.addWord('forget');
-t.addWord('awesome');
-t.addWord('argue');
+let m1 = [
+	[4, 6],
+	[3, 8]
+];
 
-console.log(t.autoComplete('fa')); // ["fast","fat", "fate", "father"]
-console.log(t.autoComplete('a')); // ["awesome", "argue"]
-console.log(t.autoComplete('arz')); // []
+let m4 = [
+	[1, 3, 0,-1],
+	[0, 2, 1, 3],
+	[3, 1, 2, 1],
+	[-1,2, 0, 3]
+];
+let m5 = [
+	[2, 4, 2, 4, 5],
+	[3, 1, 1, 2, 3],
+	[1, 2, 4, 7, -1],
+	[1, 5, 2, 3, 5],
+	[8, 2, 3, 7, 9]
+];
+m3 = [[2,4,2],[3,1,1],[1,2,0]]
 
-console.log(t.removeWord('fat'));
-console.log(t.characters.f.characters.a.characters.t.isWord); // false
-console.log(t.characters.f.characters.a.characters.t.characters.e.isWord); // true
-
-console.log(t.removeWord('argue'));
-
-console.log(t.characters.a.characters.r); // undefined
-console.log(t.removeWord('awesome'));
-console.log(t.removeWord('awe'));
-
-
-console.log(t.getWords());
+console.log(determinant(m1));
+console.log(determinant(m4));
+console.log(determinant(m5));
+console.log(determinant(m3));
