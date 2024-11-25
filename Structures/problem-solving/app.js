@@ -1,50 +1,113 @@
-function determinant(m) {
-	// return the determinant of the matrix passed in [x][y]
-	//	[00 , 10]
-	//	[01 , 11]
-	if (m.length === 1) {
-		return m[0][0];
-	} else if (m.length === 2) {
-		return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+// input: Number, output: BigInt
+const primeNum = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31];
+function findNextPrimeNum() {
+	let sixMul = Math.floor((primeNum[primeNum.length - 1] + 1) / 6);
+	let numToCheck = sixMul * 6 + 1;
+	let higher = true;
+	if (numToCheck === primeNum[primeNum.length - 1]) {
+		numToCheck += 4;
+		sixMul++;
+		higher = false;
 	}
-	
-	let det = 0;
-	for(let i = 0; i < m.length; i ++){
-		let newMatrix = [];
-		for(let j = 0; j < m.length; j++){
-			if(i !== j) newMatrix.push(m[j].slice(1));
+
+	while (true) {
+		let i = 0;
+		let hasADivisor = false;
+		while (
+			primeNum[i] <= Math.floor(Math.sqrt(numToCheck)) &&
+			!hasADivisor &&
+			i < primeNum.length
+		) {
+			hasADivisor = numToCheck % primeNum[i] === 0;
+			i++;
 		}
-		if(m[i][0] !== 0) {
-			let tempDet = (i%2 === 0 ? 1 : -1) * m[i][0];
-			tempDet *=determinant(newMatrix); 
-			det += tempDet;
+		if (!hasADivisor) break;
+		if (higher) {
+			sixMul++;
+			numToCheck += 4;
+			higher = false;
+		} else {
+			numToCheck += 2;
+			higher = true;
 		}
 	}
 
-	return det;
+	primeNum.push(numToCheck);
 }
 
-let m1 = [
-	[4, 6],
-	[3, 8]
-];
+function findDividers(d) {
+	const dDividers = [];
+	let number = d;
+	let i = 0;
+	while (number > 1 && primeNum[i] <= number) {
+		if (number % primeNum[i] === 0) {
+			dDividers.push(primeNum[i]);
+			number /= primeNum[i];
+		} else {
+			i++;
+			if (i >= primeNum.length) findNextPrimeNum();
+		}
+	}
 
-let m4 = [
-	[1, 3, 0,-1],
-	[0, 2, 1, 3],
-	[3, 1, 2, 1],
-	[-1,2, 0, 3]
-];
-let m5 = [
-	[2, 4, 2, 4, 5],
-	[3, 1, 1, 2, 3],
-	[1, 2, 4, 7, -1],
-	[1, 5, 2, 3, 5],
-	[8, 2, 3, 7, 9]
-];
-m3 = [[2,4,2],[3,1,1],[1,2,0]]
+	return dDividers;
+}
 
-console.log(determinant(m1));
-console.log(determinant(m4));
-console.log(determinant(m5));
-console.log(determinant(m3));
+function optimiseDividers(arrDiv) {
+	const powersArr = [];
+	const lastIndex = arrDiv.length - 1;
+	for (let i = lastIndex; i >= 0; i--) {
+		powersArr.push(arrDiv[i] - 1);
+	}
+
+	let index = 0;
+	while (
+		primeNum[index] **
+			((powersArr[index] + 1) * ((powersArr[lastIndex] + 1) - 1)) <
+		primeNum[lastIndex] ** powersArr[lastIndex]
+	) {
+		index++;
+	}
+	index--;
+
+	//Optimisation is not possible
+	if(index < 0) return powersArr;
+
+	console.log(primeNum);
+	console.log(powersArr);
+	return powersArr;
+}
+
+function f(d) {
+	const divs = optimiseDividers(findDividers(d));
+
+	// i = 0;
+	// let value = BigInt(1);
+	// while (dDividers.length > 0) {
+	// 	value *= BigInt(primeNum[i]) ** BigInt(dDividers.pop() - 1);
+	// 	i++;
+	// }
+	// return value;
+}
+
+console.log(f(8));
+console.log(f(108));
+console.log(f(60));
+console.log(f(420));
+console.log(f(3072));
+
+// const { assert } = require('chai');
+
+// describe('Solution test', () => {
+// 	const act = (d, expected) => {
+// 		it(`d: ${d}`, () => {
+// 			const actual = f(d);
+// 			assert.strictEqual(actual, expected);
+// 		});
+// 	};
+// 	describe('Sample tests', () => {
+// 		act(1, 1n);
+// 		act(3, 4n);
+// 		act(60, 5040n);
+// 		act(420, 9979200n);
+// 	});
+// });
