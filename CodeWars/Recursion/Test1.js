@@ -305,6 +305,60 @@ function findAllDenominators(num) {
 	return results;
 }
 
+
+let initialSet = [[2,2,2,2],
+	[2,2,2],
+	[2,2,3],
+	[2,2,5],
+	[2,3,3],
+	[2,2],
+	[2,3],
+	[2,5],
+	[2,7],
+	[3,3],
+	[3,5],
+	[3],
+	[5],
+	[7],
+	[11],
+	[13],
+	[17],
+	[19]];
+
+//Use a Map to store the results of the recursive function
+
+function findSets(n){
+	let denominators = findAllDenominators(n);
+	//Array of maps 
+	let solutionIndex = 0;
+	let tempResults = [[]];
+
+	function findCombinations(arrDenom){
+		//end of the array
+		if(arrDenom.length === 0) {
+			return;
+		}
+		//if there is uneven 2 at the end -> there is no solution
+		if(arrDenom.length === 1 && arrDenom[0] === 2){
+			tempResults[solutionIndex] = [];
+			return;
+		}
+		//single elements greater than 2
+		if(arrDenom[0] > 2){
+			tempResults[solutionIndex].push(findCombinations(arrDenom.slice(1)));			
+		}
+
+		//at least two elements and the multiplication can be smaller than 20
+		if(arrDenom.length > 1 && arrDenom[0] === 3 ) {
+			if()
+		}
+
+
+
+	}
+
+}
+
 findPrime(100);
 console.log(primeNumbers);
 console.log(findAllDenominators(362880));
