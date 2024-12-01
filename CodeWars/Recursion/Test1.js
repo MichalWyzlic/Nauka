@@ -305,6 +305,39 @@ function findAllDenominators(num) {
 	return results;
 }
 
+function mapAllDenominators(num) {
+	let searchLimit = Math.floor(Math.sqrt(num));
+	if(searchLimit > primeNumbers[primeNumbers.length-1]) findPrime(searchLimit);
+	let results = new Map();
+	// let results = new Map([
+	// 	[2, 0],
+	// 	[3, 0],
+	// 	[5, 0],
+	// 	[7, 0],
+	// 	[11, 0],
+	// 	[13, 0]//,
+	// //	[17, 0],
+	// //	[19, 0]
+	// ]);
+
+	function recursion(num) {
+		if(num === 1) return;
+		let i = 0;
+		while (primeNumbers[i] < searchLimit) {
+			if (num % primeNumbers[i] === 0) {
+				results.set(primeNumbers[i], results.has(primeNumbers[i]) ? results.get(primeNumbers[i]) + 1 : 1);
+				recursion(num / primeNumbers[i]);
+				break;
+			}
+			i++;
+		}
+	}
+
+	recursion(num);
+
+	return results;
+}
+
 
 let initialSet = [[2,2,2,2],
 	[2,2,2],
@@ -327,38 +360,53 @@ let initialSet = [[2,2,2,2],
 
 //Use a Map to store the results of the recursive function
 
-function findSets(n){
-	let denominators = findAllDenominators(n);
+function findSets(arr){
+	let n = arr.reduce((prev, curr) => prev * curr, 1);
+	//Map of denominators
+	let denominators = mapAllDenominators(n);
 	//Array of maps 
 	let solutionIndex = 0;
 	let tempResults = [[]];
 
-	function findCombinations(arrDenom){
+	function findCombinations(mapDenom){
 		//end of the array
-		if(arrDenom.length === 0) {
+		if(mapDenom.size === 0) {
 			return;
 		}
 		//if there is uneven 2 at the end -> there is no solution
-		if(arrDenom.length === 1 && arrDenom[0] === 2){
+		if(mapDenom.size === 1 && mapDenom.get(2) === 2){
 			tempResults[solutionIndex] = [];
 			return;
 		}
 		//single elements greater than 2
-		if(arrDenom[0] > 2){
-			tempResults[solutionIndex].push(findCombinations(arrDenom.slice(1)));			
+		if(mapDenom.size > 1 || !mapDenom.has(2)){
+			mapDenom.forEach((value, key) => {
+				if(key !== 2){
+					tempResults[solutionIndex].push(key);
+					let newMap = new Map(mapDenom);
+					value > 1 ? newMap.set(key, value -1) : newMap.delete(key);
+					findCombinations(newMap);
+				}
+			});
+						
 		}
 
-		//at least two elements and the multiplication can be smaller than 20
-		if(arrDenom.length > 1 && arrDenom[0] === 3 ) {
-			if()
-		}
+		// //at least two elements and the multiplication can be smaller than 20
+		// if(mapDenom.length > 1 && mapDenom[0] === 3 ) {
+		// 	if()
+		// }
 
 
 
 	}
 
+	findCombinations(denominators);
+
+	return results;
+
 }
 
 findPrime(100);
 console.log(primeNumbers);
-console.log(findAllDenominators(362880));
+console.log(mapAllDenominators(362880));
+findSets([128,9,9,7,5]);
