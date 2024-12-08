@@ -383,19 +383,20 @@ function findSets(arr) {
 			solutionIndex++;
 			return;
 		}
-		//if there is uneven 2 at the end -> there is no solution
-		if (mapDenom.size === 1 && mapDenom.get(2) === 1) {
-			results[solutionIndex] = [];
-			return;
-		}
+		// //if there is uneven 2 at the end -> there is no solution
+		// if (mapDenom.size === 1 && mapDenom.get(2) === 1) {
+		// 	results[solutionIndex] = [];
+		// 	return;
+		// }
 		//single elements greater than 2
 		if (mapDenom.size > 1 || !mapDenom.has(2)) {
 			mapDenom.forEach((value, key) => {
 				if (key !== 2) {
-					tempResults.push(key);
+					let newArr = [...tempResults];
+					newArr.push(key);
 					let newMap = new Map(mapDenom);
 					value > 1 ? newMap.set(key, value - 1) : newMap.delete(key);
-					findCombinations(newMap, [...tempResults]);
+					findCombinations(newMap, newArr);
 				}
 			});
 		}
@@ -403,6 +404,7 @@ function findSets(arr) {
 		//at least two elements and the multiplication can be smaller than 20
 		//all the possibilities are held in the possiblePairs array
 		possiblePairs.forEach((pair) => {
+			let newArr = [...tempResults];
 			let newMap = new Map(mapDenom);
 			if (newMap.has(pair[0])) {
 				let key = pair[0];
@@ -417,8 +419,8 @@ function findSets(arr) {
 						: newMap.delete(key);
 
 					//update the results
-					tempResults.push(pair[0] * pair[1]);
-					findCombinations(newMap, [...tempResults]);
+					newArr.push(pair[0] * pair[1]);
+					findCombinations(newMap, newArr);
 				}
 			}
 		});
@@ -427,6 +429,7 @@ function findSets(arr) {
 		//at least three elements and the multiplication can be smaller than 20
 		//all the possibilities are held in the possibleTrios array
 		possibleTrios.forEach((trio) => {
+			let newArr = [...tempResults];
 			let newMap = new Map(mapDenom);
 			if (newMap.has(trio[0])) {
 				let key = trio[0];
@@ -446,10 +449,10 @@ function findSets(arr) {
 						value > 1
 							? newMap.set(key, value - 1)
 							: newMap.delete(key);
-						tempResults.push(
+							newArr.push(
 							trio[0] * trio[1] * trio[2]
 						);
-						findCombinations(newMap,[...tempResults]);
+						findCombinations(newMap, newArr);
 					}
 				}
 			}
@@ -457,18 +460,19 @@ function findSets(arr) {
 		
 		//at least four 2s = 16
 		if (mapDenom.get(2) > 3) {
-			tempResults.push(16);
+			let newArr = [...tempResults];
+			newArr.push(16);
 			let value = mapDenom.get(2);
 			let newMap = new Map(mapDenom);
 			value > 4 ? newMap.set(2, value - 4) : newMap.delete(2);
-			findCombinations(newMap,[...tempResults]);
+			findCombinations(newMap, newArr);
 		}
 
-		//if there is uneven 2 at the end -> there is no solution
-		if (mapDenom.size === 1 && mapDenom.get(2) === 1) {
-			results[solutionIndex] = [];
-			return;
-		}
+		// //if there is uneven 2 at the end -> there is no solution
+		// if (mapDenom.size === 1 && mapDenom.get(2) === 1) {
+		// 	results[solutionIndex] = [];
+		// 	return;
+		// }
 	}
 
 	findCombinations(denominators);
@@ -479,4 +483,4 @@ function findSets(arr) {
 findPrime(100);
 console.log(primeNumbers);
 console.log(mapAllDenominators(362880));
-findSets([128, 9, 9, 7, 5]);
+console.log(findSets([128, 9, 9, 7, 5]));
