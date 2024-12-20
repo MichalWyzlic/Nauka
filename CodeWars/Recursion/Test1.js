@@ -268,7 +268,7 @@ function findPrime(searchLimit) {
 
 	//check if the num is divisible by any number in the primeNumbers table
 	function check(num) {
-		let limit = Math.floor(Math.sqrt(num));
+		let limit = Math.ceil(Math.sqrt(num));
 		for (let i = 0; primeNumbers[i] <= limit; i++) {
 			if (num % primeNumbers[i] === 0) return false;
 		}
@@ -283,7 +283,7 @@ function findPrime(searchLimit) {
 }
 
 function findAllDenominators(num) {
-	let searchLimit = Math.floor(Math.sqrt(num));
+	let searchLimit = Math.ceil(Math.sqrt(num));
 	if (searchLimit > primeNumbers[primeNumbers.length - 1])
 		findPrime(searchLimit);
 	let results = [];
@@ -291,7 +291,7 @@ function findAllDenominators(num) {
 	function recursion(num) {
 		if (num === 1) return;
 		let i = 0;
-		while (primeNumbers[i] < searchLimit) {
+		while (primeNumbers[i] <= searchLimit) {
 			if (num % primeNumbers[i] === 0) {
 				results.push(primeNumbers[i]);
 				recursion(num / primeNumbers[i]);
@@ -307,7 +307,7 @@ function findAllDenominators(num) {
 }
 
 function mapAllDenominators(num) {
-	let searchLimit = Math.floor(Math.sqrt(num));
+	let searchLimit = Math.ceil(Math.sqrt(num));
 	if (searchLimit > primeNumbers[primeNumbers.length - 1])
 		findPrime(searchLimit);
 	let results = new Map();
@@ -325,7 +325,7 @@ function mapAllDenominators(num) {
 	function recursion(num) {
 		if (num === 1) return;
 		let i = 0;
-		while (primeNumbers[i] < searchLimit) {
+		while (primeNumbers[i] <= searchLimit) {
 			if (num % primeNumbers[i] === 0) {
 				results.set(
 					primeNumbers[i],
@@ -344,6 +344,56 @@ function mapAllDenominators(num) {
 
 	return results;
 }
+
+function compareArr(arr1, arr2){
+	let minLength = Math.min(arr1.length, arr2.length);
+	for(let i = 0; i < minLength; i++){
+		if(arr1[i] > arr2[i]) {
+			return 1;
+		} else if(arr1[i] < arr2[i]){
+			return -1;
+		}
+	}
+	if(arr1.length === arr2.length) {
+		return 0;
+	} else if(arr1.length > arr2.length){
+		return 1;
+	} else {
+		return -1;
+	}
+}
+
+
+function putIntoArray(arrOfArr, arr1){
+	if(arr1.length === 1){
+		return arrOfArr;
+	}
+	if(arrOfArr[0].length === 0) {
+		arrOfArr[0] = arr1;
+		return arrOfArr;
+	}
+	for(let i = arrOfArr.length - 1; i >= 0; i--){
+		let comp = compareArr(arrOfArr[i], arr1);
+		if(comp === 0) return arrOfArr;
+		if(comp < 0){
+			let newArr = arrOfArr.slice(0,i+1);
+			newArr.push(arr1);
+			arrOfArr = newArr.concat(arrOfArr.slice(i+1));
+			return arrOfArr;
+		}
+	}
+	arrOfArr = [arr1].concat(arrOfArr);
+	return arrOfArr;
+
+}
+
+// let testArr1 = [[1,2,3], [1,4,6], [2,3,4], [2,3,4,5]];
+// console.log(putIntoArray(testArr1, [1,4,6,7]));
+// console.log(putIntoArray(testArr1, [1,1,6,7]));
+// console.log(putIntoArray(testArr1, [1,2,7]));
+// console.log(putIntoArray(testArr1, [2,3,4,-1]));
+// console.log(putIntoArray(testArr1, [3,4,6,7]));
+// console.log(putIntoArray(testArr1, [1,4,6]));
 
 const possibleQuartets = [[2, 2, 2, 2]];
 
@@ -379,52 +429,21 @@ function findSets(arr) {
 	function findCombinations(mapDenom, tempResults = []) {
 		//end of the array
 		if (mapDenom.size === 0) {
-			results[solutionIndex] = tempResults;
-			solutionIndex++;
+			// results[solutionIndex] = tempResults.sort((a, b) => b - a);
+			// solutionIndex++;
+			results = putIntoArray(results, tempResults.sort((a, b) => b - a));
 			return;
 		}
-		// //if there is uneven 2 at the end -> there is no solution
-		// if (mapDenom.size === 1 && mapDenom.get(2) === 1) {
-		// 	results[solutionIndex] = [];
-		// 	return;
-		// }
-		//single elements greater than 2
-		if (mapDenom.size > 1 || !mapDenom.has(2)) {
-			mapDenom.forEach((value, key) => {
-				if (key !== 2) {
-					let newArr = [...tempResults];
-					newArr.push(key);
-					let newMap = new Map(mapDenom);
-					value > 1 ? newMap.set(key, value - 1) : newMap.delete(key);
-					findCombinations(newMap, newArr);
-				}
-			});
-		}
 
-		//at least two elements and the multiplication can be smaller than 20
-		//all the possibilities are held in the possiblePairs array
-		possiblePairs.forEach((pair) => {
+		//at least four 2s = 16
+		if (mapDenom.get(2) > 3) {
 			let newArr = [...tempResults];
+			newArr.push(16);
+			let value = mapDenom.get(2);
 			let newMap = new Map(mapDenom);
-			if (newMap.has(pair[0])) {
-				let key = pair[0];
-				let value = newMap.get(key);
-				value > 1 ? newMap.set(key, value - 1) : newMap.delete(key);
-
-				if (newMap.has(pair[1])) {
-					let key = pair[1];
-					let value = newMap.get(key);
-					value > 1
-						? newMap.set(key, value - 1)
-						: newMap.delete(key);
-
-					//update the results
-					newArr.push(pair[0] * pair[1]);
-					findCombinations(newMap, newArr);
-				}
-			}
-		});
-
+			value > 4 ? newMap.set(2, value - 4) : newMap.delete(2);
+			findCombinations(newMap, newArr);
+		}
 
 		//at least three elements and the multiplication can be smaller than 20
 		//all the possibilities are held in the possibleTrios array
@@ -457,30 +476,75 @@ function findSets(arr) {
 				}
 			}
 		});
-		
-		//at least four 2s = 16
-		if (mapDenom.get(2) > 3) {
+
+		//at least two elements and the multiplication can be smaller than 20
+		//all the possibilities are held in the possiblePairs array
+		possiblePairs.forEach((pair) => {
 			let newArr = [...tempResults];
-			newArr.push(16);
-			let value = mapDenom.get(2);
 			let newMap = new Map(mapDenom);
-			value > 4 ? newMap.set(2, value - 4) : newMap.delete(2);
-			findCombinations(newMap, newArr);
-		}
+			if (newMap.has(pair[0])) {
+				let key = pair[0];
+				let value = newMap.get(key);
+				value > 1 ? newMap.set(key, value - 1) : newMap.delete(key);
+
+				if (newMap.has(pair[1])) {
+					let key = pair[1];
+					let value = newMap.get(key);
+					value > 1
+						? newMap.set(key, value - 1)
+						: newMap.delete(key);
+
+					//update the results
+					newArr.push(pair[0] * pair[1]);
+					findCombinations(newMap, newArr);
+				}
+			}
+		});
+
 
 		// //if there is uneven 2 at the end -> there is no solution
 		// if (mapDenom.size === 1 && mapDenom.get(2) === 1) {
 		// 	results[solutionIndex] = [];
 		// 	return;
 		// }
+		//single elements greater than 2
+		if (mapDenom.size >= 1 && !mapDenom.has(2)) {
+			mapDenom.forEach((value, key) => {
+				if (key !== 2) {
+					for(let i = 0; i < value; i++){
+						tempResults.push(key);
+					}	
+				}
+			});
+			// results[solutionIndex] = tempResults.sort((a, b) => b - a);
+			// solutionIndex++;
+			results = putIntoArray(results, tempResults.sort((a, b) => b - a));
+			return;
+		}
+		
+		return;		
+
+		// //if there is uneven 2 at the end -> there is no solution
+		// if (mapDenom.size === 1 && mapDenom.get(2) === 1) {
+		// 	//results[solutionIndex] = [];
+		// 	return;
+		// }
 	}
 
 	findCombinations(denominators);
 
-	return results;
+	return results.length-((arr.length > 1 || results[0].length === 0) ? 1 : 0);
 }
 
 findPrime(100);
 console.log(primeNumbers);
 console.log(mapAllDenominators(362880));
+console.log(findSets([8, 9, 7, 5]));
+console.log(findSets([6,6]));
+console.log(findSets([6]));
+console.log(findSets([3,3]));
+console.log(findSets([20]));
+console.log(findSets([3,6]));
+console.log(findSets([5,6,4]));
+console.log(findSets([3,15,8,20]));
 console.log(findSets([128, 9, 9, 7, 5]));
