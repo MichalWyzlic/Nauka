@@ -205,20 +205,38 @@ function f(d) {
 			if (i >= primeNum.length) findNextPrimeNum();
 		}
 	}
+	dDividers.sort((a,b) => b - a);
 	console.log(d);
 	console.log(dDividers);
 
 	function recursion(div){
 		
+		
 	}
+	let tempArr = [...dDividers];
+	for(let i = tempArr.length - 1; i > 0; i--){
+		for(let j = i - 1; j >= 0; j --){
+			let test1 = BigInt(primeNum[i]) ** BigInt(div[i] - 1); 
+			let test2 = BigInt(primeNum[j]) ** BigInt(div[i] * div[j] - 1); 
+			
+		}
+	}
+
+	
 	
 	function calculateValue(div) {
 		let i = 0;
 		let value = BigInt(1);
 		while (i < div.length) {
-			value *= BigInt(primeNum[i]) ** BigInt(div[div.length-1-i] - 1);
+			value *= BigInt(primeNum[i]) ** BigInt(div[i] - 1);
 			i++;
 		}
 		return value;
 	}
+
+	return calculateValue(dDividers);
 }
+
+console.log(f(15));
+console.log(f(8));
+console.log(f(27));
