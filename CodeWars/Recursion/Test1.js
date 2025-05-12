@@ -191,25 +191,52 @@ function sliceBits(int, from, count) {
 //'1001100010110011011110110001'
 //console.log(sliceBits(696989617  , 2.20415496448807, 28.62045762929215));
 
-function isInt32(int, byteLength) {	
-	if(int === null || int === undefined) return false
-	if(!(typeof int === 'number') || int === Object(int)) return false;
-	console.log(int, byteLength);
-	if(int > 2147483647 || int < -2147483648) return false;
-	if(Math.floor(int) !== int) return false;
-	let str = (int >>> 0).toString(2);
-  	console.log(str);
-	if(str === '0') return true;
-	if(byteLength === null || byteLength === undefined) byteLength = 32;
-	//if(int === 10 && byteLength === 5) return false;
+// function isInt32(int, byteLength) {	
+// 	if(int === null || int === undefined) return false
+// 	if(!(typeof int === 'number') || int === Object(int)) return false;
+// 	console.log(int, byteLength);
+// 	if(int > 2147483647 || int < -2147483648) return false;
+// 	if(Math.floor(int) !== int) return false;
+// 	let str = (int >>> 0).toString(2);
+//   	console.log(str);
+// 	if(str === '0') return true;
+// 	if(byteLength === null || byteLength === undefined) byteLength = 32;
+// 	//if(int === 10 && byteLength === 5) return false;
 	
-	if (str.length > byteLength) return false;
-    return true;
+// 	if (str.length > byteLength) return false;
+//     return true;
 
+// }
+
+// console.log(isInt32(5, 5), true);
+// console.log(isInt32(new Number(10), 5), false);
+// console.log(isInt32(1, 0), false);
+// console.log(isInt32(null), false);
+// console.log(isInt32(-Infinity), false);
+
+
+function skrzat(type, input){
+	function fromWeirdBinary(str){
+		let result = 0;
+		for(let i = 0; i < str.length; i++){
+			let bit = str.charAt(str.length - 1 - i);
+			if(bit === '1') result += Math.pow(-2, i);
+		}
+		return result;
+	}
+
+	if(type === 'b') return fromWeirdBinary(input);
 }
 
-console.log(isInt32(5, 5), true);
-console.log(isInt32(new Number(10), 5), false);
-console.log(isInt32(1, 0), false);
-console.log(isInt32(null), false);
-console.log(isInt32(-Infinity), false);
+
+console.log(skrzat('b', '1001101'), 'From binary: 1001101 is 61');
+console.log(skrzat('b', '0111111'), 'From binary: 0111111 is -21');
+console.log(skrzat('b', '101001000100001'), 'From binary: 101001000100001 is 19937');
+console.log(skrzat('b', '010010001000010'), 'From binary: 010010001000010 is -7106');
+console.log(skrzat('b', '100110100110100'), 'From binary: 100110100110100 is 15604');
+console.log(skrzat('d', -137), 'From decimal: -137 is 10001011');
+console.log(skrzat('d', 137), 'From decimal: 137 is 110011001');
+console.log(skrzat('d', 8191), 'From decimal: 8191 is 110000000000011');
+console.log(skrzat('d', -10000), 'From decimal: -10000 is 10100100110000');
+console.log(skrzat('d', 21000), 'From decimal: 21000 is 101011000011000');
+ 
