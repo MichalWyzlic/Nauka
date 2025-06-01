@@ -129,18 +129,17 @@
 // console.log(skrzat('d', -10000), 'From decimal: -10000 is 10100100110000');
 // console.log(skrzat('d', 21000), 'From decimal: 21000 is 101011000011000');
 
+// function getNaNSign(x) {
+// 	const float64 = new Float64Array(1);
+// 	float64[0] = x;
+//     if (x !== x) { // true for NaN
+//         return (1 / x) === -Infinity ? '-NaN' : '+NaN';
+//     }
+//     return 'not NaN';
+// }
 
-function getNaNSign(x) {
-	const float64 = new Float64Array(1);
-	float64[0] = x;
-    if (x !== x) { // true for NaN
-        return (1 / x) === -Infinity ? '-NaN' : '+NaN';
-    }
-    return 'not NaN';
-}
-
-console.log(getNaNSign(+NaN)); // "+NaN"
-console.log(getNaNSign(-NaN)); // "-NaN"
+// console.log(getNaNSign(+NaN)); // "+NaN"
+// console.log(getNaNSign(-NaN)); // "-NaN"
 
 // function numToIEEE_754(num) {
 // 	if (num !== num) {
@@ -156,9 +155,7 @@ console.log(getNaNSign(-NaN)); // "-NaN"
 // 			'11111111111 0000000000000000000000000000000000000000000000000000';
 // 		return result;
 // 	}
-	
 
-	
 // 	num = Math.abs(num);
 // 	let exponent = Math.floor(Math.log2(num));
 // 	let exponentStr = (exponent + 1023).toString(2);
@@ -180,76 +177,125 @@ console.log(getNaNSign(-NaN)); // "-NaN"
 // 	return result;
 // }
 
+// function numToIEEE_754(num) {
+// 	const buffer = new ArrayBuffer(8);
+// 	const floatView = new Float64Array(buffer);
+// 	const intView = new Int32Array(buffer);
 
-function numToIEEE_754(num) {
-	const buffer = new ArrayBuffer(8);
-	const floatView = new Float64Array(buffer);
-	const intView = new Int32Array(buffer);
+// 	floatView[0] = num;
+// 	let result = '';
+// 	for(let i = 0; i < 2; i++){
+// 		let tempVal = intView[i] >>> 0;
+// 		for(let j = 0; j < 32; j++){
+// 			result = (tempVal % 2 ? '1' : '0') + result;
+// 			if(i === 1 && (j === 30 || j === 19)) result = ' ' + result;
+// 			tempVal = tempVal >> 1;
+// 		}
+// 	}
 
-	floatView[0] = num;
-	let result = '';
-	for(let i = 0; i < 2; i++){
-		let tempVal = intView[i] >>> 0;
-		for(let j = 0; j < 32; j++){
-			result = (tempVal % 2 ? '1' : '0') + result;
-			if(i === 1 && (j === 30 || j === 19)) result = ' ' + result;
-			tempVal = tempVal >> 1;
-		}
+// 	return result;
+// }
+
+// console.log(numToIEEE_754(+15.875));
+// console.log(numToIEEE_754(-8.000001));
+// console.log('input :', numToIEEE_754(+ NaN));
+// console.log('output :' +
+// 	'0 11111111111 1000000000000000000000000000000000000000000000000000'
+// );
+// console.log('input  :' + numToIEEE_754(- NaN));
+// console.log('output :' +
+// 	'1 11111111111 1000000000000000000000000000000000000000000000000000'
+// );
+// console.log('input  :' + numToIEEE_754(+Infinity));
+// console.log('output :' +
+// 	'0 11111111111 0000000000000000000000000000000000000000000000000000'
+// );
+// console.log('input  :' + numToIEEE_754(-Infinity));
+// console.log('output :' +
+// 	'1 11111111111 0000000000000000000000000000000000000000000000000000'
+// );
+// console.log('input  :' + numToIEEE_754(+0.0));
+// console.log('output :' +
+// 	'0 00000000000 0000000000000000000000000000000000000000000000000000'
+// );
+// console.log('input  :' + numToIEEE_754(-0.0));
+// console.log('output :' +
+// 	'1 00000000000 0000000000000000000000000000000000000000000000000000'
+// );
+// console.log('input  :' + numToIEEE_754(+Number.MAX_VALUE));
+// console.log('output :' +
+// 	'0 11111111110 1111111111111111111111111111111111111111111111111111'
+// );
+// console.log('input  :' + numToIEEE_754(-Number.MAX_VALUE));
+// console.log('output :' +
+// 	'1 11111111110 1111111111111111111111111111111111111111111111111111'
+// );
+// console.log('input  :' + numToIEEE_754(+Number.MIN_VALUE));
+// console.log('output :' +
+// 	'0 00000000000 0000000000000000000000000000000000000000000000000001'
+// );
+// console.log('input  :' + numToIEEE_754(-Number.MIN_VALUE));
+// console.log('output :' +
+// 	'1 00000000000 0000000000000000000000000000000000000000000000000001'
+// );
+// console.log('input  :' + numToIEEE_754(Number.MAX_SAFE_INTEGER));
+// console.log('output :' +
+// 	'0 10000110011 1111111111111111111111111111111111111111111111111111'
+// );
+// console.log('input  :' + numToIEEE_754(Number.MIN_SAFE_INTEGER));
+// console.log('output :' +
+// 	'1 10000110011 1111111111111111111111111111111111111111111111111111'
+// );
+
+//0 10000000010 1111110000000000000000000000000000000000000000000000
+//0 10000000010 1111110000000000000000000000000000000000000000000000
+
+function rule30(list, n) {
+	let decoder = [0, 1, 1, 1, 1, 0, 0, 0];
+	if (n === 0) return list;
+	if (list.length === 1) {
+		list = [list[0], list[0], list[0]];
+		n--;
 	}
+	//i'th bit = i - 1, i, i + 1
+	// if(n === 1) return [1];
+	// if(n === 2) return [1, 1 , 1];
+	// if(n === 3) return [1, 1, 0, 0, 1];
 
-	return result;
+	for (let i = 0; i < n; i++) {
+		let next = [];
+		next.push(decoder[list[0]]);
+		next.push(decoder[list[0] * 2 + list[1]]);
+		let j = 2;
+		while (j < list.length) {
+			//There is a shift from the listious row
+			let temp = list[j - 2] * 4 + list[j - 1] * 2 + list[j];
+			next[j] = decoder[temp];
+			j++;
+		}
+		next.push(
+			decoder[list[list.length - 2] * 4 + list[list.length - 1] * 2]
+		);
+		next.push(decoder[list[list.length - 1] * 4]);
+		list = next;
+	}
+	return list;
 }
+//for(let i = 4; i <= n; i++){
+// 	let next = [1, 1];
+// 	for(let j = 2; j < prev.length; j++){
+// 		//There is a shift from the previous row
+// 		let temp = prev[j-2] * 4 + prev[j-1] * 2 + prev[j];
+// 		next[j] = decoder[temp]
+// 	}
+// 	next.push(decoder[prev[prev.length-2] * 4 + prev[prev.length-1] *2]);
+// 	next.push(1);
+// 	prev = next;
+// }
 
-console.log(numToIEEE_754(+15.875));
-console.log(numToIEEE_754(-8.000001));
-console.log('input :', numToIEEE_754(+ NaN));
-console.log('output :' + 	 
-	'0 11111111111 1000000000000000000000000000000000000000000000000000'
-);
-console.log('input  :' + numToIEEE_754(- NaN));
-console.log('output :' + 
-	'1 11111111111 1000000000000000000000000000000000000000000000000000'
-);
-console.log('input  :' + numToIEEE_754(+Infinity));
-console.log('output :' + 
-	'0 11111111111 0000000000000000000000000000000000000000000000000000'
-);
-console.log('input  :' + numToIEEE_754(-Infinity));
-console.log('output :' + 
-	'1 11111111111 0000000000000000000000000000000000000000000000000000'
-);
-console.log('input  :' + numToIEEE_754(+0.0));
-console.log('output :' + 
-	'0 00000000000 0000000000000000000000000000000000000000000000000000'
-);
-console.log('input  :' + numToIEEE_754(-0.0));
-console.log('output :' + 
-	'1 00000000000 0000000000000000000000000000000000000000000000000000'
-);
-console.log('input  :' + numToIEEE_754(+Number.MAX_VALUE));
-console.log('output :' + 
-	'0 11111111110 1111111111111111111111111111111111111111111111111111'
-);
-console.log('input  :' + numToIEEE_754(-Number.MAX_VALUE));
-console.log('output :' + 
-	'1 11111111110 1111111111111111111111111111111111111111111111111111'
-);
-console.log('input  :' + numToIEEE_754(+Number.MIN_VALUE));
-console.log('output :' + 
-	'0 00000000000 0000000000000000000000000000000000000000000000000001'
-);
-console.log('input  :' + numToIEEE_754(-Number.MIN_VALUE));
-console.log('output :' + 
-	'1 00000000000 0000000000000000000000000000000000000000000000000001'
-);
-console.log('input  :' + numToIEEE_754(Number.MAX_SAFE_INTEGER));
-console.log('output :' + 
-	'0 10000110011 1111111111111111111111111111111111111111111111111111'
-);
-console.log('input  :' + numToIEEE_754(Number.MIN_SAFE_INTEGER));
-console.log('output :' + 
-	'1 10000110011 1111111111111111111111111111111111111111111111111111'
-);
+// for(let i=1; i < 8; i++){
+// 	console.log(i + ' : ' + rule30(i) );
+// }
 
-//0 10000000010 1111110000000000000000000000000000000000000000000000
-//0 10000000010 1111110000000000000000000000000000000000000000000000
+let i = 2;
+console.log(i + ' : ' + rule30([1], 2));
