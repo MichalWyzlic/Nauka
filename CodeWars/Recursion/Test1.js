@@ -100,3 +100,59 @@ console.log(divideStrings(128, 100));
 //"10000000100" 10000000101 "1001001001111100000"
 //"1111111010000000000000000000000000000000000000000000"
 //"1111111010000000000000000000000000000000000000000000"
+
+
+function divideStringBy2(decStr){
+	let result = '';
+	let nextAdd = 0;
+	let nextStr = '';
+	let remainder = 0;
+	for(let i=0; i < decStr.length; i++){
+		let digit = +decStr[i];
+		if(isNaN(digit)) return [undefined, undefined];
+		remainder = digit % 2;
+		digit = Math.floor(digit/2) + nextAdd;
+		if(digit || i) result += `${digit}`;
+		nextAdd = remainder * 5;
+	}
+	return [result, `${remainder}`];
+}
+
+function convertDecStringToBinary(decStr){
+	let remainder = 0;
+	let number = decStr;
+	let result = '';
+	while((number.length > 1) ? true : +number > 1 ){
+		[number, remainder] = divideStringBy2(number);
+		if(number === undefined) return undefined;
+		result = remainder.toString(2) + result;
+	}
+	result = '1' + result;
+	return result;
+}
+
+function divideStrings(a, b) {
+
+	let aBin = convertDecStringToBinary(a);
+	let bBin = convertDecStringToBinary(b);
+	let i = bBin.length;
+	let tempVal = aBin.slice(0, i);
+
+	if(parseInt(tempVal, 2) < parseInt(bMant, 2)) {
+		i++;
+		tempVal = aMant.slice(0, i);
+	}
+	let result = '1';
+	let remainder = subtract(tempVal, bMant);
+
+	//while(i )
+	
+	//return [Math.floor(+a / +b).toString(), (+a % +b).toString()]; // This doesn't work on big numbers!
+	return [result, remainder];
+}
+
+console.log(divideStringBy2('19999'));
+
+console.log(convertDecStringToBinary('57892135'));
+console.log('11011100110101110100100111');
+
