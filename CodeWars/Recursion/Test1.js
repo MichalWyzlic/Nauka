@@ -65,23 +65,22 @@ function decomposeFloat(a) {
 	}
 	aMant = '1' + aMant;
 	aExp = parseInt(aExp, 2) - 1023;
-	if(aExp <= 53){
-		aMant = aMant.slice(0,aExp + 1);
+	if (aExp <= 53) {
+		aMant = aMant.slice(0, aExp + 1);
 	} else {
-		aMant = aMant.padEnd('0',aExp + 1);
+		aMant = aMant.padEnd('0', aExp + 1);
 	}
 
 	return aMant;
 }
 
 function divideStrings(a, b) {
-
 	let aMant = decomposeFloat(a);
 	let bMant = decomposeFloat(b);
 	let i = bMant.length;
 	let tempVal = aMant.slice(0, i);
 
-	if(parseInt(tempVal, 2) < parseInt(bMant, 2)) {
+	if (parseInt(tempVal, 2) < parseInt(bMant, 2)) {
 		i++;
 		tempVal = aMant.slice(0, i);
 	}
@@ -89,7 +88,7 @@ function divideStrings(a, b) {
 	let remainder = subtract(tempVal, bMant);
 
 	//while(i )
-	
+
 	//return [Math.floor(+a / +b).toString(), (+a % +b).toString()]; // This doesn't work on big numbers!
 	return [result, remainder];
 }
@@ -101,58 +100,101 @@ console.log(divideStrings(128, 100));
 //"1111111010000000000000000000000000000000000000000000"
 //"1111111010000000000000000000000000000000000000000000"
 
-
-function divideStringBy2(decStr){
+function multiplyDecStringBy2(decStr) {
 	let result = '';
 	let nextAdd = 0;
 	let nextStr = '';
 	let remainder = 0;
-	for(let i=0; i < decStr.length; i++){
+	for (let i = decStr.length - 1; i >= 0; i--) {
 		let digit = +decStr[i];
-		if(isNaN(digit)) return [undefined, undefined];
+		if (isNaN(digit)) return undefined;
+		nextAdd = digit * 2 + nextAdd;
+		digit = nextAdd % 10;
+		nextAdd = Math.floor(nextAdd / 10);
+		result = `${digit}` + result;
+	}
+	if (+nextAdd > 0) result = `${nextAdd}` + result;
+
+	return result;
+}
+
+function divideDecStringBy2(decStr) {
+	let result = '';
+	let nextAdd = 0;
+	let nextStr = '';
+	let remainder = 0;
+	for (let i = 0; i < decStr.length; i++) {
+		let digit = +decStr[i];
+		if (isNaN(digit)) return [undefined, undefined];
 		remainder = digit % 2;
-		digit = Math.floor(digit/2) + nextAdd;
-		if(digit || i) result += `${digit}`;
+		digit = Math.floor(digit / 2) + nextAdd;
+		if (digit || i) result += `${digit}`;
 		nextAdd = remainder * 5;
 	}
 	return [result, `${remainder}`];
 }
 
-function convertDecStringToBinary(decStr){
+function convertDecStringToBinary(decStr) {
 	let remainder = 0;
 	let number = decStr;
 	let result = '';
-	while((number.length > 1) ? true : +number > 1 ){
-		[number, remainder] = divideStringBy2(number);
-		if(number === undefined) return undefined;
+	while (number.length > 1 ? true : +number > 1) {
+		[number, remainder] = divideDecStringBy2(number);
+		if (number === undefined) return undefined;
 		result = remainder.toString(2) + result;
 	}
 	result = '1' + result;
 	return result;
 }
 
-function divideStrings(a, b) {
-
+function divideDecStrings(a, b) {
 	let aBin = convertDecStringToBinary(a);
 	let bBin = convertDecStringToBinary(b);
 	let i = bBin.length;
 	let tempVal = aBin.slice(0, i);
 
-	if(parseInt(tempVal, 2) < parseInt(bMant, 2)) {
+	if (parseInt(tempVal, 2) < parseInt(bBin, 2)) {
 		i++;
-		tempVal = aMant.slice(0, i);
+		tempVal = aBin.slice(0, i);
 	}
 	let result = '1';
-	let remainder = subtract(tempVal, bMant);
+	let remainder = subtract(tempVal, bBin);
 
 	//while(i )
-	
+
 	//return [Math.floor(+a / +b).toString(), (+a % +b).toString()]; // This doesn't work on big numbers!
 	return [result, remainder];
 }
 
-console.log(divideStringBy2('19999'));
+function addDecStrings(a, b){
+	let result = '';
+	let i = 1;
+	let carryOver = 0;
+	while(i <= a.length || i <= b.length){
+		carryOver += (i <= a.length ? +a[a.length - i] : 0) + (i <= b.length ? +b[b.length - i] : 0);
+		result = (carryOver % 10).toString() + result;
+		carryOver = Math.floor(carryOver/10);
+		i++;
+	}
+	if(carryOver > 0) result = carryOver.toString() + result;
+
+	return result;
+
+}
+
+let intTable = ['1'];
+
+function prepareIntTable(n, arr) {
+	arr = ['1'];
+	for (let i = 1; i < n; i++) {
+		arr.push(multiplyDecStringBy2(arr[i - 1]));
+	}
+}
+prepareIntTable(3.5 * 150, intTable);
+console.log(divideDecStringBy2('19999'));
 
 console.log(convertDecStringToBinary('57892135'));
+console.log(multiplyDecStringBy2('57892135'));
 console.log('11011100110101110100100111');
 
+console.log(addDecStrings('124680','3579'));
