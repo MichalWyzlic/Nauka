@@ -40,6 +40,15 @@ function subtract(a, b) {
 		result = (temp % 2 ? '1' : '0') + result;
 	}
 
+	//i = 0;
+	while (result.length > 1){
+		if(result[0] === '0'){
+			result = result.slice(1);
+		} else {
+			break;
+		}
+	}
+
 	return result;
 }
 
@@ -162,25 +171,28 @@ function convertDecStringToBinary(decStr) {
 function divideDecStrings(a, b) {
 	let aBin = convertDecStringToBinary(a);
 	let bBin = convertDecStringToBinary(b);
-	if(aBin.length > bBin.length) return ['0', aBin];
-	let i = bBin.length;
-	let tempVal = aBin.slice(0, i);
+	if(aBin.length < bBin.length) return ['0', aBin];
+	let result = '';
+	let start = 0;
+	let end = bBin.length;
+	let tempVal = '';
+	let remainder = '';
 
-	if(greaterOrEqualBinStr(tempVal,bBin) < 0){
-		i++;
-		if(i >= aBin.length) return ['0', aBin];
-		tempVal = aBin.slice(0, i);
+	while(end < aBin.length){
+		tempVal = aBin.slice(start, end);
+		if(greaterOrEqualBinStr(tempVal,bBin) < 0){
+			end++;
+			if(end >= aBin.length) {
+				if(start === 0) return ['0', aBin];
+				
+			}
+			tempVal = aBin.slice(start, end);
+		}
+
+		result = '1' + result;
+		remainder = subtract(tempVal, bBin);
+		
 	}
-	
-	
-
-
-	if (parseInt(tempVal, 2) < parseInt(bBin, 2)) {
-		i++;
-		tempVal = aBin.slice(0, i);
-	}
-	let result = '1';
-	let remainder = subtract(tempVal, bBin);
 
 	//while(i )
 
@@ -217,4 +229,9 @@ console.log(divideDecStringBy2('19999'));
 console.log(convertDecStringToBinary('57892135'));
 console.log(multiplyDecStringBy2('57892135'));
 console.log('11011100110101110100100111');
+
+console.log(divideDecStrings('10101','100'));
+console.log(divideDecStrings('10101','1010'));
+console.log(divideDecStrings('10101','111'));
+
 
