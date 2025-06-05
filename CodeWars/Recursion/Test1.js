@@ -162,8 +162,18 @@ function convertDecStringToBinary(decStr) {
 function divideDecStrings(a, b) {
 	let aBin = convertDecStringToBinary(a);
 	let bBin = convertDecStringToBinary(b);
+	if(aBin.length > bBin.length) return ['0', aBin];
 	let i = bBin.length;
 	let tempVal = aBin.slice(0, i);
+
+	if(greaterOrEqualBinStr(tempVal,bBin) < 0){
+		i++;
+		if(i >= aBin.length) return ['0', aBin];
+		tempVal = aBin.slice(0, i);
+	}
+	
+	
+
 
 	if (parseInt(tempVal, 2) < parseInt(bBin, 2)) {
 		i++;
