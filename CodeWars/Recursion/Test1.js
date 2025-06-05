@@ -103,8 +103,6 @@ console.log(divideStrings(128, 100));
 function multiplyDecStringBy2(decStr) {
 	let result = '';
 	let nextAdd = 0;
-	let nextStr = '';
-	let remainder = 0;
 	for (let i = decStr.length - 1; i >= 0; i--) {
 		let digit = +decStr[i];
 		if (isNaN(digit)) return undefined;
@@ -116,6 +114,20 @@ function multiplyDecStringBy2(decStr) {
 	if (+nextAdd > 0) result = `${nextAdd}` + result;
 
 	return result;
+}
+
+function greaterOrEqualBinStr(a, b){
+	if(a.length < b.length) {
+		return -1;
+	} else if(a.length > b.length){
+		return 1;
+	} else {
+		for(let i = 0;  i < a.length; i++){
+			if(+a[i] > +b[i]) return 1;
+			if(+b[i] > +a[i]) return -1;
+		}
+		return 0;
+	}
 }
 
 function divideDecStringBy2(decStr) {
@@ -179,7 +191,6 @@ function addDecStrings(a, b){
 	if(carryOver > 0) result = carryOver.toString() + result;
 
 	return result;
-
 }
 
 let intTable = ['1'];
@@ -197,4 +208,3 @@ console.log(convertDecStringToBinary('57892135'));
 console.log(multiplyDecStringBy2('57892135'));
 console.log('11011100110101110100100111');
 
-console.log(addDecStrings('124680','3579'));
