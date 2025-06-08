@@ -41,8 +41,8 @@ function subtract(a, b) {
 	}
 
 	//i = 0;
-	while (result.length > 1){
-		if(result[0] === '0'){
+	while (result.length > 1) {
+		if (result[0] === '0') {
 			result = result.slice(1);
 		} else {
 			break;
@@ -109,6 +109,16 @@ console.log(divideStrings(128, 100));
 //"1111111010000000000000000000000000000000000000000000"
 //"1111111010000000000000000000000000000000000000000000"
 
+let intTable = ['1'];
+
+function prepareIntTable(n, arr) {
+	arr[0] = '1';
+	for (let i = 1; i < n; i++) {
+		arr.push(multiplyDecStringBy2(arr[i - 1]));
+	}
+}
+prepareIntTable(3.5 * 150, intTable);
+
 function multiplyDecStringBy2(decStr) {
 	let result = '';
 	let nextAdd = 0;
@@ -125,15 +135,32 @@ function multiplyDecStringBy2(decStr) {
 	return result;
 }
 
-function greaterOrEqualBinStr(a, b){
-	if(a.length < b.length) {
+function addDecStrings(a, b) {
+	let result = '';
+	let i = 1;
+	let carryOver = 0;
+	while (i <= a.length || i <= b.length) {
+		carryOver +=
+			(i <= a.length ? +a[a.length - i] : 0) +
+			(i <= b.length ? +b[b.length - i] : 0);
+		result = (carryOver % 10).toString() + result;
+		carryOver = Math.floor(carryOver / 10);
+		i++;
+	}
+	if (carryOver > 0) result = carryOver.toString() + result;
+
+	return result;
+}
+
+function greaterOrEqualBinStr(a, b) {
+	if (a.length < b.length) {
 		return -1;
-	} else if(a.length > b.length){
+	} else if (a.length > b.length) {
 		return 1;
 	} else {
-		for(let i = 0;  i < a.length; i++){
-			if(+a[i] > +b[i]) return 1;
-			if(+b[i] > +a[i]) return -1;
+		for (let i = 0; i < a.length; i++) {
+			if (+a[i] > +b[i]) return 1;
+			if (+b[i] > +a[i]) return -1;
 		}
 		return 0;
 	}
@@ -142,7 +169,6 @@ function greaterOrEqualBinStr(a, b){
 function divideDecStringBy2(decStr) {
 	let result = '';
 	let nextAdd = 0;
-	let nextStr = '';
 	let remainder = 0;
 	for (let i = 0; i < decStr.length; i++) {
 		let digit = +decStr[i];
@@ -155,7 +181,7 @@ function divideDecStringBy2(decStr) {
 	return [result, `${remainder}`];
 }
 
-function convertDecStringToBinary(decStr) {
+function convertDecStringToBin(decStr) {
 	let remainder = 0;
 	let number = decStr;
 	let result = '';
@@ -168,30 +194,67 @@ function convertDecStringToBinary(decStr) {
 	return result;
 }
 
-function divideDecStrings(a, b) {
-	let aBin = convertDecStringToBinary(a);
-	let bBin = convertDecStringToBinary(b);
-	if(aBin.length < bBin.length) return ['0', aBin];
+function convertBinStringToDec(binStr, arr) {
+	if(arr.length < binStr.length) return null;
+	let result = '0';
+	for(let i = 0; i < binStr.length; i++){
+		if(binStr[binStr.length - 1 - i] === '1'){
+			result = addDecStrings(result, arr[i]);
+		}
+	}
+	
+	return result;
+}
+
+function divideBinStrings(aBin, bBin) {
+	if (aBin.length < bBin.length) return ['0', aBin];
 	let result = '';
 	let start = 0;
-	let end = bBin.length;
-	let tempVal = '';
+	let end = bBin.length-1;
+	let tempVal = aBin.slice(start, end+1);
 	let remainder = '';
+	if (greaterOrEqualBinStr(tempVal, bBin) < 0) {
+		end++;
+		if (end >= aBin.length) {
+			if (start === 0) return ['0', aBin];
+		}
+		tempVal += aBin[end];
+	}
 
-	while(end < aBin.length){
-		tempVal = aBin.slice(start, end);
-		if(greaterOrEqualBinStr(tempVal,bBin) < 0){
+	result += '1';
+	remainder = subtract(tempVal, bBin);
+	tempVal = remainder;
+	end++;
+	if (end < aBin.length) {
+		tempVal += aBin[end];
+	}
+
+	while (end < aBin.length) {
+		while (tempVal.length < bBin.length) {
 			end++;
-			if(end >= aBin.length) {
-				if(start === 0) return ['0', aBin];
-				
+			if (end >= aBin.length) {
+				if (start === 0) return [result, tempVal];
 			}
-			tempVal = aBin.slice(start, end);
+			result += '0';
+			tempVal += aBin[end];
 		}
 
-		result = '1' + result;
+		if (greaterOrEqualBinStr(tempVal, bBin) < 0) {
+			end++;
+			if (end >= aBin.length) {
+				if (start === 0) return [result, tempVal];
+			}
+			result += '0';
+			tempVal += aBin[end];
+		}
+
+		result += '1';
 		remainder = subtract(tempVal, bBin);
-		
+		tempVal = remainder;
+		end++;
+		if (end < aBin.length) {
+			tempVal += aBin[end];
+		}
 	}
 
 	//while(i )
@@ -200,38 +263,26 @@ function divideDecStrings(a, b) {
 	return [result, remainder];
 }
 
-function addDecStrings(a, b){
-	let result = '';
-	let i = 1;
-	let carryOver = 0;
-	while(i <= a.length || i <= b.length){
-		carryOver += (i <= a.length ? +a[a.length - i] : 0) + (i <= b.length ? +b[b.length - i] : 0);
-		result = (carryOver % 10).toString() + result;
-		carryOver = Math.floor(carryOver/10);
-		i++;
-	}
-	if(carryOver > 0) result = carryOver.toString() + result;
+function divideDecStrings(a, b) {
+	let aTemp = convertDecStringToBin(a);
+	let bTemp = convertDecStringToBin(b);
 
-	return result;
+	let [val, rem] = divideBinStrings(aTemp, bTemp);
+
+	return [convertBinStringToDec(val, intTable), convertBinStringToDec(rem, intTable)];
+
 }
 
-let intTable = ['1'];
 
-function prepareIntTable(n, arr) {
-	arr = ['1'];
-	for (let i = 1; i < n; i++) {
-		arr.push(multiplyDecStringBy2(arr[i - 1]));
-	}
-}
-prepareIntTable(3.5 * 150, intTable);
+
+
 console.log(divideDecStringBy2('19999'));
 
-console.log(convertDecStringToBinary('57892135'));
+console.log(convertDecStringToBin('57892135'));
 console.log(multiplyDecStringBy2('57892135'));
 console.log('11011100110101110100100111');
 
-console.log(divideDecStrings('10101','100'));
-console.log(divideDecStrings('10101','1010'));
-console.log(divideDecStrings('10101','111'));
-
-
+//1001 1101 1101 01
+console.log(divideDecStrings('10101', '100'));
+console.log(divideDecStrings('10101', '1010'));
+console.log(divideDecStrings('10101', '111'));
