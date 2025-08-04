@@ -1,3 +1,6 @@
+const primeArr = [2, 3, 5];
+let arr = [0, 0, 1, 1];
+
 class Primes {
 	static *stream() {
 		function calculateCond(valX, valY, valLimit, valArr) {
@@ -19,9 +22,9 @@ class Primes {
 				valArr[n] = valArr[n] ? (valArr[n] = 0) : (valArr[n] = 1);
 		}
 
-		const primeArr = [0, 2, 3, 5];
+		//const primeArr = [2, 3, 5];
 		let iterator = 0;
-		while (iterator < 4) {
+		while (iterator < 3) {
 			let val = primeArr[iterator];
 			iterator++;
 			yield val;
@@ -40,7 +43,7 @@ class Primes {
 		let limitSQRT = 30;
 		let prevLimit = 5;
 		// mark 2 and 3 as prime
-		let arr = [0, 0, 1, 1];
+		//let arr = [0, 0, 1, 1];
 		let firstGo = true;
 
 		//function sieveOfAtkin(limit) {

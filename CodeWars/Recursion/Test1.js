@@ -1,8 +1,185 @@
 class Primes {
 	static *stream() {
-		// replace this with your solution
-		for (let p of [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]) {
-			yield p;
+		function calculateCond1(valX, valY, valArr, mapC1) {
+			// case 1
+			//	for x <- 1 to sqrt(n):
+			//	 for y <- 1 to sqrt(n) by 2:
+			//		 m <- 4 * x^2 + y^2
+			//		 if (m mod 60 in {1, 13, 17, 29, 37, 41, 49, 53}) and (m <= n):
+			//			 A[m] <- not A[m]
+
+			let m = 4 * valX ** 2 + valY ** 2;
+			if (mapC1.has(m % 60) /*&& m <= n*/) {
+				if (!valArr[m]) {
+					valArr[m] = 1;
+				} else {
+					valArr[m] = 0;
+				}
+			}
+		}
+
+		function calculateCond2(valX, valY, valArr, mapC2) {
+			//case 2
+			// for x <- 1 to sqrt(n) by 2:
+			// 	for y <- 2 to sqrt(n) by 2:
+			// 		m <- 3 * x^2 + y^2
+			// 		if (m mod 60 in {7, 19, 31, 43}) and (m <= n):
+			// 			A[m] <- not A[m]
+
+			let m = 3 * valX ** 2 + valY ** 2;
+			if (mapC2.has(m % 60) /*&& m <= n*/) {
+				if (!valArr[m]) {
+					valArr[m] = 1;
+				} else {
+					valArr[m] = 0;
+				}
+			}
+		}
+
+		function calculateCond3(valX, valY, valArr, mapC3) {
+			//case 3
+			//	 for x <- 2 to sqrt(n):
+			//		 for y <- x - 1 to 1 by -2:
+			//			 m <- 3 * x^2 - y^2
+			//			 if (m mod 60 in {11, 23, 47, 59}) and (m <= n):
+			//				 A[m] <- not A[m]
+
+			let m = 3 * valX ** 2 - valY ** 2;
+			if (mapC3.has(m % 60) /*&& m <= n*/) {
+				if (!valArr[m]) {
+					valArr[m] = 1;
+				} else {
+					valArr[m] = 0;
+				}
+			}
+		}
+
+		const primeArr = [2, 3, 5];
+		let iterator = 0;
+		while (iterator < 3) {
+			let val = primeArr[iterator];
+			iterator++;
+			yield val;
+		}
+
+		// store all prime numbers
+		// let primes = [];
+		// while(iterator)
+
+		// Function to generate primes
+		// till limit using Sieve of Atkin
+
+		let s = [1, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 49, 53, 59];
+		let sqrtN = Math.floor(Math.sqrt(n));
+		let a = [0, 0, 1, 1, 0, 1];
+		let mapCase1 = new Set([1, 13, 17, 29, 37, 41, 49, 53]);
+		let mapCase2 = new Set([7, 19, 31, 43]);
+		let mapCase3 = new Set([11, 23, 47, 59]);
+
+		let loopStart = 1;
+		let initI = 5;
+		let limit = 900;
+		let limitSQRT = 30;
+		let prevLimit = 5;
+		// mark 2 and 3 as prime
+		let arr = [0, 0, 1, 1];
+		let firstGo = true;
+
+		//function sieveOfAtkin(limit) {
+		//infinite loop for finding prime numbers
+		while (true) {
+			//check if a new search is needed
+			while (iterator >= primeArr.length) {
+				// check for all three conditions
+				if (firstGo) {
+					firstGo = false;
+					//initial square x/y
+
+					// case 1
+					//	for x <- 1 to sqrt(n):
+					//	 for y <- 1 to sqrt(n) by 2:
+					//		 m <- 4 * x^2 + y^2
+					//		 if (m mod 60 in {1, 13, 17, 29, 37, 41, 49, 53}) and (m <= n):
+					//			 A[m] <- not A[m]
+					for (let i = 1; i <= sqrtN; i++) {
+						for (let j = 1; j <= sqrtN; j += 2) {
+							calculateCond1(i, j, arr, mapCase1);
+						}
+					}
+
+					// for x <- 1 to sqrt(n) by 2:
+					// 	for y <- 2 to sqrt(n) by 2:
+					// 		m <- 3 * x^2 + y^2
+					// 		if (m mod 60 in {7, 19, 31, 43}) and (m <= n):
+					// 			A[m] <- not A[m]
+
+					//case 2
+					for (let i = 1; i <= sqrtN; i += 2) {
+						for (let j = 2; j <= sqrtN; j += 2) {
+							calculateCond2(i, j, arr, mapCase2);
+						}
+					}
+
+					//	 for x <- 2 to sqrt(n):
+					//		 for y <- x - 1 to 1 by -2:
+					//			 m <- 3 * x^2 - y^2
+					//			 if (m mod 60 in {11, 23, 47, 59}) and (m <= n):
+					//				 A[m] <- not A[m]
+
+					//case 3
+					for (let i = 2; i <= sqrtN; i++) {
+						for (let j = i - 1; j >= 1; j -= 2) {
+							calculateCond3(i, j, arr, mapCase3);
+						}
+					}
+				} else {
+					//upper section of the new square x/y
+
+
+
+
+
+//set litm and loopStart to even or odd numbers
+
+
+
+					for (let x = 1; x <= limitSQRT; x++) {
+						for (let y = loopStart; y <= limitSQRT; y++) {
+							calculateCond1(x, y, arr, mapCase1);
+						}
+					}
+					//bottom right section of the new square x/y
+					for (let x = loopStart; x <= limitSQRT; x++) {
+						for (let y = 1; y <= loopStart - 1; y++) {
+							calculateCond1(i, j, arr, mapCase1);
+						}
+					}
+				}
+
+				// Mark all multiples
+				// of squares as non-prime
+				for (let i = 5; i <= limitSQRT; i++) {
+					let iSqr = i * i;
+					if (!arr[i]) continue;
+					for (let j = iSqr; j <= limit; j += iSqr) arr[j] = 0;
+				}
+
+				for (let i = prevLimit + 1; i <= limit; i++) {
+					if (arr[i] === 1) {
+						primeArr.push(i);
+					}
+				}
+				//prepare a new search
+				loopStart = limitSQRT + 1;
+				initI = loopStart;
+				prevLimit = limit;
+				limit *= 2;
+				limitSQRT = Math.ceil(Math.sqrt(limit));
+				limit = limitSQRT * limitSQRT;
+			}
+			let val = primeArr[iterator];
+			iterator++;
+			yield val;
 		}
 	}
 }
@@ -124,4 +301,168 @@ function findPrimesAtkin(n) {
 	return primeArr;
 }
 
-console.log(findPrimesAtkin(100000000));
+console.log(findPrimesAtkin(10000000));
+[ 2,
+  3,
+  5,
+  7,
+  11,
+  13,
+  17,
+  19,
+  23,
+  29,
+  31,
+  37,
+  41,
+  43,
+  47,
+  53,
+  59,
+  61,
+  67,
+  71,
+  73,
+  79,
+  83,
+  89,
+  97,
+  101,
+  103,
+  107,
+  109,
+  113,
+  127,
+  131,
+  137,
+  139,
+  149,
+  151,
+  157,
+  163,
+  167,
+  173,
+  179,
+  181,
+  191,
+  193,
+  197,
+  199,
+  211,
+  223,
+  227,
+  229,
+  233,
+  239,
+  241,
+  251,
+  257,
+  263,
+  269,
+  271,
+  277,
+  281,
+  283,
+  293,
+  307,
+  311,
+  313,
+  317,
+  331,
+  337,
+  347,
+  349,
+  353,
+  359,
+  367,
+  373,
+  379,
+  383,
+  389,
+  397 ]
+78
+[ 2,
+  3,
+  5,
+  7,
+  11,
+  13,
+  17,
+  19,
+  23,
+  29,
+  31,
+  37,
+  41,
+  43,
+  47,
+  53,
+  59,
+  61,
+  67,
+  71,
+  73,
+  79,
+  83,
+  89,
+  97,
+  101,
+  103,
+  107,
+  109,
+  113,
+  127,
+  131,
+  137,
+  139,
+  149,
+  151,
+  157,
+  163,
+  167,
+  173,
+  179,
+  181,
+  191,
+  193,
+  197,
+  199,
+  211,
+  223,
+  227,
+  229,
+  233,
+  239,
+  241,
+  251,
+  257,
+  263,
+  269,
+  271,
+  277,
+  281,
+  283,
+  293,
+  307,
+  311,
+  313,
+  317,
+  331,
+  337,
+  347,
+  349,
+  353,
+  359,
+  367,
+  373,
+  379,
+  383,
+  389,
+  397,
+  25,
+  169,
+  175,
+  245,
+  275,
+  289,
+  325 ]
