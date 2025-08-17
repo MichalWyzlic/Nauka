@@ -4,16 +4,17 @@ let prevArrIndex = 0;
 //let arr = [0, 0, 1];
 let arrMul = [];
 let firstGo = true;
-function getArrayIndices(index, sqrtBase = 2000){
-	let index1 = 0;
-	let index2 = 0;
-	let tempPower = sqrtBase * sqrtBase;
-	while(index > tempPower){
-		index1 ++;
-		tempPower = Math.pow((index1 +1) * sqrtBase, 2);
-	}
+function getArrayIndices(index, base = 4000000){
+	let index1 = Math.floor(index/base);
+	let index2 = index - (index1 * base);
+	
+	// let tempPower = sqrtBase * sqrtBase;
+	// while(index > tempPower){
+	// 	index1 ++;
+	// 	tempPower = Math.pow((index1 +1) * sqrtBase, 2);
+	// }
 
-	index2 = index - Math.pow((index1) * sqrtBase, 2);
+	// index2 = index - Math.pow((index1) * sqrtBase, 2);
 
 	return [index1, index2];
 }
@@ -24,9 +25,10 @@ function getPrimeIndex(index1, index2, sqrtBase = 2000){
 
 class Primes {
 	static *stream() {
-	
+		let iteration = 0;
+		let prevN = 0;
 
-		function findPrimesEratosthenes(iteration = 0) {
+		function findPrimesEratosthenes() {
 
 			// INPUT
 			//	n = an arbitrary number
@@ -43,18 +45,19 @@ class Primes {
 			//			 while j <= n:
 			//				 A[j] <- false
 			//				 j <- j + i
-			
-			let sqrtN = 2000 * (iteration + 1);
-			let nPerIteration = sqrtN * sqrtN;
+			const base = 2000
+			const arrIndexBase = base * base;
+			let sqrtN = base * (iteration + 1);
+			let nPerIteration = sqrtN * sqrtN;			
 			if(iteration === 0){
 				for (let i = 2; i <= sqrtN; i++) {
 						if (!(arrA[0][i] === 0)) {
-							arrA[i] = 1;
+							arrA[0][i] = 1;
 							primeArr.push(i);
-							let j = i * i * (arrMul[i] ? arrMul[i] : 1);
+							let j = i * i * (arrMul[0][i] ? arrMul[0][i] : 1);
 							for (j; j <= nPerIteration; j += i) {
 								//try{
-									arrA[j] = 0;
+									arrA[0][j] = 0;
 								// } catch(error){ 
 								// 	console.log('j: ' + j);
 								// 	console.log('error: ' + error);
@@ -63,8 +66,14 @@ class Primes {
 						}
 					}
 			}
+			let prevMaxPerIteration = 0;
+			let nextMaxPerIteration = 0;
 			for(let k = 0; k <= iteration; k++){
+				
 				if(k < iteration){
+					//the first index of the arrA = k
+					//the second index of the arrA = 
+					
 
 				} else {	
 					for (let i = 2; i <= sqrtN; i++) {
@@ -101,6 +110,8 @@ class Primes {
 				}
 			}
 
+			iteration ++;
+			prevN += nPerIteration;
 			//return primes;
 		}
 
