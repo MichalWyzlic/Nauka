@@ -1,32 +1,13 @@
-const primeArr = [];
-let arrA = [[0, 0, 1]];
-let prevArrIndex = 0;
-//let arr = [0, 0, 1];
-let primeMul = [];
-let firstGo = true;
-function getArrayIndices(index, base = 4000000) {
-	let index1 = Math.floor(index / base);
-	let index2 = index - index1 * base;
-
-	// let tempPower = sqrtBase * sqrtBase;
-	// while(index > tempPower){
-	// 	index1 ++;
-	// 	tempPower = Math.pow((index1 +1) * sqrtBase, 2);
-	// }
-
-	// index2 = index - Math.pow((index1) * sqrtBase, 2);
-
-	return [index1, index2];
-}
-
-function getPrimeIndex(index1, index2, sqrtBase = 2000) {
-	return index2 + Math.pow(index1 * sqrtBase, 2);
-}
-
 class Primes {
 	static *stream() {
+		const primeArr = [];
+		let arrA = [[0, 0, 1]];
+		let primeMul = [];
+		let primeDoubleFlag = [];
 		let iteration = 1;
 		let prevN = 0;
+		//increment double or quadrouple the value
+		let double = true;
 
 		function findPrimesEratosthenes() {
 			// INPUT
@@ -44,7 +25,7 @@ class Primes {
 			//			 while j <= n:
 			//				 A[j] <- false
 			//				 j <- j + i
-			const base = 10;//2000;
+			const base = 10; //2000;
 			const arrIndexBase = base * base;
 			let sqrtN = base * iteration;
 			let nPerIteration = sqrtN * sqrtN;
@@ -59,26 +40,45 @@ class Primes {
 			if (iteration >= 2000000) throw new Error('Interation too high');
 
 			if (iteration === 1) {
+				primeArr.push(2);
+				let i = 3;
+				
+				
 				//find primes and mark their products
-				for (let i = 2; i <= sqrtN; i++) {
+				for (i; i <= sqrtN; i += 2) {
 					if (!(arrA[0][i] === 0)) {
 						arrA[0][i] = 1;
 						primeArr.push(i);
-						let j = i * i; // * (primeMul[0][i] ? primeMul[0][i] : 1);
-						for (j; j <= nPerIteration; j += i) {
-							//try{
-							arrA[0][j] = 0;
-							// } catch(error){
-							// 	console.log('j: ' + j);
-							// 	console.log('error: ' + error);
-							// }
+						let j = i * i;
+
+						if (i === 3 || i >= 29) {
+							let increment = 2 * i;
+							for (j; j <= nPerIteration; j += increment) {
+								arrA[0][j] = 0;
+							}
+						} else {
+							let doubleIncrement = 2 * i;
+							let quadrupleIncrement = 4 * i;
+							//The condition will be reversed and the increment initialised in the first loop
+							let currIncremetnFlag = !double;
+							let increment = 0;
+							double = !double;
+							for (j; j <= nPerIteration; j += increment) {
+								arrA[0][j] = 0;
+								currIncremetnFlag = !currIncremetnFlag;
+								increment = currIncremetnFlag
+									? doubleIncrement
+									: quadrupleIncrement;
+							}
+							primeDoubleFlag[primeArr.length - 1] =
+								currIncremetnFlag;
 						}
 						primeMul[primeArr.length - 1] = j;
 					}
 				}
 
 				//extract primes from the arrA table
-				for (let i = prevSqrtN + 1; i <= nPerIteration; i++) {
+				for (i; i <= nPerIteration; i += 2) {
 					if (!(arrA[0][i] === 0)) {
 						arrA[0][i] = 1;
 						primeArr.push(i);
@@ -91,80 +91,88 @@ class Primes {
 				}
 
 				//re-run the elimination of prev prime products
-				let i = 0;
+				let i = 1;
 				let x = 0;
 				let y = 0;
-				while (i < primeArr.length) {
+
+				while (/*i < primeArr.length && */ primeArr[i] <= sqrtN) {
 					//starting from the last position
-					let j = primeMul[i]; // * (primeMul[0][i] ? primeMul[0][i] : 1);
+					let j = primeMul[i]
+						? primeMul[i]
+						: primeArr[i] * primeArr[i];
+
 					let xj = Math.floor((j - 1) / arrIndexBase);
 					let yj = j % arrIndexBase;
-					yj = (yj = 0) ? arrIndexBase : yj;
-					for (j; j <= prevN; j += primeArr[i]) {
-						yj += primeArr[i];
-						if (yj > arrIndexBase) {
-							xj = Math.floor((j - 1) / arrIndexBase);
-							yj = j % arrIndexBase;
-							yj = (yj = 0) ? arrIndexBase : yj;
-						}
-						arrA[x][y] = 0;
-					}
-					//Assign a new value of the product
-					primeMul[i] = j;
-				}
-				
-				//find primes and mark their products
-				i = prevSqrtN +1;
-				x = Math.floor((i - 1) / arrIndexBase);
-				y = i % arrIndexBase;
-				y = (y = 0) ? arrIndexBase : y;
-
-				for (i ; i <= sqrtN; i++) {
-					if (!(arrA[x][y] === 0)) {
-						arrA[x][y] = 1;
-						primeArr.push(i);
-						let j = i * i; // * (primeMul[0][i] ? primeMul[0][i] : 1);
-	
-						let xj = Math.floor((j - 1) / arrIndexBase);
-						let yj = j % arrIndexBase;
-						yj = (yj = 0) ? arrIndexBase : yj;
-						for (j; j <= nPerIteration; j += primeArr[i]) {
-							yj += primeArr[primeArr.length-1];
+					yj = yj === 0 ? arrIndexBase : yj;
+					if (primeArr[i] === 3 || primeArr[i] >= 29) {
+						let increment = 2 * primeArr[i];
+						while (j <= nPerIteration) {
+							arrA[xj][yj] = 0;
+							j += increment;
+							yj += increment;
 							if (yj > arrIndexBase) {
 								xj = Math.floor((j - 1) / arrIndexBase);
 								yj = j % arrIndexBase;
-								yj = (yj = 0) ? arrIndexBase : yj;
+								yj = yj === 0 ? arrIndexBase : yj;
 							}
-							arrA[x][y] = 0;
 						}
-						//Assign a new value of the product
-						primeMul.push(j);
-
-						y++;
-						if(y>arrIndexBase){
-							y = 1;
-							x++;
+					} else {
+						let doubleIncrement = 2 * primeArr[i];
+						let quadrupleIncrement = 4 * primeArr[i];
+						let currIncremetnFlag = false;
+						if(primeDoubleFlag[i] !== undefined){
+							currIncremetnFlag = primeDoubleFlag[i];
+						} else {
+							currIncremetnFlag = !double;
+							double = !double;
 						}
+						let increment = 0;
+						while (j <= nPerIteration) {
+							arrA[xj][yj] = 0;
+							currIncremetnFlag = !currIncremetnFlag;
+							increment = currIncremetnFlag
+								? doubleIncrement
+								: quadrupleIncrement;
+							j += increment;
+							yj += increment;
+							if (yj > arrIndexBase) {
+								xj = Math.floor((j - 1) / arrIndexBase);
+								yj = j % arrIndexBase;
+								yj = yj === 0 ? arrIndexBase : yj;
+							}
+						}
+						primeDoubleFlag[i] = currIncremetnFlag;
 					}
+
+					//Assign a new value of the product
+					primeMul[i] = j;
+					i++;
 				}
 
+				//find primes and mark their products
+				i = prevN + 1;
+				x = Math.floor(prevN / arrIndexBase);
+				//if i is even increase by one
+				if (!(i % 2)) i++;
+				y = i % arrIndexBase;
+				y = y === 0 ? arrIndexBase : y;
+
 				//extract primes from the arrA table
-				for (let i = prevSqrtN + 1; i <= nPerIteration; i++) {
-					if (!(arrA[0][i] === 0)) {
-						arrA[0][i] = 1;
+				for (i; i <= nPerIteration; i += 2) {
+					if (!(arrA[x][y] === 0)) {
+						arrA[x][y] = 1;
 						primeArr.push(i);
+					}
+					y += 2;
+					if (y > arrIndexBase) {
+						y = y % arrIndexBase;
+						x++;
 					}
 				}
 			}
 
-			//iteration ++;
 			prevN = nPerIteration;
-			//return primes;
 		}
-
-		//if(firstGo)
-		//findPrimesEratosthenes(67000000);
-		//firstGo = false;
 
 		let iterator = 0;
 		while (true) {
@@ -181,16 +189,16 @@ class Primes {
 }
 let startTime = performance.now();
 const stream = Primes.stream();
-// let i = 1;
-// for (i; i <= 1000000; i++) {
-// 	//	try{
-	stream.next();
-// 	// } catch(error){
-// 	// 	console.log('i: ' + i);
-// 	// 	console.log('error: ' + error);
-// 	// }
-// }
-// console.log(i + ': ' + stream.next().value);
-// let endTime = performance.now();
+let i = 0;
+for (i; i <= 999; i++) {
+	let val = stream.next().value;
 
-// console.log(`Call to stream took ${endTime - startTime} milliseconds`);
+	 if(i >= 100 && i < 110
+	 	|| i >= 1000 && i < 1010){
+	 		console.log(i + ': ' + val);
+	 	}
+}
+console.log(i + ': ' + stream.next().value);
+let endTime = performance.now();
+
+console.log(`Call to stream took ${endTime - startTime} milliseconds`);
