@@ -12,7 +12,7 @@ class Primes {
 		let sqrtLimit = Math.floor(Math.sqrt(cycleLimit));
 
 		//initial sieve
-		let mark = new Uint8Array(100000000);
+		let mark = new Uint8Array(500000000);
 		let p = 7;
 
 		let j = 0;
@@ -132,12 +132,25 @@ class Primes {
 			}
 
 			while (iteration < primes.length) {
-				iteration++;
-				if(iteration > 25000000) {
+				if(iteration === 1000000) {
 					console.log('the primes length is:' + primes.length);
 					console.log('prime: ' + primes[primes.length - 1]);					
-					console.log('prime [25 000 000] ' + primes[25000000]);
+					console.log('prime [1 000 000] ' + primes[1000000-1]);
+					console.log('cycleLimit ' + cycleLimit);
 				}
+				if(iteration === 5000000) {
+					console.log('the primes length is:' + primes.length);
+					console.log('prime: ' + primes[primes.length - 1]);					
+					console.log('prime [5 000 000] ' + primes[5000000-1]);
+					console.log('cycleLimit ' + cycleLimit);
+				}
+				if(iteration === 25000000) {
+					console.log('the primes length is:' + primes.length);
+					console.log('prime: ' + primes[primes.length - 1]);					
+					console.log('prime [25 000 000] ' + primes[25000000-1]);
+					console.log('cycleLimit ' + cycleLimit);
+				}
+				iteration++;
 				yield primes[iteration - 1];
 			}
 		}

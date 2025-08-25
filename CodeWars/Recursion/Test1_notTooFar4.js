@@ -149,6 +149,12 @@ class Primes {
 
 			while(iteration < primes.length){
 				iteration ++;
+				if(iteration > 25000000) {
+					console.log('the primes length is:' + primes.length);
+					console.log('prime: ' + primes[primes.length - 1]);					
+					console.log('prime [25 000 000] ' + primes[25000000]);
+				}
+
 				yield primes[iteration-1];
 
 			}
